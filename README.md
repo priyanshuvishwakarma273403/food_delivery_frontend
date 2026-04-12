@@ -1,16 +1,39 @@
-# React + Vite
+# AntiGravity Food Delivery Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A high-performance, premium food delivery web application built with a modern React stack.
 
-Currently, two official plugins are available:
+## 🚀 Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Premium UI/UX**: Inspired by Zomato/Swiggy with glassmorphism, smooth animations (Framer Motion), and a custom Red/Orange design system.
+- **Real-time Tracking**: Live delivery tracking using Leaflet.js with simulated movement logic.
+- **Role-based Access**: Separate flows for Customers, Admin, and Delivery Partners.
+- **State Management**: Persistent global state using Zustand for Auth, Cart, and Location.
+- **Smart Cart**: Item management with restaurant-specific logic and tax/delivery fee calculation.
+- **Search & Filters**: Debounced search with multi-select filtering for ratings, food type, and cuisines.
+- **Responsive Web Design**: Fully optimized for Mobile, Tablet, and Desktop.
 
-## React Compiler
+## 🛠 Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Framework**: React 18 + Vite
+- **Styling**: Tailwind CSS 3
+- **Animations**: Framer Motion
+- **Routing**: React Router v6
+- **State**: Zustand + Persist Middleware
+- **Data Fetching**: Axios + TanStack Query (React Query)
+- **Forms**: React Hook Form + Zod
+- **Maps**: Leaflet.js + React Leaflet
+- **Charts**: Recharts
+- **Icons**: Lucide React
+- **Notifications**: React Hot Toast
 
-## Expanding the ESLint configuration
+## 🚦 Getting Started
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+1. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
+
+2. **Run Development Server**:
+   ```bash
+   npm run dev
+   ```
