@@ -2,6 +2,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import Header from './Header';
 import Footer from './Footer';
+import AnnouncementBar from './AnnouncementBar';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Layout = () => {
@@ -21,7 +22,12 @@ const Layout = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      {!isAuthRoute && <Header />}
+      {!isAuthRoute && (
+        <>
+          <AnnouncementBar />
+          <Header />
+        </>
+      )}
       <main className="flex-grow">
         <AnimatePresence mode="wait">
           <motion.div

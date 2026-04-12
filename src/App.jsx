@@ -37,6 +37,8 @@ const ProtectedRoute = ({ children, roles = [] }) => {
   return children;
 };
 
+import AiAssistant from './components/common/AiAssistant';
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
@@ -94,6 +96,7 @@ function App() {
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
+        <AiAssistant />
         <Toaster position="bottom-right" />
       </BrowserRouter>
     </QueryClientProvider>
