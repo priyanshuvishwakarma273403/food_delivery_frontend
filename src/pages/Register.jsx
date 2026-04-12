@@ -106,7 +106,7 @@ const Register = () => {
 
         <div className="text-center mt-6 mb-12">
           <h1 className="text-4xl font-black text-text-primary mb-2">Create Account</h1>
-          <p className="text-text-secondary">Join the AntiGravity food network today</p>
+          <p className="text-text-secondary">Join the Tomato food network today</p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">

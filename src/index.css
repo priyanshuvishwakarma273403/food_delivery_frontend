@@ -1,8 +1,32 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #E23744;
+  --color-primary-dark: #c12e3a;
+  --color-primary-light: #ee5b68;
+  
+  --color-secondary: #FC8019;
+  --color-secondary-dark: #e67316;
+  --color-secondary-light: #fd9947;
+  
+  --color-background: #F5F5F5;
+  --color-card: #FFFFFF;
+  
+  --color-text-primary: #1C1C1C;
+  --color-text-secondary: #686B78;
+  
+  --color-status-success: #26A541;
+  --color-status-error: #E23744;
+  --color-status-warning: #FC8019;
+  --color-status-info: #2563eb;
+
+  --font-sans: "Inter", "system-ui", "sans-serif";
+  
+  --shadow-premium: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
+  --shadow-premium-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
 
 @layer base {
   body {

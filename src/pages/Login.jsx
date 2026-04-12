@@ -72,9 +72,9 @@ const Login = () => {
         <div className="text-center mb-10">
           <Link to="/" className="inline-flex items-center gap-2 mb-6">
             <div className="bg-primary p-1.5 rounded-lg">
-              <span className="text-white font-black text-xl tracking-tighter">AG</span>
+              <span className="text-white font-black text-xl tracking-tighter">T</span>
             </div>
-            <span className="text-xl font-black text-primary">AntiGravity</span>
+            <span className="text-xl font-black text-primary">Tomato</span>
           </Link>
           <h1 className="text-3xl font-black text-text-primary mb-2">Welcome Back!</h1>
           <p className="text-text-secondary text-sm">Please enter your details to sign in</p>

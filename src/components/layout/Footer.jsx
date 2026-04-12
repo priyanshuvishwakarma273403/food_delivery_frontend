@@ -9,9 +9,9 @@ const Footer = () => {
           <div className="space-y-6">
             <Link to="/" className="flex items-center gap-2">
               <div className="bg-primary p-1.5 rounded-lg">
-                <span className="text-white font-black text-2xl tracking-tighter">AG</span>
+                <span className="text-white font-black text-2xl tracking-tighter">T</span>
               </div>
-              <span className="text-2xl font-black text-primary">AntiGravity</span>
+              <span className="text-2xl font-black text-primary">Tomato</span>
             </Link>
             <p className="text-text-secondary text-sm leading-relaxed max-w-xs">
               Experience the best food delivery at your doorstep with lightning speed and premium quality.
@@ -58,7 +58,7 @@ const Footer = () => {
               </li>
               <li className="flex items-center gap-3 text-sm text-text-secondary">
                 <Mail size={18} className="text-primary shrink-0" />
-                <span>support@antigravity.food</span>
+                <span>support@tomato.food</span>
               </li>
             </ul>
           </div>
@@ -66,7 +66,7 @@ const Footer = () => {
 
         <div className="border-t border-gray-100 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-xs text-text-secondary">
-            © {new Date().getFullYear()} AntiGravity Food Delivery. All rights reserved.
+            © {new Date().getFullYear()} Tomato Food Delivery. All rights reserved.
           </p>
           <div className="flex gap-6">
              <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Google Play" className="h-8" />

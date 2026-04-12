@@ -1,4 +1,4 @@
-# AntiGravity Food Delivery Frontend
+# Tomato Food Delivery Frontend
 
 A high-performance, premium food delivery web application built with a modern React stack.
 

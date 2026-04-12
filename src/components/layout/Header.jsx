@@ -46,9 +46,9 @@ const Header = () => {
         <div className="flex items-center gap-8">
           <Link to="/" className="flex items-center gap-2">
             <div className="bg-primary p-1.5 rounded-lg shadow-lg shadow-primary/20">
-              <span className="text-white font-black text-2xl tracking-tighter">AG</span>
+              <span className="text-white font-black text-2xl tracking-tighter">T</span>
             </div>
-            <span className="text-2xl font-black text-primary hidden sm:block">AntiGravity</span>
+            <span className="text-2xl font-black text-primary hidden sm:block">Tomato</span>
           </Link>
 
           <div className="hidden lg:flex items-center gap-2 bg-gray-50 px-4 py-2.5 rounded-xl border border-gray-100 group hover:border-primary/30 transition-colors cursor-pointer">

@@ -67,9 +67,9 @@ const AdminDashboard = () => {
         <aside className="w-80 h-screen bg-white border-r border-gray-100 p-8 sticky top-0 hidden lg:block">
            <div className="flex items-center gap-2 mb-12">
             <div className="bg-primary p-1.5 rounded-lg">
-              <span className="text-white font-black text-xl tracking-tighter">AG</span>
+              <span className="text-white font-black text-xl tracking-tighter">T</span>
             </div>
-            <span className="text-xl font-black text-primary">AdminPanel</span>
+            <span className="text-xl font-black text-primary">TomatoAdmin</span>
           </div>
 
           <nav className="space-y-6">

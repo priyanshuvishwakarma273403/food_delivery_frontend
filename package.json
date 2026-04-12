@@ -1,5 +1,5 @@
 {
-  "name": "fooddeliveryfrontend",
+  "name": "tomato-frontend",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
+    "@tailwindcss/postcss": "^4.2.2",
     "@tanstack/react-query": "^5.99.0",
     "axios": "^1.15.0",
     "clsx": "^2.1.1",
