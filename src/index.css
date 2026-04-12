@@ -29,18 +29,47 @@
 }
 
 @layer base {
+  :root {
+    --bg-main: #F5F5F5;
+    --card-main: #FFFFFF;
+    --text-main: #1C1C1C;
+    --text-sub: #686B78;
+    --border-main: #F1F5F9;
+  }
+
+  .dark {
+    --bg-main: #0F1111;
+    --card-main: #1C1C1C;
+    --text-main: #F5F5F5;
+    --text-sub: #9DA3AF;
+    --border-main: #2D2D2D;
+  }
+
   body {
-    @apply bg-background text-text-primary font-sans antialiased;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    @apply font-sans antialiased transition-colors duration-300;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-bold tracking-tight;
+    @apply font-bold tracking-tight transition-colors duration-300;
   }
 }
 
 @layer components {
   .glass-card {
-    @apply bg-white/80 backdrop-blur-md border border-white/20 shadow-premium;
+    background-color: var(--card-main);
+    @apply backdrop-blur-md border border-white/10 shadow-premium opacity-95;
+  }
+
+  .card-premium {
+    background-color: var(--card-main);
+    border-color: var(--border-main);
+    @apply rounded-[2.5rem] border shadow-premium transition-all duration-300;
+  }
+
+  .text-secondary {
+    color: var(--text-sub);
   }
 
   .premium-shadow {
@@ -59,11 +88,11 @@
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-gray-100;
+  background-color: var(--bg-main);
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-gray-300 rounded-full hover:bg-gray-400 transition-colors;
+  @apply bg-gray-300/50 rounded-full hover:bg-gray-400 transition-colors;
 }
 
 /* Leaflet Map Overrides */
@@ -72,4 +101,9 @@
   height: 100%;
   z-index: 10;
   border-radius: 0.75rem;
+  filter: var(--map-filter, none);
+}
+
+.dark .leaflet-container {
+  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
 }

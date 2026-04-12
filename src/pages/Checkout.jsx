@@ -12,7 +12,9 @@ import {
   Smartphone,
   CheckCircle2,
   ArrowLeft,
-  Truck
+  Truck,
+  Leaf,
+  TrendingUp
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useCartStore } from '../store/cartStore';
@@ -224,6 +226,36 @@ const Checkout = () => {
     <div className="container mx-auto px-4 py-12 md:py-20 max-w-4xl">
       <StepIndicator />
 
+      {/* God Mode: Environment Tracker & Demand Pricing */}
+      <div className="mb-12 grid grid-cols-1 md:grid-cols-2 gap-6">
+         <div className="bg-green-500 text-white p-8 rounded-[2.5rem] shadow-xl shadow-green-100 flex items-center justify-between relative overflow-hidden group">
+            <div className="absolute -right-4 -bottom-4 h-24 w-24 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform" />
+            <div className="flex items-center gap-4 relative z-10">
+               <div className="h-14 w-14 bg-white/20 rounded-2xl flex items-center justify-center">
+                  <Leaf size={28} />
+               </div>
+               <div>
+                  <p className="text-xs font-black opacity-80 uppercase tracking-widest leading-none mb-1">Eco Impact</p>
+                  <p className="text-xl font-black">Saved 54g Plastic</p>
+               </div>
+            </div>
+            <div className="text-3xl font-black opacity-20 pr-4">#GreenTomato</div>
+         </div>
+
+         <div className="bg-orange-500 text-white p-8 rounded-[2.5rem] shadow-xl shadow-orange-100 flex items-center justify-between overflow-hidden group">
+            <div className="flex items-center gap-4">
+               <div className="h-14 w-14 bg-white/20 rounded-2xl flex items-center justify-center">
+                  <TrendingUp size={28} />
+               </div>
+               <div>
+                  <p className="text-xs font-black opacity-80 uppercase tracking-widest leading-none mb-1">Peak Time</p>
+                  <p className="text-xl font-black">High Demand in City</p>
+               </div>
+            </div>
+            <div className="bg-white/10 px-4 py-2 rounded-xl text-xs font-black uppercase">₹20 Added</div>
+         </div>
+      </div>
+      
       <div className="bg-white rounded-[3.5rem] shadow-premium border border-gray-100 p-8 md:p-14 relative overflow-hidden">
         {/* Background Decorative Element */}
         <div className="absolute -top-10 -right-10 h-64 w-64 bg-primary/5 rounded-full blur-[80px]" />

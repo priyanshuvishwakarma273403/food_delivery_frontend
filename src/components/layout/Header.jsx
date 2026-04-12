@@ -8,11 +8,15 @@ import {
   Menu, 
   X,
   LogOut,
-  ChevronDown
+  ChevronDown,
+  Moon,
+  Sun,
+  Mic
 } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { useCartStore } from '../../store/cartStore';
 import { useLocationStore } from '../../store/locationStore';
+import { useTheme } from '../../hooks/useTheme';
 import Button from '../common/Button';
 import { cn } from '../../utils/cn';
 
@@ -24,9 +28,35 @@ const Header = () => {
   const { user, logout, isAuthenticated } = useAuthStore();
   const { items } = useCartStore();
   const { city } = useLocationStore();
+  const { isDark, toggleTheme } = useTheme();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isListening, setIsListening] = useState(false);
   const navigate = useNavigate();
 
   const cartItemCount = items.reduce((acc, item) => acc + item.quantity, 0);
+
+  const handleVoiceSearch = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("Voice search is not supported in this browser.");
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.start();
+    setIsListening(true);
+
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      setSearchQuery(transcript);
+      setIsListening(false);
+      navigate(`/restaurants?search=${transcript}`);
+    };
+
+    recognition.onerror = () => setIsListening(false);
+    recognition.onend = () => setIsListening(false);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -39,7 +69,7 @@ const Header = () => {
   return (
     <header className={cn(
       'sticky top-0 z-50 w-full transition-all duration-300',
-      isScrolled ? 'bg-white/90 backdrop-blur-lg border-b border-gray-100 py-2 shadow-sm' : 'bg-white py-4'
+      isScrolled ? 'bg-white/90 dark:bg-card-main/90 backdrop-blur-lg border-b border-gray-100 dark:border-gray-800 py-2 shadow-sm' : 'bg-white dark:bg-card-main py-4'
     )}>
       <div className="container mx-auto px-4 flex items-center justify-between">
         {/* Logo & Location */}
@@ -65,15 +95,34 @@ const Header = () => {
             <input 
               type="text" 
               placeholder="Search for restaurants, cuisines..." 
-              className="bg-gray-50 border border-transparent focus:border-primary/20 focus:ring-4 focus:ring-primary/5 rounded-xl pl-10 pr-4 py-2.5 text-sm w-64 lg:w-96 outline-none transition-all"
+              className="bg-gray-50 dark:bg-gray-800 border border-transparent focus:border-primary/20 focus:ring-4 focus:ring-primary/5 rounded-xl pl-10 pr-12 py-2.5 text-sm w-64 lg:w-96 outline-none transition-all dark:text-white"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
+            <button 
+              onClick={handleVoiceSearch}
+              className={cn(
+                "absolute right-3 top-1/2 -translate-y-1/2 transition-all p-1.5 rounded-lg",
+                isListening ? "text-primary animate-pulse bg-primary/10" : "text-gray-400 hover:text-primary"
+              )}
+            >
+              <Mic size={18} />
+            </button>
           </div>
 
-          <div className="flex items-center gap-4 border-l border-gray-100 pl-6">
-            <Link to="/cart" className="relative p-2 rounded-xl hover:bg-gray-100 transition-colors">
-              <ShoppingCart size={22} className="text-text-primary" />
+          <div className="flex items-center gap-2 border-l border-gray-100 dark:border-gray-800 pl-6">
+            {/* Theme Toggle */}
+            <button 
+              onClick={toggleTheme}
+              className="p-2.5 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-text-secondary"
+            >
+              {isDark ? <Sun size={20} className="text-yellow-500" /> : <Moon size={20} />}
+            </button>
+
+            <Link to="/cart" className="relative p-2.5 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+              <ShoppingCart size={20} className="text-text-primary dark:text-white" />
               {cartItemCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-primary text-white text-[10px] font-bold h-5 w-5 rounded-full flex items-center justify-center border-2 border-white">
+                <span className="absolute top-1 right-1 bg-primary text-white text-[10px] font-bold h-5 w-5 rounded-full flex items-center justify-center border-2 border-white dark:border-card-main">
                   {cartItemCount}
                 </span>
               )}

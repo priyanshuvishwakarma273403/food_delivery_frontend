@@ -85,7 +85,7 @@ const Home = () => {
               Order from your favorite restaurants and track your food in real-time. Fast, fresh, and reliable.
             </p>
 
-            <div className="bg-white p-2 rounded-2xl shadow-2xl flex flex-col md:flex-row gap-2 max-w-2xl">
+            <div className="bg-white p-2 rounded-2xl shadow-2xl flex flex-col md:flex-row gap-2 max-w-2xl mb-8">
               <div className="flex-1 flex items-center gap-3 px-4 border-b md:border-b-0 md:border-r border-gray-100 py-2">
                 <MapPin className="text-primary" size={20} />
                 <input 
@@ -108,6 +108,28 @@ const Home = () => {
                 />
               </div>
               <Button className="rounded-xl px-10">Search</Button>
+            </div>
+
+            {/* Mood Selector (God Mode) */}
+            <div className="hidden md:block animate-in fade-in slide-in-from-left duration-1000 delay-300">
+               <p className="text-white/60 text-xs font-black uppercase tracking-widest mb-4">How are you feeling today?</p>
+               <div className="flex flex-wrap gap-3">
+                  {[
+                    { label: 'Stressed', emoji: '😫', class: 'hover:bg-red-500 hover:border-red-500' },
+                    { label: 'Happy', emoji: '🤩', class: 'hover:bg-yellow-500 hover:border-yellow-500' },
+                    { label: 'Lazy', emoji: '😴', class: 'hover:bg-blue-500 hover:border-blue-500' },
+                    { label: 'Healthy', emoji: '🥗', class: 'hover:bg-green-500 hover:border-green-500' },
+                    { label: 'Adventurous', emoji: '🧭', class: 'hover:bg-purple-500 hover:border-purple-500' }
+                  ].map((mood, idx) => (
+                    <Link 
+                      key={idx} 
+                      to={`/restaurants?mood=${mood.label.toLowerCase()}`}
+                      className={`px-5 py-2.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-white text-sm font-bold flex items-center gap-2 transition-all duration-300 ${mood.class}`}
+                    >
+                      <span className="text-lg">{mood.emoji}</span> {mood.label}
+                    </Link>
+                  ))}
+               </div>
             </div>
           </motion.div>
         </div>
