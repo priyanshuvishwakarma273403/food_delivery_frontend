@@ -11,7 +11,8 @@ import {
   Briefcase,
   Smartphone,
   CheckCircle2,
-  ArrowLeft
+  ArrowLeft,
+  Truck
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useCartStore } from '../store/cartStore';

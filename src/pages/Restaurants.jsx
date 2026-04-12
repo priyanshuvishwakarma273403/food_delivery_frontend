@@ -12,6 +12,7 @@ import RestaurantCard from '../components/restaurant/RestaurantCard';
 import { CUISINES } from '../constants';
 import Button from '../components/common/Button';
 import Badge from '../components/common/Badge';
+import { cn } from '../utils/cn';
 
 // Dummy data
 const ALL_RESTAURANTS = [
@@ -166,9 +167,5 @@ const Restaurants = () => {
   );
 };
 
-// Helper inside file for simplicity
-function cn(...inputs) {
-  return inputs.filter(Boolean).join(' ');
-}
 
 export default Restaurants;

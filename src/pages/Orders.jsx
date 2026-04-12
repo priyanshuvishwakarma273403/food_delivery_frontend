@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ShoppingBag, ChevronRight, Clock, MapPin, Replay, Star } from 'lucide-react';
+import { ShoppingBag, ChevronRight, Clock, MapPin, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Badge from '../components/common/Badge';
 

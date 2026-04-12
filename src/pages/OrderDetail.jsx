@@ -12,7 +12,8 @@ import {
   Package,
   Soup,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  Star
 } from 'lucide-react';
 import LiveMap from '../components/order/LiveMap';
 import Button from '../components/common/Button';

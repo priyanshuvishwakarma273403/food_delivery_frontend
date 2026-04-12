@@ -10,7 +10,8 @@ import {
   Power,
   ChevronRight,
   User,
-  Package
+  Package,
+  LayoutDashboard
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Badge from '../components/common/Badge';

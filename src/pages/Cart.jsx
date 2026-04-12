@@ -14,6 +14,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useCartStore } from '../store/cartStore';
 import Button from '../components/common/Button';
 import Badge from '../components/common/Badge';
+import { cn } from '../utils/cn';
 
 const Cart = () => {
   const { items, updateQuantity, removeItem, clearCart, getTotalAmount } = useCartStore();

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Facebook, Twitter, Instagram, Youtube, Mail, Phone, MapPin } from 'lucide-react';
+import { Send, Camera, Globe, Play, Mail, Phone, MapPin } from 'lucide-react';
 
 const Footer = () => {
   return (
@@ -17,7 +17,7 @@ const Footer = () => {
               Experience the best food delivery at your doorstep with lightning speed and premium quality.
             </p>
             <div className="flex gap-4">
-              {[Instagram, Twitter, Facebook, Youtube].map((Icon, i) => (
+              {[Camera, Send, Globe, Play].map((Icon, i) => (
                 <a key={i} href="#" className="h-10 w-10 flex items-center justify-center rounded-xl bg-gray-50 text-text-secondary hover:bg-primary hover:text-white transition-all duration-300">
                   <Icon size={18} />
                 </a>
