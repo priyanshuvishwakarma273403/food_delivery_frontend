@@ -21,6 +21,7 @@ import Input from '../components/common/Input';
 import Button from '../components/common/Button';
 import { useAuthStore } from '../store/authStore';
 import OtpVerification from '../components/common/OtpVerification';
+import apiClient from '../api/axios';
 
 const registerSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -89,45 +90,50 @@ const Register = () => {
   });
 
   const onSubmit = async (data) => {
-    setFormData(data);
-    // Proceed to OTP verification instead of immediate creation
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      setAuthView('otp');
-      toast.success(`Verification OTP sent to ${data.email}`);
-    }, 1000);
-  };
-
-  const handleVerifyOTP = async (otp) => {
-    if (otp !== '123456') { // Dummy check
-      toast.error("Invalid OTP. Try '123456'");
-      return;
-    }
-    
     setIsLoading(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      const dummyUser = { ...formData, id: '2' };
-      login(dummyUser, 'dummy-jwt-token');
-      toast.success('Account verified and created successfully!');
-      
-      if (formData.role === 'ADMIN') navigate('/admin');
-      else if (formData.role === 'DELIVERY_PARTNER') navigate('/delivery');
-      else navigate('/');
+      await apiClient.post(`/auth/send-otp?email=${data.email}`);
+      setFormData(data);
+      setAuthView('otp');
+      toast.success(`Verification code sent to ${data.email}`);
     } catch (error) {
-      toast.error('Registration failed. Please try again.');
+      toast.error(error.response?.data?.message || 'Failed to send verification code');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleResendOTP = () => {
-     setIsLoading(true);
-     setTimeout(() => {
+  const handleVerifyOTP = async (otp) => {
+    setIsLoading(true);
+    try {
+      const registerData = { ...formData, otp };
+      const response = await apiClient.post('/auth/register', registerData);
+      
+      const { user, accessToken } = response.data.data;
+      login(user, accessToken);
+      
+      toast.success('Account verified and created successfully!');
+      
+      if (user.role === 'ADMIN') navigate('/admin');
+      else if (user.role === 'DELIVERY_PARTNER') navigate('/delivery');
+      else navigate('/');
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Verification failed. Please try again.');
+    } finally {
       setIsLoading(false);
-      toast.success(`OTP resent to ${formData?.email}`);
-    }, 1000);
+    }
+  };
+
+  const handleResendOTP = async () => {
+    setIsLoading(true);
+    try {
+      await apiClient.post(`/auth/send-otp?email=${formData?.email || emailValue}`);
+      toast.success(`Verification code resent to ${formData?.email || emailValue}`);
+    } catch (error) {
+      toast.error('Failed to resend code');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const RoleCard = ({ value, label, icon: Icon, description }) => (
