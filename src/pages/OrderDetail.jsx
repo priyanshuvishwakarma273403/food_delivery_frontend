@@ -16,7 +16,7 @@ import {
   Star,
   Navigation
 } from 'lucide-react';
-import LiveMap from '../components/order/LiveMap';
+import GoogleLiveMap from '../components/order/GoogleLiveMap';
 import Button from '../components/common/Button';
 import Badge from '../components/common/Badge';
 
@@ -31,20 +31,20 @@ const STEPS = [
 const OrderDetail = () => {
   const { id } = useParams();
   const [currentStep, setCurrentStep] = useState(4);
-  const [riderPos, setRiderPos] = useState([28.6139, 77.2090]);
+  const [riderPos, setRiderPos] = useState({ lat: 28.6139, lng: 77.2090 });
   const [eta, setEta] = useState(12);
 
   // Positions
-  const restaurantPos = [28.6239, 77.2290];
-  const userPos = [28.6039, 77.1890];
+  const restaurantPos = { lat: 28.6239, lng: 77.2290 };
+  const userPos = { lat: 28.6039, lng: 77.1890 };
 
   // Simulate rider movement
   useEffect(() => {
     const interval = setInterval(() => {
-      setRiderPos(prev => [
-        prev[0] - 0.0001,
-        prev[1] - 0.0001
-      ]);
+      setRiderPos(prev => ({
+        lat: prev.lat - 0.0001,
+        lng: prev.lng - 0.0001
+      }));
       setEta(prev => Math.max(1, prev - 1));
     }, 5000);
     return () => clearInterval(interval);
@@ -159,7 +159,7 @@ const OrderDetail = () => {
           {/* Map */}
           <div className="lg:col-span-8">
             <div className="h-[300px] md:h-[500px] lg:h-full lg:min-h-[500px] rounded-2xl md:rounded-[3rem] overflow-hidden shadow-sm border-4 border-white bg-gray-100 relative">
-              <LiveMap 
+              <GoogleLiveMap 
                 riderPos={riderPos}
                 restaurantPos={restaurantPos}
                 userPos={userPos}
