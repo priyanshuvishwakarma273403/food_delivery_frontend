@@ -162,7 +162,7 @@ const Header = () => {
               onClick={() => toggleDrawer(true)}
               className="relative p-2.5 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
             >
-              <ShoppingCart size={20} className="text-text-primary dark:text-white" />
+              <ShoppingCart size={20} className="text-gray-800 dark:text-white hover:text-primary transition-colors" />
               {cartItemCount > 0 && (
                 <span className="absolute top-1 right-1 bg-primary text-white text-[10px] font-bold h-5 w-5 rounded-full flex items-center justify-center border-2 border-white dark:border-card-main">
                   {cartItemCount}

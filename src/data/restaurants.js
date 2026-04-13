@@ -403,7 +403,7 @@ export const ALL_RESTAURANTS = [
     ]
   },
   {
-    id: 14, name: 'Korean Kitchen', image: img('1498654896616-c77836568761'),
+    id: 14, name: 'Korean Kitchen', image: img('1526318896980-cf78c088247c'),
     cuisine: 'Korean, BBQ, Asian', rating: 4.7, deliveryTime: 40, minOrder: 400, isOpen: true,
     offer: '15% OFF', address: 'Hauz Khas, Delhi', totalRatings: 1200, costForTwo: 900,
     isVeg: false, tags: ['Korean', 'BBQ'],
