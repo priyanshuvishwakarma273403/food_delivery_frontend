@@ -16,13 +16,5 @@ export const USER_ROLES = {
   DELIVERY_PARTNER: 'DELIVERY_PARTNER',
 };
 
-export const CUISINES = [
-  { name: 'Pizza', icon: '🍕' },
-  { name: 'Biryani', icon: '🍲' },
-  { name: 'Burger', icon: '🍔' },
-  { name: 'Chicken', icon: '🍗' },
-  { name: 'Chinese', icon: '🍜' },
-  { name: 'Desserts', icon: '🍰' },
-  { name: 'South Indian', icon: '🍱' },
-  { name: 'North Indian', icon: '🍛' },
-];
+// Re-export from centralized data
+export { CUISINE_CATEGORIES as CUISINES } from '../data/restaurants';

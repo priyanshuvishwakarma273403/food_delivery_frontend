@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 @import "tailwindcss";
 
@@ -45,14 +45,26 @@
     --border-main: #2D2D2D;
   }
 
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
   body {
     background-color: var(--bg-main);
     color: var(--text-main);
     @apply font-sans antialiased transition-colors duration-300;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   h1, h2, h3, h4, h5, h6 {
     @apply font-bold tracking-tight transition-colors duration-300;
+  }
+
+  /* Ensure proper viewport handling on mobile */
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
   }
 }
 
@@ -79,12 +91,26 @@
   .premium-shadow:hover {
     @apply shadow-premium-hover -translate-y-1;
   }
+
+  /* Scrollbar Hide utility for horizontal scroll */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Safe area for mobile bottom nav */
+  .safe-pb {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -93,6 +119,14 @@
 
 ::-webkit-scrollbar-thumb {
   @apply bg-gray-300/50 rounded-full hover:bg-gray-400 transition-colors;
+}
+
+/* Mobile specific: smaller scrollbar */
+@media (max-width: 768px) {
+  ::-webkit-scrollbar {
+    width: 3px;
+    height: 3px;
+  }
 }
 
 /* Leaflet Map Overrides */
@@ -106,4 +140,35 @@
 
 .dark .leaflet-container {
   filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+}
+
+/* Smooth page transitions */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+/* Mobile-first responsive image loading */
+img {
+  content-visibility: auto;
+}
+
+/* Fix for iOS fixed positioning */
+@supports (-webkit-touch-callout: none) {
+  .fixed {
+    position: -webkit-sticky;
+    position: sticky;
+  }
+}
+
+/* Snap scrolling for horizontal lists */
+.snap-x {
+  scroll-snap-type: x mandatory;
+}
+.snap-start {
+  scroll-snap-align: start;
 }
