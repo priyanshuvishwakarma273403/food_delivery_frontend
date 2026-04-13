@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import RestaurantCard from '../components/restaurant/RestaurantCard';
 import { CUISINE_CATEGORIES, getTopRatedRestaurants, getTotalFoodItems, getTotalRestaurants } from '../data/restaurants';
 import Button from '../components/common/Button';
+import StoryViewer from '../components/common/StoryViewer';
 
 const Home = () => {
   const [searchValue, setSearchValue] = useState('');
@@ -98,8 +99,18 @@ const Home = () => {
         </div>
       </section>
 
+      {/* Stories Component */}
+      <section className="bg-white py-4 shadow-sm relative z-20">
+        <div className="container mx-auto px-4">
+          <p className="text-sm font-black text-text-primary mb-2 flex items-center gap-2">
+            <Flame className="text-secondary" size={16} /> Latest Food Bites
+          </p>
+          <StoryViewer />
+        </div>
+      </section>
+
       {/* Stats Bar */}
-      <section className="bg-primary -mt-1">
+      <section className="bg-primary">
         <div className="container mx-auto px-4 py-4 md:py-5 flex flex-wrap justify-center gap-4 md:gap-12">
           {[
             { value: `${totalRestaurants}+`, label: 'Restaurants', icon: <Flame size={16} /> },
