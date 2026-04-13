@@ -1,27 +1,20 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Check, 
-  MapPin, 
-  CreditCard, 
-  ShoppingCart, 
-  ChevronRight, 
-  Plus,
-  Home,
-  Briefcase,
-  Smartphone,
-  CheckCircle2,
-  ArrowLeft,
-  Truck,
-  Leaf,
-  TrendingUp
+  Check, MapPin, CreditCard, Clock, 
+  ChevronRight, Plus, Home, Briefcase,
+  Smartphone, CheckCircle2, ArrowLeft, Truck,
+  Leaf, TrendingUp, Coins, Crown
 } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useCartStore } from '../store/cartStore';
 import { useLocationStore } from '../store/locationStore';
+import { useAuthStore } from '../store/authStore';
+import { useWalletStore } from '../store/walletStore';
 import Button from '../components/common/Button';
 import Input from '../components/common/Input';
 import { toast } from 'react-hot-toast';
+import ScratchCard from '../components/gamification/ScratchCard';
 
 const steps = [
   { id: 1, name: 'Address', icon: MapPin },
@@ -34,12 +27,31 @@ const Checkout = () => {
   const [selectedAddress, setSelectedAddress] = useState(1);
   const [paymentMethod, setPaymentMethod] = useState('upi');
   const [isPlacing, setIsPlacing] = useState(false);
+  const [scheduledTime, setScheduledTime] = useState('asap');
+  const [useCoins, setUseCoins] = useState(false);
+  
+  // Modals state
+  const [wonCard, setWonCard] = useState(null);
+
   const { items, getTotalAmount, clearCart } = useCartStore();
+  const { user } = useAuthStore();
+  const { coins, deductCoins, addScratchCard } = useWalletStore();
   const { address: currentLoc } = useLocationStore();
   const navigate = useNavigate();
 
+  const isPremium = user?.isPremium;
   const subtotal = getTotalAmount();
-  const total = subtotal + 40 + Math.round(subtotal * 0.05);
+  
+  // Calculate delivery fee
+  const baseDelivery = 40;
+  const deliveryFee = isPremium ? 0 : baseDelivery;
+  
+  const taxes = Math.round(subtotal * 0.05);
+  
+  // Calculate gamification discounts
+  const coinDiscount = useCoins ? Math.min(coins, subtotal * 0.5) : 0; // Max 50% off via coins
+  
+  const total = subtotal + deliveryFee + taxes - coinDiscount;
 
   const nextStep = () => setCurrentStep(prev => Math.min(prev + 1, 3));
   const prevStep = () => setCurrentStep(prev => Math.max(prev - 1, 1));
@@ -48,14 +60,30 @@ const Checkout = () => {
     setIsPlacing(true);
     try {
       await new Promise(resolve => setTimeout(resolve, 2000));
-      toast.success('🎉 Order placed successfully!');
+      
+      // Deduct coins if used
+      if (useCoins && coinDiscount > 0) {
+        deductCoins(coinDiscount);
+      }
+      
       clearCart();
-      navigate('/orders/ORD' + Math.floor(Math.random() * 10000), { replace: true });
+      
+      // Generate a Scratch Card!
+      const newCard = addScratchCard();
+      setWonCard(newCard); // Show modal
+      
     } catch (error) {
       toast.error('Failed to place order.');
-    } finally {
       setIsPlacing(false);
     }
+  };
+
+  const handleScratchComplete = () => {
+    setTimeout(() => {
+      setWonCard(null);
+      navigate('/orders/ORD' + Math.floor(Math.random() * 10000), { replace: true });
+      toast.success('🎉 Order placed & Reward added!');
+    }, 2000);
   };
 
   const StepIndicator = () => (
@@ -113,11 +141,57 @@ const Checkout = () => {
           <span className="font-bold text-xs md:text-sm">Add New Address</span>
         </button>
       </div>
+
+      <div className="bg-orange-50 border border-orange-100 rounded-2xl p-4 md:p-6 mt-6">
+         <h4 className="font-bold text-text-primary mb-3 flex items-center gap-2"><Clock size={18} className="text-orange-500" /> Schedule Delivery</h4>
+         <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+            {[
+               { id: 'asap', label: 'Fastest Delivery' },
+               { id: '14:00', label: 'Today 2:00 PM' },
+               { id: '19:00', label: 'Today 7:00 PM' },
+               { id: 'tomorrow', label: 'Tomorrow 1:00 PM' }
+            ].map(time => (
+               <button 
+                  key={time.id}
+                  onClick={() => setScheduledTime(time.id)}
+                  className={`shrink-0 px-4 py-2 rounded-xl border text-sm font-bold transition-all ${
+                     scheduledTime === time.id ? 'bg-orange-500 text-white border-orange-500' : 'bg-white text-text-secondary border-orange-200 hover:border-orange-500'
+                  }`}
+               >
+                  {time.label}
+               </button>
+            ))}
+         </div>
+      </div>
     </div>
   );
 
   const PaymentStep = () => (
     <div className="space-y-3 md:space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      
+      {coins > 0 && (
+         <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-2xl flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+               <div className="h-10 w-10 bg-white rounded-full flex items-center justify-center text-yellow-500 shadow-sm">
+                  <Coins size={22} />
+               </div>
+               <div>
+                  <h4 className="font-bold text-text-primary text-sm shadow-text uppercase">Tomato Wallet</h4>
+                  <p className="text-xs text-text-secondary font-medium">Balance: {coins} Coins</p>
+               </div>
+            </div>
+            <label className="flex items-center gap-2 cursor-pointer">
+               <input 
+                  type="checkbox" 
+                  checked={useCoins} 
+                  onChange={(e) => setUseCoins(e.target.checked)} 
+                  className="w-5 h-5 accent-yellow-500 rounded"
+               />
+               <span className="text-sm font-bold text-text-primary uppercase">Use Coins</span>
+            </label>
+         </div>
+      )}
+
       <div className="space-y-2 md:space-y-4">
         {[
           { id: 'upi', name: 'UPI (GPay/PhonePe)', icon: Smartphone, desc: 'Scan and Pay Instantly' },
@@ -179,20 +253,39 @@ const Checkout = () => {
             <span className="text-xs md:text-sm font-bold">₹{subtotal}</span>
           </div>
           <div className="flex justify-between items-center mb-1">
-            <span className="text-xs md:text-sm text-text-secondary">Fees & Taxes</span>
-            <span className="text-xs md:text-sm font-bold">₹{total - subtotal}</span>
+            <span className="text-xs md:text-sm text-text-secondary">Delivery Fee</span>
+            {isPremium ? (
+               <span className="text-xs md:text-sm font-bold flex items-center gap-1 text-green-500">
+                  <Crown size={14} /> FREE <span className="line-through text-gray-400 ml-1 text-xs">₹{baseDelivery}</span>
+               </span>
+            ) : (
+               <span className="text-xs md:text-sm font-bold">₹{baseDelivery}</span>
+            )}
           </div>
-          <div className="flex justify-between items-center pt-3">
-            <span className="text-base md:text-xl font-black">Total</span>
+          <div className="flex justify-between items-center mb-1">
+            <span className="text-xs md:text-sm text-text-secondary">Taxes</span>
+            <span className="text-xs md:text-sm font-bold">₹{taxes}</span>
+          </div>
+          {coinDiscount > 0 && (
+            <div className="flex justify-between items-center mb-1 text-yellow-600">
+              <span className="text-xs md:text-sm font-bold flex items-center gap-1"><Coins size={14} /> Coins Applied</span>
+              <span className="text-xs md:text-sm font-black">-₹{coinDiscount}</span>
+            </div>
+          )}
+          <div className="flex justify-between items-center pt-3 mt-2 border-t border-gray-200 border-dashed">
+            <span className="text-base md:text-xl font-black">Total to Pay</span>
             <span className="text-lg md:text-2xl font-black text-primary">₹{total}</span>
           </div>
         </div>
       </div>
       
       <div className="grid grid-cols-2 gap-3 md:gap-4">
-        <div className="bg-white p-3 md:p-5 rounded-xl md:rounded-2xl border border-gray-100 shadow-sm">
-          <p className="text-[9px] md:text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 md:mb-2">Deliver to</p>
-          <p className="text-xs md:text-sm font-bold truncate">H.No 123, Sector 62...</p>
+        <div className="bg-white p-3 md:p-5 rounded-xl md:rounded-2xl border border-gray-100 shadow-sm relative overflow-hidden">
+          <p className="text-[9px] md:text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 md:mb-2">Schedule</p>
+          <p className="text-xs md:text-sm font-bold truncate">
+             {scheduledTime === 'asap' ? 'ASAP (Fastest)' : scheduledTime}
+          </p>
+          {scheduledTime !== 'asap' && <Clock className="absolute top-2 right-2 text-orange-200" size={40} />}
         </div>
         <div className="bg-white p-3 md:p-5 rounded-xl md:rounded-2xl border border-gray-100 shadow-sm">
           <p className="text-[9px] md:text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 md:mb-2">Payment</p>
@@ -201,6 +294,28 @@ const Checkout = () => {
       </div>
     </div>
   );
+
+  if (wonCard) {
+     return (
+        <div className="min-h-screen bg-transparent fixed inset-0 z-[100] flex items-center justify-center p-4">
+           {/* Dark backdrop */}
+           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+           
+           <motion.div 
+             initial={{ scale: 0.8, opacity: 0 }}
+             animate={{ scale: 1, opacity: 1 }}
+             className="relative z-10 bg-white rounded-[3rem] p-8 md:p-12 text-center max-w-sm w-full flex flex-col items-center shadow-2xl"
+           >
+              <h2 className="text-3xl font-black text-text-primary mb-2">Order Confirmed!</h2>
+              <p className="text-text-secondary font-medium mb-8">You won a scratch card for this order.</p>
+              
+              <ScratchCard card={wonCard} onScratchComplete={handleScratchComplete} />
+              
+              <p className="text-xs text-gray-400 mt-8 uppercase tracking-widest font-bold">Scratch to reveal reward</p>
+           </motion.div>
+        </div>
+     );
+  }
 
   return (
     <div className="min-h-screen pb-20 md:pb-10">
@@ -230,21 +345,35 @@ const Checkout = () => {
               <p className="text-sm md:text-lg font-black">Saved 54g Plastic</p>
             </div>
           </div>
-          <div className="bg-orange-500 text-white p-4 md:p-6 rounded-xl md:rounded-2xl shadow-lg shadow-orange-100 flex items-center justify-between overflow-hidden">
-            <div className="flex items-center gap-3 md:gap-4">
-              <div className="h-10 w-10 md:h-12 md:w-12 bg-white/20 rounded-xl flex items-center justify-center shrink-0">
-                <TrendingUp size={22} />
-              </div>
-              <div>
-                <p className="text-[9px] md:text-[10px] font-black opacity-80 uppercase tracking-widest">Peak Time</p>
-                <p className="text-sm md:text-lg font-black">High Demand</p>
-              </div>
-            </div>
-            <div className="bg-white/10 px-3 py-1.5 rounded-lg text-[10px] md:text-xs font-black shrink-0">₹20 Added</div>
-          </div>
+          
+          {isPremium ? (
+             <div className="bg-gradient-to-r from-yellow-500 to-amber-500 text-white p-4 md:p-6 rounded-xl md:rounded-2xl shadow-lg shadow-yellow-100 flex items-center justify-between overflow-hidden">
+               <div className="flex items-center gap-3 md:gap-4">
+                 <div className="h-10 w-10 md:h-12 md:w-12 bg-white/20 rounded-xl flex items-center justify-center shrink-0">
+                   <Crown size={22} />
+                 </div>
+                 <div>
+                   <p className="text-[9px] md:text-[10px] font-black opacity-80 uppercase tracking-widest">Gold Member</p>
+                   <p className="text-sm md:text-lg font-black">Free Delivery Applied</p>
+                 </div>
+               </div>
+             </div>
+          ) : (
+             <div className="bg-orange-500 text-white p-4 md:p-6 rounded-xl md:rounded-2xl shadow-lg shadow-orange-100 flex items-center justify-between overflow-hidden">
+               <div className="flex items-center gap-3 md:gap-4">
+                 <div className="h-10 w-10 md:h-12 md:w-12 bg-white/20 rounded-xl flex items-center justify-center shrink-0">
+                   <TrendingUp size={22} />
+                 </div>
+                 <div>
+                   <p className="text-[9px] md:text-[10px] font-black opacity-80 uppercase tracking-widest">Peak Time</p>
+                   <p className="text-sm md:text-lg font-black">High Demand</p>
+                 </div>
+               </div>
+             </div>
+          )}
         </div>
         
-        <div className="bg-white rounded-xl md:rounded-[2.5rem] shadow-sm border border-gray-100 p-4 md:p-8 lg:p-12 relative overflow-hidden">
+        <div className="bg-white rounded-xl md:rounded-[2.5rem] shadow-sm border border-gray-100 p-4 md:p-8 lg:p-12 relative overflow-hidden mb-12">
           <div className="absolute -top-10 -right-10 h-40 w-40 bg-primary/5 rounded-full blur-[60px] hidden md:block" />
           
           <div className="relative z-10">

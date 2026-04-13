@@ -16,11 +16,14 @@ import {
   UtensilsCrossed,
   ClipboardList,
   UserCircle,
-  ShoppingBag
+  ShoppingBag,
+  Crown,
+  Coins
 } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { useCartStore } from '../../store/cartStore';
 import { useLocationStore } from '../../store/locationStore';
+import { useWalletStore } from '../../store/walletStore';
 import { useTheme } from '../../hooks/useTheme';
 import Button from '../common/Button';
 import { cn } from '../../utils/cn';
@@ -33,6 +36,7 @@ const Header = () => {
   const { user, logout, isAuthenticated } = useAuthStore();
   const { items, toggleDrawer } = useCartStore();
   const { city } = useLocationStore();
+  const { coins } = useWalletStore();
   const { isDark, toggleTheme } = useTheme();
   const [searchQuery, setSearchQuery] = useState('');
   const [isListening, setIsListening] = useState(false);
@@ -181,9 +185,27 @@ const Header = () => {
                 {isProfileOpen && (
                   <div className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-premium border border-gray-100 overflow-hidden py-1 animate-in fade-in zoom-in-95 duration-200">
                     <div className="px-4 py-3 border-b border-gray-50">
-                      <p className="text-sm font-bold text-text-primary">{user?.name}</p>
+                      <div className="flex items-center gap-2">
+                         <p className="text-sm font-bold text-text-primary">{user?.name}</p>
+                         {user?.isPremium && (
+                            <span className="bg-yellow-100 text-yellow-700 text-[10px] font-black px-1.5 py-0.5 rounded uppercase tracking-widest flex items-center gap-1">
+                               <Crown size={10} /> Gold
+                            </span>
+                         )}
+                      </div>
                       <p className="text-xs text-text-secondary truncate">{user?.email}</p>
                     </div>
+                    {isAuthenticated && (
+                       <div className="px-4 py-2.5 border-b border-gray-50 flex justify-between items-center bg-gray-50/50">
+                          <Link to="/gold" className="flex items-center gap-2 text-sm font-bold hover:text-yellow-600">
+                             <Crown size={16} className="text-yellow-500" /> 
+                             {user?.isPremium ? 'Manage Gold' : 'Join Gold'}
+                          </Link>
+                          <div className="flex items-center gap-1 text-sm font-black text-primary">
+                             <Coins size={16} /> {coins}
+                          </div>
+                       </div>
+                    )}
                     <Link to="/orders" className="flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:bg-gray-50 hover:text-primary transition-colors">
                       <ShoppingCart size={16} /> My Orders
                     </Link>

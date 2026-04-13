@@ -22,6 +22,7 @@ import FAQ from './pages/FAQ';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import Terms from './pages/Terms';
 import DeliveryPartnerCTA from './pages/DeliveryPartnerCTA';
+import TomatoGold from './pages/TomatoGold';
 import { useAuthStore } from './store/authStore';
 
 const queryClient = new QueryClient({
@@ -65,6 +66,7 @@ function App() {
             <Route path="/privacy" element={<PrivacyPolicy />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/delivery" element={<DeliveryPartnerCTA />} />
+            <Route path="/gold" element={<TomatoGold />} />
             
             {/* Protected Routes */}
             <Route path="/checkout" element={
