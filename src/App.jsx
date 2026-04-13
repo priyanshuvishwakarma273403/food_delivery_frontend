@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Layout from './components/layout/Layout';
@@ -37,9 +37,16 @@ const queryClient = new QueryClient({
 
 const ProtectedRoute = ({ children, roles = [] }) => {
   const { isAuthenticated, user } = useAuthStore();
+  const location = useLocation();
 
-  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace state={{ from: location }} />;
+  }
+  
   if (roles.length > 0 && !roles.includes(user?.role)) {
+    // If not authorized, redirect to their role's default dashboard
+    if (user?.role === 'ADMIN') return <Navigate to="/admin" replace />;
+    if (user?.role === 'DELIVERY_PARTNER') return <Navigate to="/delivery/dashboard" replace />;
     return <Navigate to="/" replace />;
   }
   return children;
