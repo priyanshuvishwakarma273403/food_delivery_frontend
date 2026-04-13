@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { 
   Search, 
   MapPin, 
@@ -15,7 +15,8 @@ import {
   Home,
   UtensilsCrossed,
   ClipboardList,
-  UserCircle
+  UserCircle,
+  ShoppingBag
 } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { useCartStore } from '../../store/cartStore';
@@ -36,6 +37,7 @@ const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isListening, setIsListening] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const cartItemCount = items.reduce((acc, item) => acc + item.quantity, 0);
 
@@ -70,10 +72,26 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close mobile menu on route change
+  // Close menus on route change
   useEffect(() => {
     setIsMobileMenuOpen(false);
-  }, [navigate]);
+    setIsProfileOpen(false);
+  }, [location.pathname]);
+
+  // Check if a nav item is active
+  const isActive = (path) => {
+    if (path === '/') return location.pathname === '/';
+    return location.pathname.startsWith(path);
+  };
+
+  // Bottom nav items
+  const bottomNavItems = [
+    { icon: Home, label: 'Home', to: '/' },
+    { icon: Search, label: 'Search', to: '/restaurants' },
+    { icon: ShoppingBag, label: 'Cart', to: '/cart', badge: cartItemCount },
+    { icon: ClipboardList, label: 'Orders', to: isAuthenticated ? '/orders' : '/login' },
+    { icon: UserCircle, label: 'Account', to: isAuthenticated ? '/profile' : '/login' },
+  ];
 
   return (
     <>
@@ -229,21 +247,42 @@ const Header = () => {
         />
       </header>
 
-      {/* Mobile Bottom Navigation */}
+      {/* Mobile Bottom Navigation - Fully Active with Highlights */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-lg border-t border-gray-100 z-50 safe-pb">
-        <div className="flex items-center justify-around py-2">
-          {[
-            { icon: Home, label: 'Home', to: '/' },
-            { icon: Search, label: 'Search', to: '/restaurants' },
-            { icon: UtensilsCrossed, label: 'Food', to: '/restaurants' },
-            { icon: ClipboardList, label: 'Orders', to: '/orders' },
-            { icon: UserCircle, label: 'Profile', to: isAuthenticated ? '/orders' : '/login' },
-          ].map((item, i) => (
-            <Link key={i} to={item.to} className="flex flex-col items-center gap-0.5 text-text-secondary hover:text-primary transition-colors p-1">
-              <item.icon size={20} />
-              <span className="text-[9px] font-bold">{item.label}</span>
-            </Link>
-          ))}
+        <div className="flex items-center justify-around py-1.5">
+          {bottomNavItems.map((item, i) => {
+            const active = isActive(item.to);
+            return (
+              <Link 
+                key={i} 
+                to={item.to} 
+                className={cn(
+                  "flex flex-col items-center gap-0.5 p-1.5 rounded-xl transition-all duration-300 relative min-w-[56px]",
+                  active 
+                    ? "text-primary" 
+                    : "text-text-secondary hover:text-primary"
+                )}
+              >
+                {/* Active indicator dot */}
+                {active && (
+                  <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 h-1 w-5 bg-primary rounded-full" />
+                )}
+                <div className="relative">
+                  <item.icon size={22} strokeWidth={active ? 2.5 : 1.8} />
+                  {/* Cart badge */}
+                  {item.badge > 0 && (
+                    <span className="absolute -top-1.5 -right-2 bg-primary text-white text-[8px] font-black h-4 min-w-[16px] px-0.5 rounded-full flex items-center justify-center border-2 border-white">
+                      {item.badge}
+                    </span>
+                  )}
+                </div>
+                <span className={cn(
+                  "text-[10px] leading-tight",
+                  active ? "font-black" : "font-semibold"
+                )}>{item.label}</span>
+              </Link>
+            );
+          })}
         </div>
       </nav>
     </>
