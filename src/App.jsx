@@ -16,6 +16,12 @@ import AdminRestaurants from './pages/AdminRestaurants';
 import AdminOrders from './pages/AdminOrders';
 import DeliveryDashboard from './pages/DeliveryDashboard';
 import NotFound from './pages/NotFound';
+import About from './pages/About';
+import Contact from './pages/Contact';
+import FAQ from './pages/FAQ';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import Terms from './pages/Terms';
+import DeliveryPartnerCTA from './pages/DeliveryPartnerCTA';
 import { useAuthStore } from './store/authStore';
 
 const queryClient = new QueryClient({
@@ -53,6 +59,12 @@ function App() {
             <Route path="/restaurants" element={<Restaurants />} />
             <Route path="/restaurants/:id" element={<RestaurantDetail />} />
             <Route path="/cart" element={<Cart />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/faq" element={<FAQ />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/delivery" element={<DeliveryPartnerCTA />} />
             
             {/* Protected Routes */}
             <Route path="/checkout" element={
@@ -89,7 +101,7 @@ function App() {
             } />
 
             {/* Delivery Routes */}
-            <Route path="/delivery" element={
+            <Route path="/delivery/dashboard" element={
               <ProtectedRoute roles={['DELIVERY_PARTNER']}>
                 <DeliveryDashboard />
               </ProtectedRoute>
