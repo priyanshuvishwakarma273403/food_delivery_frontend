@@ -26,7 +26,7 @@ const Header = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   
   const { user, logout, isAuthenticated } = useAuthStore();
-  const { items } = useCartStore();
+  const { items, toggleDrawer } = useCartStore();
   const { city } = useLocationStore();
   const { isDark, toggleTheme } = useTheme();
   const [searchQuery, setSearchQuery] = useState('');
@@ -68,8 +68,8 @@ const Header = () => {
 
   return (
     <header className={cn(
-      'sticky top-0 z-50 w-full transition-all duration-300',
-      isScrolled ? 'bg-white/90 dark:bg-card-main/90 backdrop-blur-lg border-b border-gray-100 dark:border-gray-800 py-2 shadow-sm' : 'bg-white dark:bg-card-main py-4'
+      'sticky top-0 z-50 w-full transition-all duration-300 border-b border-transparent',
+      isScrolled ? 'bg-white/90 dark:bg-card-main/90 backdrop-blur-lg border-gray-100 dark:border-gray-800 py-2 shadow-sm' : 'bg-white dark:bg-card-main py-4'
     )}>
       <div className="container mx-auto px-4 flex items-center justify-between">
         {/* Logo & Location */}
@@ -81,9 +81,9 @@ const Header = () => {
             <span className="text-2xl font-black text-primary hidden sm:block">Tomato</span>
           </Link>
 
-          <div className="hidden lg:flex items-center gap-2 bg-gray-50 px-4 py-2.5 rounded-xl border border-gray-100 group hover:border-primary/30 transition-colors cursor-pointer">
+          <div className="hidden lg:flex items-center gap-2 bg-gray-50 dark:bg-gray-800 px-4 py-2.5 rounded-xl border border-gray-100 dark:border-gray-700 group hover:border-primary/30 transition-colors cursor-pointer">
             <MapPin className="text-primary" size={18} />
-            <span className="text-sm font-medium text-text-secondary">{city || 'Select Location'}</span>
+            <span className="text-sm font-medium text-text-secondary dark:text-gray-300">{city || 'Select Location'}</span>
             <ChevronDown size={14} className="text-gray-400 group-hover:text-primary transition-colors" />
           </div>
         </div>
@@ -119,14 +119,17 @@ const Header = () => {
               {isDark ? <Sun size={20} className="text-yellow-500" /> : <Moon size={20} />}
             </button>
 
-            <Link to="/cart" className="relative p-2.5 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+            <button 
+              onClick={() => toggleDrawer(true)}
+              className="relative p-2.5 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            >
               <ShoppingCart size={20} className="text-text-primary dark:text-white" />
               {cartItemCount > 0 && (
                 <span className="absolute top-1 right-1 bg-primary text-white text-[10px] font-bold h-5 w-5 rounded-full flex items-center justify-center border-2 border-white dark:border-card-main">
                   {cartItemCount}
                 </span>
               )}
-            </Link>
+            </button>
 
             {isAuthenticated ? (
               <div className="relative">

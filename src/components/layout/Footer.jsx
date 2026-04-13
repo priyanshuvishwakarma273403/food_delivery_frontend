@@ -50,15 +50,15 @@ const Footer = () => {
             <ul className="space-y-4">
               <li className="flex items-start gap-3 text-sm text-text-secondary">
                 <MapPin size={18} className="text-primary shrink-0" />
-                <span>123 Food Street, Culinary Quarter,<br />New Delhi, India</span>
+                <span>123 Food Street, Nsp,<br />New Delhi, India</span>
               </li>
               <li className="flex items-center gap-3 text-sm text-text-secondary">
                 <Phone size={18} className="text-primary shrink-0" />
-                <span>+91 1800-FOOD-LIFE</span>
+                <span>+91 9369420619 FOOD-LIFE</span>
               </li>
               <li className="flex items-center gap-3 text-sm text-text-secondary">
                 <Mail size={18} className="text-primary shrink-0" />
-                <span>support@tomato.food</span>
+                <span>pv254424@tomato.food</span>
               </li>
             </ul>
           </div>

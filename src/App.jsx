@@ -38,6 +38,8 @@ const ProtectedRoute = ({ children, roles = [] }) => {
 };
 
 import AiAssistant from './components/common/AiAssistant';
+import SocialProof from './components/common/SocialProof';
+import CartDrawer from './components/cart/CartDrawer';
 
 function App() {
   return (
@@ -97,6 +99,8 @@ function App() {
           </Route>
         </Routes>
         <AiAssistant />
+        <SocialProof />
+        <CartDrawer />
         <Toaster position="bottom-right" />
       </BrowserRouter>
     </QueryClientProvider>

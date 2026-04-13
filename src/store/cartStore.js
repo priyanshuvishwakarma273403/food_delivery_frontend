@@ -6,8 +6,12 @@ export const useCartStore = create(
     (set, get) => ({
       items: [],
       restaurantId: null,
+      isDrawerOpen: false,
+
+      toggleDrawer: (open) => set({ isDrawerOpen: open }),
 
       addItem: (item, restaurantId) => set((state) => {
+        state.toggleDrawer(true);
         // If adding from a different restaurant, clear cart first (or handle warning)
         if (state.restaurantId && state.restaurantId !== restaurantId) {
           // You might want to handle this with a modal in UI

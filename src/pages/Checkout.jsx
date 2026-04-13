@@ -49,6 +49,11 @@ const Checkout = () => {
     try {
       await new Promise(resolve => setTimeout(resolve, 2000));
       toast.success('Order placed successfully!');
+      confetti({
+        particleCount: 150,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
       clearCart();
       navigate('/orders/ORD' + Math.floor(Math.random() * 10000), { replace: true });
     } catch (error) {

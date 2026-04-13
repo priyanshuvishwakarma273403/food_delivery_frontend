@@ -148,10 +148,9 @@ const RestaurantDetail = () => {
       </div>
 
       <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-          {/* Menu Sections */}
-          <div className="lg:col-span-8 space-y-12">
-            <div className="flex items-center justify-between border-b border-gray-100 pb-6">
+          {/* Menu Sections (Full Width for Premium Feel) */}
+          <div className="lg:col-span-12 space-y-12">
+            <div className="flex items-center justify-between border-b border-gray-100 dark:border-gray-800 pb-6">
               <div className="flex items-center gap-4">
                 <h2 className="text-2xl font-black text-text-primary">Menu</h2>
                 <div className="relative">
@@ -200,62 +199,6 @@ const RestaurantDetail = () => {
               </div>
             ))}
           </div>
-
-          {/* Cart Sidebar */}
-          <div className="lg:col-span-4">
-            <div className="sticky top-28 bg-white rounded-[2rem] shadow-premium border border-gray-100 p-8">
-               <h3 className="text-2xl font-black text-text-primary mb-6 flex items-center gap-3">
-                 Cart
-                 <ShoppingCart size={24} className="text-primary" />
-               </h3>
-               
-               {items.length > 0 ? (
-                 <div className="space-y-6">
-                   <div className="max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
-                     {items.map(item => (
-                       <div key={item.id} className="flex items-center justify-between gap-4 mb-4">
-                         <div className="flex-1">
-                           <p className="text-sm font-bold text-text-primary">{item.name}</p>
-                           <p className="text-xs text-text-secondary">₹{item.price}</p>
-                         </div>
-                         <div className="bg-white text-primary border border-primary/20 rounded-lg flex items-center overflow-hidden scale-90">
-                           <button onClick={() => updateQuantity(item.id, item.quantity - 1)} className="px-2 py-1"><Minus size={14} strokeWidth={3} /></button>
-                           <span className="px-2 font-black text-xs">{item.quantity}</span>
-                           <button onClick={() => updateQuantity(item.id, item.quantity + 1)} className="px-2 py-1"><Plus size={14} strokeWidth={3} /></button>
-                         </div>
-                         <p className="text-sm font-bold text-text-primary w-16 text-right">₹{item.price * item.quantity}</p>
-                       </div>
-                     ))}
-                   </div>
-                   
-                   <div className="pt-6 border-t border-gray-100 space-y-4">
-                     <div className="flex justify-between items-center">
-                       <span className="text-sm font-medium text-text-secondary">Subtotal</span>
-                       <span className="font-bold">₹{getTotalAmount()}</span>
-                     </div>
-                     <div className="flex justify-between items-center text-primary">
-                       <span className="text-sm font-medium">Extra charges may apply</span>
-                       <Info size={14} />
-                     </div>
-                     <Link to="/checkout">
-                       <Button className="w-full py-4 rounded-2xl text-base shadow-lg shadow-primary/20">
-                         Checkout <ArrowLeft size={18} className="rotate-180 ml-2" />
-                       </Button>
-                     </Link>
-                   </div>
-                 </div>
-               ) : (
-                 <div className="py-12 text-center">
-                   <div className="h-32 w-32 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                      <ShoppingCart size={48} className="text-gray-200" />
-                   </div>
-                   <p className="text-text-secondary font-medium">Your cart is empty.</p>
-                   <p className="text-xs text-gray-400 mt-1 px-4">Add some items from the menu to start your order!</p>
-                 </div>
-               )}
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );
