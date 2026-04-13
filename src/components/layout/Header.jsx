@@ -162,7 +162,11 @@ const Header = () => {
               onClick={() => toggleDrawer(true)}
               className="relative p-2.5 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
             >
-              <ShoppingCart size={20} className="text-gray-800 dark:text-white hover:text-primary transition-colors" />
+              <ShoppingBag
+                size={22} 
+                className="text-[#1A1A1A] dark:text-white hover:text-primary transition-all cursor-pointer" 
+                strokeWidth={2.5}
+              />
               {cartItemCount > 0 && (
                 <span className="absolute top-1 right-1 bg-primary text-white text-[10px] font-bold h-5 w-5 rounded-full flex items-center justify-center border-2 border-white dark:border-card-main">
                   {cartItemCount}
@@ -244,14 +248,15 @@ const Header = () => {
           <div className="flex md:hidden items-center gap-1">
             <button 
               onClick={() => toggleDrawer(true)}
-              className="relative p-2 rounded-lg"
             >
-              <ShoppingCart size={20} className="text-text-primary" />
-              {cartItemCount > 0 && (
-                <span className="absolute top-0.5 right-0.5 bg-primary text-white text-[9px] font-bold h-4 w-4 rounded-full flex items-center justify-center border border-white">
-                  {cartItemCount}
-                </span>
-              )}
+              <div className="relative p-2 rounded-xl group hover:bg-white transition-all transform active:scale-95">
+                <ShoppingCart size={24} className="text-black transition-colors" strokeWidth={2.5} />
+                {cartItemCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-primary text-white text-[10px] font-black h-5 w-5 rounded-full flex items-center justify-center border-2 border-white shadow-lg">
+                    {cartItemCount}
+                  </span>
+                )}
+              </div>
             </button>
             <button 
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
