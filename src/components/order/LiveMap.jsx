@@ -39,7 +39,8 @@ const LiveMap = ({ riderPos, restaurantPos, userPos }) => {
         center={riderPos} 
         zoom={14} 
         scrollWheelZoom={false}
-        className="h-full w-full z-0"
+        className="z-0"
+        style={{ height: "100%", width: "100%" }}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

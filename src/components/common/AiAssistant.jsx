@@ -82,7 +82,7 @@ const AiAssistant = () => {
   };
 
   return (
-    <div className="fixed bottom-20 md:bottom-8 right-4 md:right-8 z-[100]">
+    <div className="fixed bottom-[90px] md:bottom-8 right-4 md:right-8 z-[60]">
       <AnimatePresence>
         {isOpen && (
           <motion.div

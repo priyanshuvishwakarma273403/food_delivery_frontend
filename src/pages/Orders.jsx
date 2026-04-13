@@ -168,7 +168,7 @@ const OrderCard = ({ order, idx, isActive }) => {
           {/* Active Order Progress */}
           {isActive && order.status !== 'DELIVERED' && (
             <div className="mt-3 pt-3 border-t border-gray-50">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 mb-3">
                 <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
                   <div 
                     className="h-full bg-primary rounded-full transition-all duration-1000"
@@ -183,6 +183,9 @@ const OrderCard = ({ order, idx, isActive }) => {
                   {order.status === 'OUT_FOR_DELIVERY' ? 'Arriving soon' : config.label}
                 </span>
               </div>
+              <Button className="w-full py-2.5 rounded-xl text-sm font-black bg-primary/10 text-primary hover:bg-primary hover:text-white transition-colors border-none">
+                 <MapPin size={16} className="mr-2 inline" /> Track on Live Map
+              </Button>
             </div>
           )}
         </div>

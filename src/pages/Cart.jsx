@@ -230,7 +230,7 @@ const Cart = () => {
       </div>
 
       {/* Mobile Fixed Bottom Checkout Bar */}
-      <div className="md:hidden fixed bottom-[56px] left-0 right-0 z-40 bg-white border-t border-gray-100 px-4 py-3 shadow-lg">
+      <div className="md:hidden fixed bottom-[64px] left-0 right-0 z-40 bg-white border-t border-gray-100 px-4 py-3 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
         <div className="flex items-center justify-between gap-4">
           <div>
             <p className="text-[10px] text-text-secondary font-medium">Total Amount</p>

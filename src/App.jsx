@@ -23,6 +23,7 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import Terms from './pages/Terms';
 import DeliveryPartnerCTA from './pages/DeliveryPartnerCTA';
 import TomatoGold from './pages/TomatoGold';
+import Profile from './pages/Profile';
 import { useAuthStore } from './store/authStore';
 
 const queryClient = new QueryClient({
@@ -82,6 +83,11 @@ function App() {
             <Route path="/orders/:id" element={
               <ProtectedRoute roles={['CUSTOMER']}>
                 <OrderDetail />
+              </ProtectedRoute>
+            } />
+            <Route path="/profile" element={
+              <ProtectedRoute roles={['CUSTOMER']}>
+                <Profile />
               </ProtectedRoute>
             } />
 
