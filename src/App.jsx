@@ -32,6 +32,8 @@ const Terms = lazy(() => import('./pages/Terms'));
 const DeliveryPartnerCTA = lazy(() => import('./pages/DeliveryPartnerCTA'));
 const TomatoGold = lazy(() => import('./pages/TomatoGold'));
 const Profile = lazy(() => import('./pages/Profile'));
+const Blogs = lazy(() => import('./pages/Blogs'));
+const AdminBlogs = lazy(() => import('./pages/AdminBlogs'));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -87,6 +89,7 @@ function App() {
               <Route path="/terms" element={<Terms />} />
               <Route path="/delivery" element={<DeliveryPartnerCTA />} />
               <Route path="/gold" element={<TomatoGold />} />
+              <Route path="/blogs" element={<Blogs />} />
               
               {/* Protected Routes */}
               <Route path="/checkout" element={
@@ -124,6 +127,11 @@ function App() {
               <Route path="/admin/orders" element={
                 <ProtectedRoute roles={['ADMIN']}>
                   <AdminOrders />
+                </ProtectedRoute>
+              } />
+              <Route path="/admin/blogs" element={
+                <ProtectedRoute roles={['ADMIN']}>
+                  <AdminBlogs />
                 </ProtectedRoute>
               } />
 

@@ -26,6 +26,8 @@ const QUICK_PROMPTS = [
   { text: "Budget meal under ₹200", icon: "💰" },
 ];
 
+import { getGroqResponse } from '../../services/aiService';
+
 const AiAssistant = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState('');
@@ -57,24 +59,19 @@ const AiAssistant = () => {
     setLoading(true);
 
     try {
-      const messages = [
-        { role: 'system', content: SYSTEM_PROMPT },
-        ...chat.map(msg => ({
-          role: msg.role === 'user' ? 'user' : 'assistant',
-          content: msg.text
-        })),
-        { role: 'user', content: userMessage }
-      ];
+      const messages = chat.map(msg => ({
+        role: msg.role === 'user' ? 'user' : 'assistant',
+        content: msg.text
+      }));
+      messages.push({ role: 'user', content: userMessage });
 
-      const { data } = await apiClient.post('/ai/chat', { messages });
-      
-      const aiReply = data.data || "I couldn't process that. Let me try again!";
+      const aiReply = await getGroqResponse(messages);
       setChat(prev => [...prev, { role: 'assistant', text: aiReply }]);
     } catch (error) {
       console.error('Chat error:', error);
       setChat(prev => [...prev, { 
         role: 'assistant', 
-        text: "Oops! I'm having a little trouble connecting right now. 😅 Try again in a moment, or browse our restaurants for some great food! 🍕" 
+        text: "Oops! I'm having a little trouble connecting right now. 😅 Try again in a moment!" 
       }]);
     } finally {
       setLoading(false);

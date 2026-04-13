@@ -14,7 +14,7 @@ import {
   Briefcase,
   Bike
 } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { useGoogleLogin } from '@react-oauth/google';
 import Input from '../components/common/Input';
@@ -33,9 +33,11 @@ const registerSchema = z.object({
 
 const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [authView, setAuthView] = useState('default'); // 'default' or 'otp'
+  const [authView, setAuthView] = useState('default'); 
   const { login } = useAuthStore();
   const navigate = useNavigate();
+  const location = useLocation();
+  const prefilledEmail = location.state?.email || '';
 
   const {
     register,
@@ -48,6 +50,7 @@ const Register = () => {
     resolver: zodResolver(registerSchema),
     defaultValues: {
       role: 'CUSTOMER',
+      email: prefilledEmail,
     }
   });
 

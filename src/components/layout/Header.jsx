@@ -91,7 +91,7 @@ const Header = () => {
   // Bottom nav items
   const bottomNavItems = [
     { icon: Home, label: 'Home', to: '/' },
-    { icon: Search, label: 'Search', to: '/restaurants' },
+    { icon: ClipboardList, label: 'Blogs', to: '/blogs' },
     { icon: ShoppingBag, label: 'Cart', to: '/cart', badge: cartItemCount },
     { icon: ClipboardList, label: 'Orders', to: isAuthenticated ? '/orders' : '/login' },
     { icon: UserCircle, label: 'Account', to: isAuthenticated ? '/profile' : '/login' },
@@ -212,6 +212,11 @@ const Header = () => {
                     {user?.role === 'ADMIN' && (
                       <Link to="/admin" className="flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:bg-gray-50 hover:text-primary transition-colors">
                         <User size={16} /> Admin Panel
+                      </Link>
+                    )}
+                    {user?.role === 'ADMIN' && (
+                      <Link to="/admin/blogs" className="flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:bg-gray-50 hover:text-primary transition-colors">
+                        <ClipboardList size={16} /> Manage Blogs
                       </Link>
                     )}
                     <button 

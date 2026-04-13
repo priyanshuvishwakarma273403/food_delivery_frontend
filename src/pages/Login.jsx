@@ -72,28 +72,37 @@ const Login = () => {
   });
 
   const onSubmitPassword = async (data) => {
-    if (!data.password) {
-      toast.error("Please enter a password or use OTP");
-      return;
-    }
     setIsLoading(true);
     try {
-      // Dummy login logic
+      // Simulate API call to check user existence and authenticate
       await new Promise(resolve => setTimeout(resolve, 1500));
       
+      // Strict rule simulation: check if email is "new"
+      const existingEmails = ['admin@tomato.com', 'user@tomato.com', 'john@tomato.com'];
+      
+      if (!existingEmails.includes(data.email.toLowerCase())) {
+        toast.error("Account not found. Redirecting to registration...");
+        navigate('/register', { state: { email: data.email } });
+        return;
+      }
+
+      if (data.password === 'wrong') {
+         toast.error('Invalid credentials. Please try again.');
+         return;
+      }
+
       const dummyUser = {
         id: '1',
-        name: 'John Doe',
+        name: data.email.split('@')[0],
         email: data.email,
-        role: 'CUSTOMER', 
+        role: data.email.includes('admin') ? 'ADMIN' : 'CUSTOMER', 
       };
-      const dummyToken = 'dummy-jwt-token';
       
-      login(dummyUser, dummyToken);
-      toast.success('Welcome back, ' + dummyUser.name + '!');
+      login(dummyUser, 'dummy-jwt-token');
+      toast.success(`Welcome back, ${dummyUser.name}!`);
       navigate(from, { replace: true });
     } catch (error) {
-      toast.error('Invalid credentials. Please try again.');
+      toast.error('Login failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -107,11 +116,17 @@ const Login = () => {
     }
     
     setIsLoading(true);
-    // Simulate API call to send OTP
+    // Smart logic for OTP too
     setTimeout(() => {
       setIsLoading(false);
+      const existingEmails = ['admin@tomato.com', 'user@tomato.com', 'john@tomato.com'];
+      if (!existingEmails.includes(emailValue.toLowerCase())) {
+        toast.error("Email not registered. Head over to Sign Up!");
+        navigate('/register', { state: { email: emailValue } });
+        return;
+      }
       setAuthView('otp');
-      toast.success(`OTP sent successfully to ${emailValue}`);
+      toast.success(`Secure OTP sent successfully to ${emailValue}`);
     }, 1000);
   };
 
