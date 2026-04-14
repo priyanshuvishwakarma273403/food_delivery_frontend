@@ -1,0 +1,35 @@
+.stock-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-top: 6px;
+  width: fit-content;
+}
+
+.med-stock {
+  background: rgba(255, 154, 0, 0.1);
+  color: #ff9a00;
+  border: 1px solid rgba(255, 154, 0, 0.2);
+}
+
+.low-stock {
+  background: rgba(226, 55, 68, 0.1);
+  color: #e23744;
+  border: 1px solid rgba(226, 55, 68, 0.2);
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: currentColor;
+}
+
+.stock-text {
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}

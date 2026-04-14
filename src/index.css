@@ -30,19 +30,27 @@
 
 @layer base {
   :root {
-    --bg-main: #F5F5F5;
+    --bg-main: #FFFFFF;
     --card-main: #FFFFFF;
-    --text-main: #1C1C1C;
+    --text-main: #02060C;
     --text-sub: #686B78;
-    --border-main: #F1F5F9;
+    --border-main: #E2E8F0;
+    --accent: #E23744;
   }
 
-  .dark {
-    --bg-main: #0F1111;
-    --card-main: #1C1C1C;
-    --text-main: #F5F5F5;
-    --text-sub: #9DA3AF;
-    --border-main: #2D2D2D;
+  body.dark-theme {
+    --bg-main: #0F0F10;
+    --card-main: #1C1C1E;
+    --text-main: #FFFFFF;
+    --text-sub: #A1A1AA;
+    --border-main: #2D2D30;
+    --accent: #FF5A00;
+  }
+
+  /* Force transitions on theme switch */
+  body {
+    transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   * {
@@ -52,13 +60,15 @@
   body {
     background-color: var(--bg-main);
     color: var(--text-main);
-    @apply font-sans antialiased transition-colors duration-300;
+    font-family: 'Inter', sans-serif;
+    @apply antialiased transition-colors duration-300;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-bold tracking-tight transition-colors duration-300;
+    font-family: 'Outfit', sans-serif;
+    @apply font-extrabold tracking-tighter transition-colors duration-300;
   }
 
   /* Ensure proper viewport handling on mobile */

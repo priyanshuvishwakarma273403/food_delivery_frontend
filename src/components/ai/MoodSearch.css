@@ -1,0 +1,90 @@
+.mood-search-container {
+  padding: 20px;
+  margin: 20px 0;
+  border: 1px solid rgba(255, 154, 0, 0.2);
+}
+
+.mood-form label {
+  display: block;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #1A1A1B;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.mood-input-wrapper {
+  display: flex;
+  gap: 10px;
+}
+
+.mood-input-wrapper input {
+  flex: 1;
+  padding: 14px 20px;
+  border-radius: 12px;
+  border: 2px solid #D1D5DB;
+  background: white;
+  color: black;
+  outline: none;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.mood-input-wrapper input:focus {
+  border-color: #ff5a00;
+  box-shadow: 0 0 0 4px rgba(255, 90, 0, 0.1);
+}
+
+.mood-input-wrapper button {
+  background: #333;
+  color: white;
+  border: none;
+  padding: 0 20px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ai-suggestion-bubble {
+  margin-top: 15px;
+  background: linear-gradient(135deg, #fff9f0 0%, #fff 100%);
+  padding: 15px;
+  border-radius: 12px;
+  border: 1px solid #ffe8cc;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.ai-icon {
+  font-size: 1.2rem;
+}
+
+.ai-suggestion-bubble p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #555;
+  line-height: 1.5;
+  padding-right: 20px;
+}
+
+.clear-ai {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: #ccc;
+  cursor: pointer;
+}
+
+.dark-theme .mood-form label { color: #ccc; }
+.dark-theme .ai-suggestion-bubble {
+  background: #2a2a2a;
+  border-color: #444;
+}
+.dark-theme .ai-suggestion-bubble p { color: #eee; }

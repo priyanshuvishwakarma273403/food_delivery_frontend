@@ -12,18 +12,19 @@ import {
   ChevronLeft
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useCartStore } from '../store/cartStore';
-import Button from '../components/common/Button';
-import Badge from '../components/common/Badge';
-import { cn } from '../utils/cn';
+import { useWalletStore } from '../store/walletStore';
+import CoinRedeemer from '../components/wallet/CoinRedeemer';
 
 const Cart = () => {
   const { items, updateQuantity, removeItem, clearCart, getTotalAmount } = useCartStore();
+  const { coins, isApplyingCoins } = useWalletStore();
 
   const subtotal = getTotalAmount();
   const deliveryFee = subtotal > 500 ? 0 : 40;
   const tax = Math.round(subtotal * 0.05); // 5% GST
-  const total = subtotal + deliveryFee + tax;
+  const intermediateTotal = subtotal + deliveryFee + tax;
+  const discountAmount = isApplyingCoins ? Math.min(coins, intermediateTotal) : 0;
+  const total = intermediateTotal - discountAmount;
 
   if (items.length === 0) {
     return (
@@ -159,6 +160,7 @@ const Cart = () => {
           {/* Order Summary */}
           <div className="lg:w-80 xl:w-96">
             <div className="sticky top-28 space-y-4 md:space-y-6">
+              <CoinRedeemer cartTotal={intermediateTotal} />
               <div className="bg-white rounded-xl md:rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden">
                 <div className="p-4 md:p-6">
                   <h3 className="text-sm md:text-lg font-bold text-text-primary mb-4 md:mb-6">Order Summary</h3>
@@ -178,6 +180,13 @@ const Cart = () => {
                       <span className="text-text-secondary font-medium">Taxes (5%)</span>
                       <span className="font-bold">₹{tax}</span>
                     </div>
+                    
+                    {isApplyingCoins && (
+                      <div className="flex justify-between items-center text-xs md:text-sm text-green-600">
+                        <span className="font-bold">Coins Discount</span>
+                        <span className="font-bold">-₹{discountAmount}</span>
+                      </div>
+                    )}
                     
                     <div className="pt-3 border-t border-gray-100 flex justify-between items-center">
                       <span className="text-sm md:text-lg font-black text-text-primary">Total</span>

@@ -24,7 +24,8 @@ import { useAuthStore } from '../../store/authStore';
 import { useCartStore } from '../../store/cartStore';
 import { useLocationStore } from '../../store/locationStore';
 import { useWalletStore } from '../../store/walletStore';
-import { useTheme } from '../../hooks/useTheme';
+import { useTheme } from '../../context/ThemeContext';
+import WalletBadge from '../wallet/WalletBadge';
 import Button from '../common/Button';
 import { cn } from '../../utils/cn';
 
@@ -36,8 +37,8 @@ const Header = () => {
   const { user, logout, isAuthenticated } = useAuthStore();
   const { items, toggleDrawer } = useCartStore();
   const { city } = useLocationStore();
-  const { coins } = useWalletStore();
-  const { isDark, toggleTheme } = useTheme();
+  const { theme, toggleTheme } = useTheme();
+  const isDark = theme === 'dark';
   const [searchQuery, setSearchQuery] = useState('');
   const [isListening, setIsListening] = useState(false);
   const navigate = useNavigate();
@@ -127,7 +128,7 @@ const Header = () => {
               <input 
                 type="text" 
                 placeholder="Search for restaurants, cuisines..." 
-                className="bg-gray-50 dark:bg-gray-800 border border-transparent focus:border-primary/20 focus:ring-4 focus:ring-primary/5 rounded-xl pl-10 pr-12 py-2.5 text-sm w-full outline-none transition-all dark:text-white"
+                className="bg-gray-50 dark:bg-gray-800 border border-transparent focus:border-primary/20 focus:ring-4 focus:ring-primary/5 rounded-xl pl-10 pr-12 py-2.5 text-sm w-full outline-none transition-all text-[#02060C] dark:text-white font-medium"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={(e) => {
@@ -149,7 +150,8 @@ const Header = () => {
           </nav>
 
           {/* Desktop Actions */}
-          <div className="hidden md:flex items-center gap-2 shrink-0">
+          <div className="hidden md:flex items-center gap-4 shrink-0">
+            {isAuthenticated && <WalletBadge />}
             {/* Theme Toggle */}
             <button 
               onClick={toggleTheme}
@@ -245,12 +247,18 @@ const Header = () => {
           </div>
 
           {/* Mobile Actions */}
-          <div className="flex md:hidden items-center gap-1">
+          <div className="flex md:hidden items-center gap-2">
+            <button 
+              onClick={toggleTheme}
+              className="p-2 rounded-xl bg-gray-50 dark:bg-gray-800 text-text-secondary transition-colors"
+            >
+              {isDark ? <Sun size={20} className="text-yellow-500" /> : <Moon size={20} />}
+            </button>
             <button 
               onClick={() => toggleDrawer(true)}
             >
               <div className="relative p-2 rounded-xl group hover:bg-white transition-all transform active:scale-95">
-                <ShoppingCart size={24} className="text-black transition-colors" strokeWidth={2.5} />
+                <ShoppingCart size={24} className="text-black dark:text-white transition-colors" strokeWidth={2.5} />
                 {cartItemCount > 0 && (
                   <span className="absolute -top-1 -right-1 bg-primary text-white text-[10px] font-black h-5 w-5 rounded-full flex items-center justify-center border-2 border-white shadow-lg">
                     {cartItemCount}
@@ -260,7 +268,7 @@ const Header = () => {
             </button>
             <button 
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2 rounded-lg bg-gray-50 text-text-primary"
+              className="p-2 rounded-lg bg-gray-50 dark:bg-gray-800 text-text-primary dark:text-white"
             >
               {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
             </button>

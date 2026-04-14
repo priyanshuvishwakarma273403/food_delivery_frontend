@@ -6,6 +6,7 @@ import RestaurantCard from '../components/restaurant/RestaurantCard';
 import { CUISINE_CATEGORIES, getTopRatedRestaurants, getTotalFoodItems, getTotalRestaurants } from '../data/restaurants';
 import Button from '../components/common/Button';
 import StoryViewer from '../components/common/StoryViewer';
+import MoodSearch from '../components/ai/MoodSearch';
 
 const Home = () => {
   const [searchValue, setSearchValue] = useState('');
@@ -74,33 +75,14 @@ const Home = () => {
               <Button type="submit" className="rounded-lg md:rounded-xl px-6 md:px-10 py-3 text-sm">Search</Button>
             </form>
 
-            {/* Mood Selector */}
-            <div className="animate-in fade-in slide-in-from-left duration-1000 delay-300">
-               <p className="text-white/60 text-[10px] md:text-xs font-black uppercase tracking-widest mb-3 md:mb-4">How are you feeling today?</p>
-               <div className="flex flex-wrap gap-2 md:gap-3">
-                  {[
-                    { label: 'Stressed', emoji: '😫', class: 'hover:bg-red-500 hover:border-red-500' },
-                    { label: 'Happy', emoji: '🤩', class: 'hover:bg-yellow-500 hover:border-yellow-500' },
-                    { label: 'Lazy', emoji: '😴', class: 'hover:bg-blue-500 hover:border-blue-500' },
-                    { label: 'Healthy', emoji: '🥗', class: 'hover:bg-green-500 hover:border-green-500' },
-                    { label: 'Adventurous', emoji: '🧭', class: 'hover:bg-purple-500 hover:border-purple-500' }
-                  ].map((mood, idx) => (
-                    <Link 
-                      key={idx} 
-                      to={`/restaurants?mood=${mood.label.toLowerCase()}`}
-                      className={`px-3 md:px-5 py-2 md:py-2.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-white text-xs md:text-sm font-bold flex items-center gap-1.5 md:gap-2 transition-all duration-300 ${mood.class}`}
-                    >
-                      <span className="text-base md:text-lg">{mood.emoji}</span> {mood.label}
-                    </Link>
-                  ))}
-               </div>
-            </div>
+            <MoodSearch />
+
           </motion.div>
         </div>
       </section>
 
       {/* Stories Component */}
-      <section className="bg-white py-4 shadow-sm relative z-20">
+      <section className="bg-white dark:bg-card-main py-4 shadow-sm relative z-20">
         <div className="container mx-auto px-4">
           <p className="text-sm font-black text-text-primary mb-2 flex items-center gap-2">
             <Flame className="text-secondary" size={16} /> Latest Food Bites
@@ -133,23 +115,25 @@ const Home = () => {
       <section className="container mx-auto px-4 py-8 md:py-16">
         <div className="flex items-center justify-between mb-6 md:mb-8">
           <div>
-            <h2 className="text-xl md:text-3xl font-black text-text-primary">What's on your mind?</h2>
-            <p className="text-text-secondary text-sm mt-1">Explore our wide variety of cuisines</p>
+            <h2 className="text-2xl md:text-4xl font-extrabold text-[#02060C] dark:text-white tracking-tighter">What's on your mind?</h2>
+            <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Explore our wide variety of cuisines</p>
           </div>
         </div>
 
-        <div className="flex overflow-x-auto pb-4 md:pb-6 scrollbar-hide gap-4 md:gap-8 -mx-4 px-4 snap-x snap-mandatory">
+        <div className="flex overflow-x-auto pb-4 md:pb-8 scrollbar-hide gap-6 md:gap-12 -mx-4 px-4 snap-x snap-mandatory">
           {CUISINE_CATEGORIES.map((cuisine, index) => (
             <Link key={index} to={`/restaurants?cuisine=${cuisine.name}`}>
               <motion.div
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.08, translateY: -4 }}
                 whileTap={{ scale: 0.95 }}
-                className="flex-shrink-0 flex flex-col items-center gap-2 md:gap-3 group cursor-pointer snap-start"
+                className="flex-shrink-0 flex flex-col items-center gap-1 group cursor-pointer snap-start"
               >
-                <div className="h-16 w-16 md:h-24 md:w-24 rounded-full bg-white shadow-premium border border-gray-100 flex items-center justify-center text-2xl md:text-4xl group-hover:border-primary/30 transition-all overflow-hidden">
+                <div className="h-16 w-16 md:h-32 md:w-32 rounded-full bg-white dark:bg-gray-800 shadow-md border border-gray-100 dark:border-gray-700 flex items-center justify-center text-3xl md:text-7xl group-hover:shadow-xl transition-all overflow-hidden mb-3">
                   <span>{cuisine.icon}</span>
                 </div>
-                <span className="font-bold text-xs md:text-sm text-text-primary group-hover:text-primary transition-colors text-center whitespace-nowrap">{cuisine.name}</span>
+                <span className="font-bold text-sm md:text-lg text-[#02060C] dark:text-gray-100 group-hover:text-primary transition-colors text-center whitespace-nowrap leading-tight px-1">
+                  {cuisine.name}
+                </span>
               </motion.div>
             </Link>
           ))}
@@ -157,23 +141,23 @@ const Home = () => {
       </section>
 
       {/* Top Rated Restaurants */}
-      <section className="bg-gray-50/50 py-8 md:py-16 overflow-hidden">
+      <section className="bg-white dark:bg-black/40 py-10 md:py-20 overflow-hidden border-t border-gray-50 dark:border-gray-800">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between mb-6 md:mb-10">
+          <div className="flex items-center justify-between mb-8 md:mb-12">
             <div>
-              <div className="flex items-center gap-2 mb-1">
-                <TrendingUp size={20} className="text-primary" />
-                <span className="text-xs font-black text-primary uppercase tracking-widest">Trending Now</span>
+              <div className="flex items-center gap-2 mb-2">
+                <TrendingUp size={22} className="text-primary font-black" />
+                <span className="text-[10px] md:text-xs font-black text-primary uppercase tracking-[0.2em] mb-1">Trending Now</span>
               </div>
-              <h2 className="text-xl md:text-3xl font-black text-text-primary">Top Rated Around You</h2>
-              <p className="text-text-secondary text-sm mt-1 hidden sm:block">Handpicked restaurants based on {totalRestaurants}+ partners</p>
+              <h2 className="text-2xl md:text-4xl font-extrabold text-[#02060C] dark:text-white tracking-tight">Top Rated Around You</h2>
+              <p className="text-gray-500 dark:text-gray-400 text-sm md:text-base mt-2 hidden sm:block">Handpicked restaurants based on local favorites</p>
             </div>
-            <Link to="/restaurants" className="group flex items-center gap-1 md:gap-2 text-primary font-bold hover:gap-2 md:hover:gap-3 transition-all text-sm md:text-base">
-              View All <ArrowRight size={18} />
+            <Link to="/restaurants" className="group flex items-center gap-2 text-primary font-black hover:gap-3 transition-all text-sm md:text-base border-b-2 border-primary/10 pb-1">
+              View All <ArrowRight size={20} />
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-8">
+          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-10">
             {topRestaurants.map((restaurant) => (
               <RestaurantCard key={restaurant.id} restaurant={restaurant} />
             ))}
@@ -182,62 +166,26 @@ const Home = () => {
       </section>
 
       {/* Browse by Categories */}
-      <section className="container mx-auto px-4 py-8 md:py-16">
-        <h2 className="text-xl md:text-3xl font-black text-text-primary mb-6 md:mb-10">Browse by Category</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-6">
+      <section className="container mx-auto px-4 py-10 md:py-20">
+        <h2 className="text-2xl md:text-4xl font-extrabold text-black dark:text-white mb-8 md:mb-12">Browse by Category</h2>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-8">
           {[
-            { label: 'Pure Veg', emoji: '🥬', color: 'bg-green-50 border-green-100 hover:border-green-300', filter: 'veg' },
-            { label: 'Under 30 min', emoji: '⚡', color: 'bg-yellow-50 border-yellow-100 hover:border-yellow-300', filter: 'fast' },
-            { label: 'Rating 4.5+', emoji: '⭐', color: 'bg-orange-50 border-orange-100 hover:border-orange-300', filter: 'top' },
-            { label: 'Great Offers', emoji: '🏷️', color: 'bg-blue-50 border-blue-100 hover:border-blue-300', filter: 'offers' },
-            { label: 'New Arrivals', emoji: '🆕', color: 'bg-purple-50 border-purple-100 hover:border-purple-300', filter: 'new' },
-            { label: 'Budget Eats', emoji: '💰', color: 'bg-green-50 border-green-100 hover:border-green-300', filter: 'budget' },
-            { label: 'Premium', emoji: '👑', color: 'bg-amber-50 border-amber-100 hover:border-amber-300', filter: 'premium' },
-            { label: 'Late Night', emoji: '🌙', color: 'bg-indigo-50 border-indigo-100 hover:border-indigo-300', filter: 'late' },
-            { label: 'Bestsellers', emoji: '🔥', color: 'bg-red-50 border-red-100 hover:border-red-300', filter: 'best' },
-            { label: 'Family Pack', emoji: '👨‍👩‍👧‍👦', color: 'bg-teal-50 border-teal-100 hover:border-teal-300', filter: 'family' },
+            { label: 'Pure Veg', emoji: '🥬', color: 'bg-green-50 dark:bg-green-900/40 border-green-300 dark:border-green-700 hover:bg-green-100', filter: 'veg' },
+            { label: 'Under 30 min', emoji: '⚡', color: 'bg-yellow-50 dark:bg-yellow-900/40 border-yellow-300 dark:border-yellow-700 hover:bg-yellow-100', filter: 'fast' },
+            { label: 'Rating 4.5+', emoji: '⭐', color: 'bg-orange-50 dark:bg-orange-900/40 border-orange-300 dark:border-orange-700 hover:bg-orange-100', filter: 'top' },
+            { label: 'Great Offers', emoji: '🏷️', color: 'bg-blue-50 dark:bg-blue-900/40 border-blue-300 dark:border-blue-700 hover:bg-blue-100', filter: 'offers' },
+            { label: 'New Arrivals', emoji: '🆕', color: 'bg-purple-50 dark:bg-purple-900/40 border-purple-300 dark:border-purple-700 hover:bg-purple-100', filter: 'new' },
           ].map((cat, i) => (
             <Link key={i} to={`/restaurants?filter=${cat.filter}`}>
               <motion.div 
-                whileHover={{ y: -4 }} 
-                className={`p-4 md:p-6 rounded-2xl md:rounded-3xl border ${cat.color} cursor-pointer transition-all group`}
+                whileHover={{ y: -8, scale: 1.02 }} 
+                className={`p-6 md:p-8 rounded-[2rem] border-2 ${cat.color} cursor-pointer transition-all group shadow-sm hover:shadow-md`}
               >
-                <span className="text-2xl md:text-3xl">{cat.emoji}</span>
-                <p className="text-xs md:text-sm font-bold mt-2 md:mt-3 text-text-primary group-hover:text-primary transition-colors">{cat.label}</p>
+                <span className="text-3xl md:text-5xl">{cat.emoji}</span>
+                <p className="text-sm md:text-base font-black mt-4 text-black dark:text-white group-hover:text-primary transition-colors uppercase tracking-tight">{cat.label}</p>
               </motion.div>
             </Link>
           ))}
-        </div>
-      </section>
-
-      {/* Trust Badges */}
-      <section className="container mx-auto px-4 grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-8 text-center">
-        {[
-          { title: 'No Minimum Order', desc: 'Order any amount you want', icon: '📦' },
-          { title: 'Live Tracking', desc: 'Know where your food is at all times', icon: '📍' },
-          { title: 'Super Fast Delivery', desc: 'Always on time, every time', icon: '⚡' }
-        ].map((item, i) => (
-          <div key={i} className="p-6 md:p-10 rounded-2xl md:rounded-3xl bg-white border border-gray-100 shadow-sm">
-            <div className="text-3xl md:text-5xl mb-3 md:mb-6">{item.icon}</div>
-            <h3 className="text-base md:text-xl font-bold mb-2 md:mb-3">{item.title}</h3>
-            <p className="text-text-secondary text-xs md:text-sm">{item.desc}</p>
-          </div>
-        ))}
-      </section>
-
-      {/* Download App Banner */}
-      <section className="container mx-auto px-4 mt-8 md:mt-16">
-        <div className="bg-gradient-to-r from-primary to-primary-dark rounded-2xl md:rounded-[3rem] p-6 md:p-12 flex flex-col md:flex-row items-center justify-between gap-6 overflow-hidden relative">
-          <div className="absolute top-0 right-0 w-40 h-40 md:w-80 md:h-80 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
-          <div className="absolute bottom-0 left-0 w-24 h-24 md:w-40 md:h-40 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2" />
-          <div className="relative z-10 text-center md:text-left">
-            <h2 className="text-xl md:text-4xl font-black text-white mb-2 md:mb-4">Get the Tomato App</h2>
-            <p className="text-white/80 text-sm md:text-base max-w-md">We will send you a link, open it on your phone to download the app.</p>
-          </div>
-          <div className="flex gap-3 md:gap-4 relative z-10">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Google Play" className="h-10 md:h-12 cursor-pointer hover:scale-105 transition-transform" />
-            <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="App Store" className="h-10 md:h-12 cursor-pointer hover:scale-105 transition-transform" />
-          </div>
         </div>
       </section>
     </div>

@@ -8,8 +8,9 @@ import AiAssistant from './components/common/AiAssistant';
 import SocialProof from './components/common/SocialProof';
 import CartDrawer from './components/cart/CartDrawer';
 import { Spinner } from './components/common/Loader'; 
+import { ThemeProvider } from './context/ThemeContext';
 
-// Lazy loaded pages to reduce initial bundle size
+// Lazy loaded pages
 const Home = lazy(() => import('./pages/Home'));
 const Login = lazy(() => import('./pages/Login'));
 const Register = lazy(() => import('./pages/Register'));
@@ -35,33 +36,17 @@ const Profile = lazy(() => import('./pages/Profile'));
 const Blogs = lazy(() => import('./pages/Blogs'));
 const AdminBlogs = lazy(() => import('./pages/AdminBlogs'));
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-      retry: 1,
-    },
-  },
-});
+const queryClient = new QueryClient();
 
 const ProtectedRoute = ({ children, roles = [] }) => {
   const { isAuthenticated, user } = useAuthStore();
   const location = useLocation();
 
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace state={{ from: location }} />;
-  }
-  
-  if (roles.length > 0 && !roles.includes(user?.role)) {
-    // If not authorized, redirect to their role's default dashboard
-    if (user?.role === 'ADMIN') return <Navigate to="/admin" replace />;
-    if (user?.role === 'DELIVERY_PARTNER') return <Navigate to="/delivery/dashboard" replace />;
-    return <Navigate to="/" replace />;
-  }
+  if (!isAuthenticated) return <Navigate to="/login" replace state={{ from: location }} />;
+  if (roles.length > 0 && !roles.includes(user?.role)) return <Navigate to="/" replace />;
   return children;
 };
 
-// Global Page Fallback Loader
 const PageLoader = () => (
   <div className="h-[80vh] flex flex-col items-center justify-center gap-4">
     <Spinner size={48} />
@@ -71,87 +56,46 @@ const PageLoader = () => (
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <Suspense fallback={<PageLoader />}>
-          <Routes>
-            <Route element={<Layout />}>
-              <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/restaurants" element={<Restaurants />} />
-              <Route path="/restaurants/:id" element={<RestaurantDetail />} />
-              <Route path="/cart" element={<Cart />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/faq" element={<FAQ />} />
-              <Route path="/privacy" element={<PrivacyPolicy />} />
-              <Route path="/terms" element={<Terms />} />
-              <Route path="/delivery" element={<DeliveryPartnerCTA />} />
-              <Route path="/gold" element={<TomatoGold />} />
-              <Route path="/blogs" element={<Blogs />} />
-              
-              {/* Protected Routes */}
-              <Route path="/checkout" element={
-                <ProtectedRoute roles={['CUSTOMER']}>
-                  <Checkout />
-                </ProtectedRoute>
-              } />
-              <Route path="/orders" element={
-                <ProtectedRoute roles={['CUSTOMER']}>
-                  <Orders />
-                </ProtectedRoute>
-              } />
-              <Route path="/orders/:id" element={
-                <ProtectedRoute roles={['CUSTOMER']}>
-                  <OrderDetail />
-                </ProtectedRoute>
-              } />
-              <Route path="/profile" element={
-                <ProtectedRoute roles={['CUSTOMER']}>
-                  <Profile />
-                </ProtectedRoute>
-              } />
-
-              {/* Admin Routes */}
-              <Route path="/admin" element={
-                <ProtectedRoute roles={['ADMIN']}>
-                  <AdminDashboard />
-                </ProtectedRoute>
-              } />
-              <Route path="/admin/restaurants" element={
-                <ProtectedRoute roles={['ADMIN']}>
-                  <AdminRestaurants />
-                </ProtectedRoute>
-              } />
-              <Route path="/admin/orders" element={
-                <ProtectedRoute roles={['ADMIN']}>
-                  <AdminOrders />
-                </ProtectedRoute>
-              } />
-              <Route path="/admin/blogs" element={
-                <ProtectedRoute roles={['ADMIN']}>
-                  <AdminBlogs />
-                </ProtectedRoute>
-              } />
-
-              {/* Delivery Routes */}
-              <Route path="/delivery/dashboard" element={
-                <ProtectedRoute roles={['DELIVERY_PARTNER']}>
-                  <DeliveryDashboard />
-                </ProtectedRoute>
-              } />
-
-              <Route path="*" element={<NotFound />} />
-            </Route>
-          </Routes>
-        </Suspense>
-        <AiAssistant />
-        <SocialProof />
-        <CartDrawer />
-        <Toaster position="bottom-right" />
-      </BrowserRouter>
-    </QueryClientProvider>
+    <ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <Suspense fallback={<PageLoader />}>
+            <Routes>
+              <Route element={<Layout />}>
+                <Route path="/" element={<Home />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/restaurants" element={<Restaurants />} />
+                <Route path="/restaurants/:id" element={<RestaurantDetail />} />
+                <Route path="/cart" element={<Cart />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/faq" element={<FAQ />} />
+                <Route path="/privacy" element={<PrivacyPolicy />} />
+                <Route path="/terms" element={<Terms />} />
+                <Route path="/delivery" element={<DeliveryPartnerCTA />} />
+                <Route path="/gold" element={<TomatoGold />} />
+                <Route path="/blogs" element={<Blogs />} />
+                <Route path="/checkout" element={<ProtectedRoute roles={['CUSTOMER']}><Checkout /></ProtectedRoute>} />
+                <Route path="/orders" element={<ProtectedRoute roles={['CUSTOMER']}><Orders /></ProtectedRoute>} />
+                <Route path="/orders/:id" element={<ProtectedRoute roles={['CUSTOMER']}><OrderDetail /></ProtectedRoute>} />
+                <Route path="/profile" element={<ProtectedRoute roles={['CUSTOMER']}><Profile /></ProtectedRoute>} />
+                <Route path="/admin" element={<ProtectedRoute roles={['ADMIN']}><AdminDashboard /></ProtectedRoute>} />
+                <Route path="/admin/restaurants" element={<ProtectedRoute roles={['ADMIN']}><AdminRestaurants /></ProtectedRoute>} />
+                <Route path="/admin/orders" element={<ProtectedRoute roles={['ADMIN']}><AdminOrders /></ProtectedRoute>} />
+                <Route path="/admin/blogs" element={<ProtectedRoute roles={['ADMIN']}><AdminBlogs /></ProtectedRoute>} />
+                <Route path="/delivery/dashboard" element={<ProtectedRoute roles={['DELIVERY_PARTNER']}><DeliveryDashboard /></ProtectedRoute>} />
+                <Route path="*" element={<NotFound />} />
+              </Route>
+            </Routes>
+          </Suspense>
+          <AiAssistant />
+          <SocialProof />
+          <CartDrawer />
+          <Toaster position="bottom-right" />
+        </BrowserRouter>
+      </QueryClientProvider>
+    </ThemeProvider>
   );
 }
 

@@ -1,0 +1,55 @@
+.scratch-card-container {
+  position: relative;
+  width: 280px;
+  height: 160px;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.reward-icon {
+  font-size: 2.5rem;
+  margin-bottom: 8px;
+}
+
+.reward-content h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.reward-amount {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #ff5a00;
+  margin: 5px 0;
+}
+
+.scratch-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  cursor: crosshair;
+  touch-action: none;
+}
+
+.scratch-overlay-win {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255,255,255,0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 700;
+  color: #2e7d32;
+  letter-spacing: 1px;
+}
