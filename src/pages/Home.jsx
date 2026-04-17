@@ -50,13 +50,13 @@ const Home = () => {
               Order from <span className="text-secondary font-bold">{totalRestaurants}+</span> restaurants and <span className="text-secondary font-bold">{totalFoods}+</span> dishes. Fast, fresh, and reliable.
             </p>
 
-            <form onSubmit={handleSearch} className="bg-white p-1.5 md:p-2 rounded-xl md:rounded-2xl shadow-2xl flex flex-col sm:flex-row gap-1.5 md:gap-2 max-w-2xl mb-6 md:mb-8">
-              <div className="flex-1 flex items-center gap-2 md:gap-3 px-3 md:px-4 border-b sm:border-b-0 sm:border-r border-gray-100 py-2">
+            <form onSubmit={handleSearch} className="bg-white dark:bg-gray-900/90 p-1.5 md:p-2 rounded-xl md:rounded-2xl shadow-2xl flex flex-col sm:flex-row gap-1.5 md:gap-2 max-w-2xl mb-6 md:mb-8 backdrop-blur-sm border border-white/10 dark:border-gray-800">
+              <div className="flex-1 flex items-center gap-2 md:gap-3 px-3 md:px-4 border-b sm:border-b-0 sm:border-r border-gray-100 dark:border-gray-800 py-2">
                 <MapPin className="text-primary shrink-0" size={18} />
                 <input 
                   type="text" 
                   placeholder="Enter delivery area..." 
-                  className="bg-transparent outline-none text-text-primary text-sm w-full font-medium min-w-0"
+                  className="bg-transparent outline-none text-text-primary dark:text-gray-100 text-sm w-full font-medium min-w-0"
                 />
                 <button type="button" className="text-primary hover:bg-primary/10 p-1.5 md:p-2 rounded-lg transition-colors shrink-0">
                   <Navigation size={16} />
@@ -67,7 +67,7 @@ const Home = () => {
                 <input 
                   type="text" 
                   placeholder="Search for food..." 
-                  className="bg-transparent outline-none text-text-primary text-sm w-full font-medium min-w-0"
+                  className="bg-transparent outline-none text-text-primary dark:text-gray-100 text-sm w-full font-medium min-w-0"
                   value={searchValue}
                   onChange={(e) => setSearchValue(e.target.value)}
                 />
@@ -82,9 +82,9 @@ const Home = () => {
       </section>
 
       {/* Stories Component */}
-      <section className="bg-white dark:bg-card-main py-4 shadow-sm relative z-20">
+      <section className="bg-white dark:bg-[#02060C] py-4 shadow-sm relative z-20 border-b border-gray-50 dark:border-gray-900">
         <div className="container mx-auto px-4">
-          <p className="text-sm font-black text-text-primary mb-2 flex items-center gap-2">
+          <p className="text-sm font-black text-text-primary dark:text-white mb-2 flex items-center gap-2">
             <Flame className="text-secondary" size={16} /> Latest Food Bites
           </p>
           <StoryViewer />
@@ -128,10 +128,10 @@ const Home = () => {
                 whileTap={{ scale: 0.95 }}
                 className="flex-shrink-0 flex flex-col items-center gap-1 group cursor-pointer snap-start"
               >
-                <div className="h-16 w-16 md:h-32 md:w-32 rounded-full bg-white dark:bg-gray-800 shadow-md border border-gray-100 dark:border-gray-700 flex items-center justify-center text-3xl md:text-7xl group-hover:shadow-xl transition-all overflow-hidden mb-3">
+                <div className="h-16 w-16 md:h-32 md:w-32 rounded-full bg-white dark:bg-gray-900 shadow-md border border-gray-100 dark:border-gray-800 flex items-center justify-center text-3xl md:text-7xl group-hover:shadow-xl transition-all overflow-hidden mb-3">
                   <span>{cuisine.icon}</span>
                 </div>
-                <span className="font-bold text-sm md:text-lg text-[#02060C] dark:text-gray-100 group-hover:text-primary transition-colors text-center whitespace-nowrap leading-tight px-1">
+                <span className="font-bold text-sm md:text-lg text-[#02060C] dark:text-gray-300 group-hover:text-primary transition-colors text-center whitespace-nowrap leading-tight px-1">
                   {cuisine.name}
                 </span>
               </motion.div>

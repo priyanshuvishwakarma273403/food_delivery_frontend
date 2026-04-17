@@ -36,15 +36,19 @@
     --text-sub: #686B78;
     --border-main: #E2E8F0;
     --accent: #E23744;
+    --primary: #E23744;
+    --secondary: #FC8019;
   }
 
   body.dark-theme {
-    --bg-main: #0F0F10;
-    --card-main: #1C1C1E;
-    --text-main: #FFFFFF;
-    --text-sub: #A1A1AA;
-    --border-main: #2D2D30;
-    --accent: #FF5A00;
+    --bg-main: #02060C;
+    --card-main: #111827;
+    --text-main: #F9FAFB;
+    --text-sub: #9CA3AF;
+    --border-main: #1F2937;
+    --accent: #F43F5E;
+    --primary: #F43F5E;
+    --secondary: #FB923C;
   }
 
   /* Force transitions on theme switch */
@@ -81,7 +85,8 @@
 @layer components {
   .glass-card {
     background-color: var(--card-main);
-    @apply backdrop-blur-md border border-white/10 shadow-premium opacity-95;
+    @apply backdrop-blur-xl border border-white/10 dark:border-white/5 shadow-premium;
+    background-image: linear-gradient(to bottom right, rgba(255, 255, 255, 0.05), transparent);
   }
 
   .card-premium {

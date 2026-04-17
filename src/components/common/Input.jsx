@@ -26,8 +26,8 @@ const Input = forwardRef(({
           ref={ref}
           type={type}
           className={cn(
-            'w-full rounded-xl border border-gray-200 bg-white py-2.5 text-sm outline-none transition-all duration-200 placeholder:text-gray-400',
-            'focus:border-primary focus:ring-4 focus:ring-primary/5',
+            'w-full rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 py-2.5 text-sm outline-none transition-all duration-200 placeholder:text-gray-400 text-text-primary dark:text-white',
+            'focus:border-primary focus:ring-4 focus:ring-primary/5 dark:focus:ring-primary/10',
             Icon ? 'pl-11 pr-4' : 'px-4',
             error ? 'border-red-500 focus:border-red-500 focus:ring-red-500/5' : '',
             className

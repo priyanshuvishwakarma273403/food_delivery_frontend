@@ -11,6 +11,7 @@ import Input from '../components/common/Input';
 import Button from '../components/common/Button';
 import { useAuthStore } from '../store/authStore';
 import OtpVerification from '../components/common/OtpVerification';
+import authService from '../services/authService';
 
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -74,35 +75,25 @@ const Login = () => {
   const onSubmitPassword = async (data) => {
     setIsLoading(true);
     try {
-      // Simulate API call to check user existence and authenticate
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const response = await authService.login(data.email, data.password);
       
-      // Strict rule simulation: check if email is "new"
-      const existingEmails = ['admin@tomato.com', 'user@tomato.com', 'john@tomato.com'];
-      
-      if (!existingEmails.includes(data.email.toLowerCase())) {
-        toast.error("Account not found. Redirecting to registration...");
-        navigate('/register', { state: { email: data.email } });
-        return;
+      if (response.success) {
+        const { user: userData, accessToken } = response.data;
+        login(userData, accessToken);
+        toast.success(`Welcome back, ${userData.name}!`);
+        navigate(from, { replace: true });
+      } else {
+        toast.error(response.message || 'Login failed');
       }
-
-      if (data.password === 'wrong') {
-         toast.error('Invalid credentials. Please try again.');
-         return;
-      }
-
-      const dummyUser = {
-        id: '1',
-        name: data.email.split('@')[0],
-        email: data.email,
-        role: data.email.includes('admin') ? 'ADMIN' : 'CUSTOMER', 
-      };
-      
-      login(dummyUser, 'dummy-jwt-token');
-      toast.success(`Welcome back, ${dummyUser.name}!`);
-      navigate(from, { replace: true });
     } catch (error) {
-      toast.error('Login failed. Please try again.');
+      console.error('Login error:', error);
+      const errorMsg = error.response?.data?.message || 'Invalid credentials or server error. Please try again.';
+      toast.error(errorMsg);
+      
+      // If user not found, suggest registration (matching previous logic)
+      if (error.response?.status === 404) {
+        navigate('/register', { state: { email: data.email } });
+      }
     } finally {
       setIsLoading(false);
     }
@@ -116,39 +107,36 @@ const Login = () => {
     }
     
     setIsLoading(true);
-    // Smart logic for OTP too
-    setTimeout(() => {
-      setIsLoading(false);
-      const existingEmails = ['admin@tomato.com', 'user@tomato.com', 'john@tomato.com'];
-      if (!existingEmails.includes(emailValue.toLowerCase())) {
-        toast.error("Email not registered. Head over to Sign Up!");
-        navigate('/register', { state: { email: emailValue } });
-        return;
+    try {
+      const response = await authService.sendOtp(emailValue);
+      if (response.success) {
+        setAuthView('otp');
+        toast.success(`Secure OTP sent successfully to ${emailValue}`);
+      } else {
+        toast.error(response.message || 'Failed to send OTP');
       }
-      setAuthView('otp');
-      toast.success(`Secure OTP sent successfully to ${emailValue}`);
-    }, 1000);
+    } catch (error) {
+      console.error('OTP error:', error);
+      toast.error(error.response?.data?.message || 'Failed to send OTP. Is your email registered?');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleVerifyOTP = async (otp) => {
-    // Simulate API call to verify OTP
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    
-    // In real app, you would pass `otp` to your backend validation endpoint
-    if (otp === '123456') { // Dummy check
-      const dummyUser = {
-        id: '2',
-        name: 'OTP User',
-        email: emailValue,
-        role: 'CUSTOMER',
-      };
-      const dummyToken = 'dummy-otp-jwt-token';
-      
-      login(dummyUser, dummyToken);
-      toast.success('Successfully verified & logged in!');
-      navigate(from, { replace: true });
-    } else {
-      toast.error("Invalid OTP. Try '123456'");
+    setIsLoading(true);
+    try {
+      // In this backend, register handles both registration and login via OTP
+      // For a simple login via OTP, we might need a separate endpoint or use register with existing user
+      // Since the backend AuthController only has /register and /login (pwd), 
+      // I'll assume for now OTP is for registration as per the controller.
+      // If the user wants OTP login, they might need to update the backend.
+      // For now, I'll just show a message.
+      toast.info('OTP Login is being integrated with backend.');
+      setIsLoading(false);
+    } catch (error) {
+      toast.error('OTP verification failed.');
+      setIsLoading(false);
     }
   };
 
@@ -246,10 +234,10 @@ const Login = () => {
 
                 <div className="relative py-4">
                   <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-gray-100"></div>
+                    <div className="w-full border-t border-gray-100 dark:border-gray-800"></div>
                   </div>
                   <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-white/50 px-2 text-gray-400 font-medium">Or continue with</span>
+                    <span className="bg-white dark:bg-[#111827] px-4 text-gray-400 font-medium">Or continue with</span>
                   </div>
                 </div>
 
@@ -257,14 +245,14 @@ const Login = () => {
                   <button 
                     type="button" 
                     onClick={() => handleGoogleLogin()}
-                    className="flex items-center justify-center gap-2 p-3 rounded-xl border border-gray-100 hover:bg-gray-50 transition-colors"
+                    className="flex items-center justify-center gap-2 p-3 rounded-xl border border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                   >
                     <img src="https://www.svgrepo.com/show/475656/google-color.svg" className="h-5" alt="Google" />
-                    <span className="text-sm font-medium">Google</span>
+                    <span className="text-sm font-medium dark:text-gray-300">Google</span>
                   </button>
-                  <button type="button" className="flex items-center justify-center gap-2 p-3 rounded-xl border border-gray-100 hover:bg-gray-50 transition-colors">
+                  <button type="button" className="flex items-center justify-center gap-2 p-3 rounded-xl border border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                     <img src="https://www.svgrepo.com/show/475647/facebook-color.svg" className="h-5" alt="Facebook" />
-                    <span className="text-sm font-medium">Facebook</span>
+                    <span className="text-sm font-medium dark:text-gray-300">Facebook</span>
                   </button>
                 </div>
               </form>

@@ -264,21 +264,21 @@ const Register = () => {
 
                 <div className="relative py-4">
                   <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-gray-100"></div>
+                    <div className="w-full border-t border-gray-100 dark:border-gray-800"></div>
                   </div>
                   <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-white/50 px-2 text-gray-400 font-medium">Or continue with</span>
+                    <span className="bg-white dark:bg-[#111827] px-4 text-gray-400 font-medium">Or continue with</span>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                  <button type="button" onClick={() => handleGoogleLogin()} className="flex items-center justify-center gap-2 p-3 rounded-xl border border-gray-100 hover:bg-gray-50 transition-colors">
+                  <button type="button" onClick={() => handleGoogleLogin()} className="flex items-center justify-center gap-2 p-3 rounded-xl border border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                     <img src="https://www.svgrepo.com/show/475656/google-color.svg" className="h-5" alt="Google" />
-                    <span className="text-sm font-medium">Google</span>
+                    <span className="text-sm font-medium dark:text-gray-300">Google</span>
                   </button>
-                  <button type="button" className="flex items-center justify-center gap-2 p-3 rounded-xl border border-gray-100 hover:bg-gray-50 transition-colors">
+                  <button type="button" className="flex items-center justify-center gap-2 p-3 rounded-xl border border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                     <img src="https://www.svgrepo.com/show/475647/facebook-color.svg" className="h-5" alt="Facebook" />
-                    <span className="text-sm font-medium">Facebook</span>
+                    <span className="text-sm font-medium dark:text-gray-300">Facebook</span>
                   </button>
                 </div>
               </form>

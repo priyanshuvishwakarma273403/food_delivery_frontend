@@ -21,7 +21,7 @@ const RestaurantCard = ({ restaurant }) => {
   return (
     <motion.div
       whileHover={{ y: -4 }}
-      className="group bg-white rounded-2xl md:rounded-3xl overflow-hidden premium-shadow border border-gray-100"
+      className="group bg-white dark:bg-gray-900 rounded-2xl md:rounded-3xl overflow-hidden premium-shadow border border-gray-100 dark:border-gray-800"
     >
       <Link to={`/restaurants/${id}`}>
         {/* Image */}
@@ -46,8 +46,8 @@ const RestaurantCard = ({ restaurant }) => {
 
           {/* Delivery time badge */}
           <div className="absolute bottom-2 md:bottom-4 right-2 md:right-4">
-            <div className="bg-white/95 backdrop-blur-sm rounded-lg px-2 py-1 shadow-sm">
-              <span className="text-[10px] md:text-xs font-black text-text-primary">{deliveryTime} min</span>
+            <div className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm rounded-lg px-2 py-1 shadow-sm">
+              <span className="text-[10px] md:text-xs font-black text-text-primary dark:text-gray-100">{deliveryTime} min</span>
             </div>
           </div>
 
@@ -64,11 +64,11 @@ const RestaurantCard = ({ restaurant }) => {
           <p className="text-[10px] md:hidden text-text-secondary truncate font-medium mb-2">{cuisine}</p>
           
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1 md:gap-1.5 px-1.5 md:px-2 py-0.5 md:py-1 rounded-md md:rounded-lg bg-green-50 text-green-700">
+            <div className="flex items-center gap-1 md:gap-1.5 px-1.5 md:px-2 py-0.5 md:py-1 rounded-md md:rounded-lg bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400">
               <Star size={10} fill="currentColor" className="md:w-3.5 md:h-3.5" />
               <span className="text-[10px] md:text-sm font-bold">{rating}</span>
               {totalRatings && (
-                <span className="text-[8px] md:text-xs text-green-600 hidden sm:inline">
+                <span className="text-[8px] md:text-xs text-green-600 dark:text-green-500 hidden sm:inline">
                   ({totalRatings > 1000 ? `${(totalRatings/1000).toFixed(0)}K+` : `${totalRatings}+`})
                 </span>
               )}
