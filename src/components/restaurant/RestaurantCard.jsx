@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion';
-import { Star, Clock, Bike } from 'lucide-react';
+import { Star, Clock, Percent } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import Badge from '../common/Badge';
 
 const RestaurantCard = ({ restaurant }) => {
   const {
@@ -18,78 +17,88 @@ const RestaurantCard = ({ restaurant }) => {
     costForTwo
   } = restaurant;
 
+  const ratingColor = rating >= 4.0 ? 'bg-[#26A541]' : rating >= 3.5 ? 'bg-[#73C044]' : 'bg-[#F17D00]';
+
   return (
-    <motion.div
-      whileHover={{ y: -4 }}
-      className="group bg-white dark:bg-gray-900 rounded-2xl md:rounded-3xl overflow-hidden premium-shadow border border-gray-100 dark:border-gray-800"
-    >
-      <Link to={`/restaurants/${id}`}>
-        {/* Image */}
-        <div className="relative aspect-[4/3] overflow-hidden">
+    <Link to={`/restaurants/${id}`}>
+      <motion.div
+        whileHover={{ y: -4 }}
+        transition={{ duration: 0.2 }}
+        className="group card-zomato cursor-pointer"
+      >
+        {/* Image Container */}
+        <div className="relative aspect-[16/9] overflow-hidden rounded-t-2xl">
           <img 
             src={image} 
             alt={name}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             loading="lazy"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
           
-          {/* Badges */}
-          <div className="absolute top-2 md:top-4 left-2 md:left-4 flex flex-col gap-1 md:gap-2">
-            {!isOpen && (
-              <Badge variant="error" className="backdrop-blur-md bg-red-500/80 text-white text-[10px] md:text-xs px-1.5 md:px-2">Closed</Badge>
-            )}
-            {offer && (
-              <Badge variant="warning" className="backdrop-blur-md bg-secondary/90 text-white font-bold text-[10px] md:text-xs px-1.5 md:px-2">{offer}</Badge>
-            )}
-          </div>
-
-          {/* Delivery time badge */}
-          <div className="absolute bottom-2 md:bottom-4 right-2 md:right-4">
-            <div className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm rounded-lg px-2 py-1 shadow-sm">
-              <span className="text-[10px] md:text-xs font-black text-text-primary dark:text-gray-100">{deliveryTime} min</span>
+          {/* Gradient */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+          
+          {/* Closed Overlay */}
+          {!isOpen && (
+            <div className="absolute inset-0 bg-white/60 flex items-center justify-center rounded-t-2xl">
+              <span className="bg-gray-800 text-white text-xs font-black px-3 py-1.5 rounded-full">Currently Closed</span>
             </div>
-          </div>
+          )}
 
-          {/* Name overlay on image */}
-          <div className="absolute bottom-2 md:bottom-4 left-2 md:left-4 right-14 md:right-20 text-white">
-            <h3 className="text-sm md:text-xl font-bold truncate leading-tight">{name}</h3>
-            <p className="text-[10px] md:text-sm opacity-90 truncate font-medium hidden sm:block">{cuisine}</p>
+          {/* Offer Badge */}
+          {offer && isOpen && (
+            <div className="absolute bottom-3 left-3">
+              <div className="bg-white text-primary text-[11px] font-black px-2.5 py-1.5 rounded-xl shadow-md flex items-center gap-1.5">
+                <Percent size={11} strokeWidth={3} />
+                {offer}
+              </div>
+            </div>
+          )}
+
+          {/* Delivery time */}
+          <div className="absolute top-3 right-3">
+            <div className="bg-white/90 backdrop-blur-sm text-[#1C1C1C] text-[11px] font-black px-2 py-1 rounded-lg shadow-sm flex items-center gap-1">
+              <Clock size={11} strokeWidth={2.5} />
+              {deliveryTime} min
+            </div>
           </div>
         </div>
 
         {/* Info */}
-        <div className="p-3 md:p-5">
-          {/* Mobile: show cuisine below image */}
-          <p className="text-[10px] md:hidden text-text-secondary truncate font-medium mb-2">{cuisine}</p>
-          
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1 md:gap-1.5 px-1.5 md:px-2 py-0.5 md:py-1 rounded-md md:rounded-lg bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400">
-              <Star size={10} fill="currentColor" className="md:w-3.5 md:h-3.5" />
-              <span className="text-[10px] md:text-sm font-bold">{rating}</span>
-              {totalRatings && (
-                <span className="text-[8px] md:text-xs text-green-600 dark:text-green-500 hidden sm:inline">
-                  ({totalRatings > 1000 ? `${(totalRatings/1000).toFixed(0)}K+` : `${totalRatings}+`})
-                </span>
-              )}
+        <div className="p-3 md:p-4">
+          <h3 className="font-black text-[#1C1C1C] text-sm md:text-base truncate leading-tight mb-0.5 group-hover:text-primary transition-colors">
+            {name}
+          </h3>
+          <p className="text-[#686B78] text-[11px] md:text-xs truncate font-medium mb-2.5">
+            {cuisine}
+          </p>
+
+          {/* Rating & Info Row */}
+          <div className="flex items-center gap-2 pt-2.5 border-t border-[#F0F0F0]">
+            {/* Rating Badge */}
+            <div className={`flex items-center gap-1 ${ratingColor} text-white px-1.5 py-0.5 rounded-md`}>
+              <Star size={10} fill="white" strokeWidth={0} />
+              <span className="text-[11px] font-black">{rating}</span>
             </div>
             
-            <div className="flex items-center gap-2 md:gap-4 text-[10px] md:text-sm text-text-secondary font-medium">
-              <div className="flex items-center gap-1">
-                <Clock size={12} className="text-primary hidden md:block" />
-                <span>{deliveryTime} min</span>
-              </div>
-              {costForTwo && (
-                <>
-                  <div className="h-0.5 w-0.5 md:h-1 md:w-1 rounded-full bg-gray-300" />
-                  <span>₹{costForTwo} for two</span>
-                </>
-              )}
-            </div>
+            <span className="text-[#D4D5D9] text-xs">•</span>
+            
+            {totalRatings && (
+              <span className="text-[#686B78] text-[10px] md:text-xs font-medium">
+                {totalRatings > 1000 ? `${(totalRatings/1000).toFixed(1)}k+` : `${totalRatings}+`} ratings
+              </span>
+            )}
+            
+            {costForTwo && (
+              <>
+                <span className="text-[#D4D5D9] text-xs">•</span>
+                <span className="text-[#686B78] text-[10px] md:text-xs font-medium">₹{costForTwo} for two</span>
+              </>
+            )}
           </div>
         </div>
-      </Link>
-    </motion.div>
+      </motion.div>
+    </Link>
   );
 };
 

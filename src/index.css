@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap');
 
 @import "tailwindcss";
 
@@ -24,37 +24,20 @@
 
   --font-sans: "Inter", "system-ui", "sans-serif";
   
-  --shadow-premium: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
-  --shadow-premium-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-premium: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-premium-hover: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --shadow-card: 0 1px 4px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
 }
 
 @layer base {
   :root {
     --bg-main: #FFFFFF;
     --card-main: #FFFFFF;
-    --text-main: #02060C;
+    --text-main: #1C1C1C;
     --text-sub: #686B78;
-    --border-main: #E2E8F0;
+    --border-main: #E8E8E8;
     --accent: #E23744;
-    --primary: #E23744;
-    --secondary: #FC8019;
-  }
-
-  body.dark-theme {
-    --bg-main: #02060C;
-    --card-main: #111827;
-    --text-main: #F9FAFB;
-    --text-sub: #9CA3AF;
-    --border-main: #1F2937;
-    --accent: #F43F5E;
-    --primary: #F43F5E;
-    --secondary: #FB923C;
-  }
-
-  /* Force transitions on theme switch */
-  body {
-    transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
-                color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    --bg-page: #F5F5F5;
   }
 
   * {
@@ -62,20 +45,19 @@
   }
 
   body {
-    background-color: var(--bg-main);
-    color: var(--text-main);
+    background-color: #FFFFFF;
+    color: #1C1C1C;
     font-family: 'Inter', sans-serif;
-    @apply antialiased transition-colors duration-300;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Outfit', sans-serif;
-    @apply font-extrabold tracking-tighter transition-colors duration-300;
+    font-family: 'Outfit', 'Inter', sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.02em;
   }
 
-  /* Ensure proper viewport handling on mobile */
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
@@ -84,27 +66,40 @@
 
 @layer components {
   .glass-card {
-    background-color: var(--card-main);
-    @apply backdrop-blur-xl border border-white/10 dark:border-white/5 shadow-premium;
-    background-image: linear-gradient(to bottom right, rgba(255, 255, 255, 0.05), transparent);
+    background-color: #FFFFFF;
+    border: 1px solid #E8E8E8;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   }
 
   .card-premium {
-    background-color: var(--card-main);
-    border-color: var(--border-main);
-    @apply rounded-[2.5rem] border shadow-premium transition-all duration-300;
+    background-color: #FFFFFF;
+    border: 1px solid #E8E8E8;
+    border-radius: 2rem;
+    box-shadow: var(--shadow-card);
+    transition: all 0.3s ease;
   }
 
-  .text-secondary {
-    color: var(--text-sub);
+  .card-zomato {
+    background: #FFFFFF;
+    border-radius: 16px;
+    border: 1px solid #F0F0F0;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+  }
+
+  .card-zomato:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12), 0 8px 32px rgba(0,0,0,0.06);
+    transform: translateY(-2px);
   }
 
   .premium-shadow {
-    @apply shadow-premium transition-all duration-300;
+    box-shadow: var(--shadow-card);
+    transition: all 0.3s ease;
   }
 
   .premium-shadow:hover {
-    @apply shadow-premium-hover -translate-y-1;
+    box-shadow: var(--shadow-premium-hover);
+    transform: translateY(-2px);
   }
 
   /* Scrollbar Hide utility for horizontal scroll */
@@ -120,27 +115,39 @@
   .safe-pb {
     padding-bottom: env(safe-area-inset-bottom, 0px);
   }
+
+  /* Zomato-style section divider */
+  .section-divider {
+    height: 8px;
+    background: #F5F5F5;
+    margin: 0 -1rem;
+  }
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 4px;
+  height: 4px;
 }
 
 ::-webkit-scrollbar-track {
-  background-color: var(--bg-main);
+  background-color: #F5F5F5;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-gray-300/50 rounded-full hover:bg-gray-400 transition-colors;
+  background: #D4D5D9;
+  border-radius: 100px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #B0B3BB;
 }
 
 /* Mobile specific: smaller scrollbar */
 @media (max-width: 768px) {
   ::-webkit-scrollbar {
-    width: 3px;
-    height: 3px;
+    width: 2px;
+    height: 2px;
   }
 }
 
@@ -150,11 +157,6 @@
   height: 100%;
   z-index: 10;
   border-radius: 0.75rem;
-  filter: var(--map-filter, none);
-}
-
-.dark .leaflet-container {
-  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
 }
 
 /* Smooth page transitions */
@@ -167,23 +169,29 @@
   animation: fadeIn 0.3s ease-out forwards;
 }
 
-/* Mobile-first responsive image loading */
-img {
-  content-visibility: auto;
-}
-
-/* Fix for iOS fixed positioning */
-@supports (-webkit-touch-callout: none) {
-  .fixed {
-    position: -webkit-sticky;
-    position: sticky;
-  }
-}
-
 /* Snap scrolling for horizontal lists */
 .snap-x {
   scroll-snap-type: x mandatory;
 }
 .snap-start {
   scroll-snap-align: start;
+}
+
+/* Zomato-style badge */
+.badge-veg {
+  border: 1.5px solid #26A541;
+  border-radius: 2px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+}
+
+.badge-nonveg {
+  border: 1.5px solid #E23744;
+  border-radius: 2px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
 }

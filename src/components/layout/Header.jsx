@@ -9,8 +9,6 @@ import {
   X,
   LogOut,
   ChevronDown,
-  Moon,
-  Sun,
   Mic,
   Home,
   UtensilsCrossed,
@@ -18,13 +16,13 @@ import {
   UserCircle,
   ShoppingBag,
   Crown,
-  Coins
+  Coins,
+  ChevronRight
 } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { useCartStore } from '../../store/cartStore';
 import { useLocationStore } from '../../store/locationStore';
 import { useWalletStore } from '../../store/walletStore';
-import { useTheme } from '../../context/ThemeContext';
 import WalletBadge from '../wallet/WalletBadge';
 import Button from '../common/Button';
 import { cn } from '../../utils/cn';
@@ -37,8 +35,9 @@ const Header = () => {
   const { user, logout, isAuthenticated } = useAuthStore();
   const { items, toggleDrawer } = useCartStore();
   const { city } = useLocationStore();
-  const { theme, toggleTheme } = useTheme();
-  const isDark = theme === 'dark';
+  const wallet = useWalletStore();
+  const coins = wallet?.coins ?? 0;
+
   const [searchQuery, setSearchQuery] = useState('');
   const [isListening, setIsListening] = useState(false);
   const navigate = useNavigate();
@@ -52,47 +51,48 @@ const Header = () => {
       alert("Voice search is not supported in this browser.");
       return;
     }
-
     const recognition = new SpeechRecognition();
     recognition.lang = 'en-US';
     recognition.start();
     setIsListening(true);
-
     recognition.onresult = (event) => {
       const transcript = event.results[0][0].transcript;
       setSearchQuery(transcript);
       setIsListening(false);
       navigate(`/restaurants?search=${transcript}`);
     };
-
     recognition.onerror = () => setIsListening(false);
     recognition.onend = () => setIsListening(false);
   };
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
+    const handleScroll = () => setIsScrolled(window.scrollY > 10);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close menus on route change
   useEffect(() => {
     setIsMobileMenuOpen(false);
     setIsProfileOpen(false);
   }, [location.pathname]);
 
-  // Check if a nav item is active
+  // Close profile dropdown on outside click
+  useEffect(() => {
+    const handleClick = (e) => {
+      if (!e.target.closest('#profile-dropdown')) setIsProfileOpen(false);
+    };
+    if (isProfileOpen) document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [isProfileOpen]);
+
   const isActive = (path) => {
     if (path === '/') return location.pathname === '/';
     return location.pathname.startsWith(path);
   };
 
-  // Bottom nav items
   const bottomNavItems = [
     { icon: Home, label: 'Home', to: '/' },
-    { icon: ClipboardList, label: 'Blogs', to: '/blogs' },
+    { icon: UtensilsCrossed, label: 'Explore', to: '/restaurants' },
     { icon: ShoppingBag, label: 'Cart', to: '/cart', badge: cartItemCount },
     { icon: ClipboardList, label: 'Orders', to: isAuthenticated ? '/orders' : '/login' },
     { icon: UserCircle, label: 'Account', to: isAuthenticated ? '/profile' : '/login' },
@@ -100,35 +100,41 @@ const Header = () => {
 
   return (
     <>
+      {/* Main Header */}
       <header className={cn(
-        'sticky top-0 z-50 w-full transition-all duration-300 border-b border-transparent',
-        isScrolled ? 'bg-white/90 dark:bg-card-main/90 backdrop-blur-lg border-gray-100 dark:border-gray-800 py-2 shadow-sm' : 'bg-white dark:bg-card-main py-2 md:py-4'
+        'sticky top-0 z-50 w-full transition-all duration-200',
+        isScrolled 
+          ? 'bg-white border-b border-[#E8E8E8] shadow-sm' 
+          : 'bg-white border-b border-[#E8E8E8]'
       )}>
-        <div className="container mx-auto px-4 flex items-center justify-between gap-2 md:gap-4">
-          {/* Logo & Location */}
-          <div className="flex items-center gap-2 md:gap-8 shrink-0">
-            <Link to="/" className="flex items-center gap-1.5 md:gap-2">
-              <div className="bg-primary p-1 md:p-1.5 rounded-lg shadow-lg shadow-primary/20">
-                <span className="text-white font-black text-lg md:text-2xl tracking-tighter">T</span>
-              </div>
-              <span className="text-xl md:text-2xl font-black text-primary hidden sm:block">Tomato</span>
-            </Link>
+        <div className="container mx-auto px-4 md:px-6 flex items-center gap-4 h-16 md:h-[72px]">
 
-            <div className="hidden lg:flex items-center gap-2 bg-gray-50 dark:bg-gray-800 px-4 py-2.5 rounded-xl border border-gray-100 dark:border-gray-700 group hover:border-primary/30 transition-colors cursor-pointer">
-              <MapPin className="text-primary" size={18} />
-              <span className="text-sm font-medium text-text-secondary dark:text-gray-300">{city || 'Select Location'}</span>
-              <ChevronDown size={14} className="text-gray-400 group-hover:text-primary transition-colors" />
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-2 shrink-0">
+            <div className="bg-primary w-8 h-8 md:w-10 md:h-10 rounded-xl flex items-center justify-center shadow-md shadow-primary/30">
+              <span className="text-white font-black text-lg md:text-xl tracking-tighter">T</span>
             </div>
-          </div>
+            <span className="text-xl md:text-2xl font-black text-primary hidden sm:block tracking-tight">Tomato</span>
+          </Link>
 
-          {/* Desktop Search */}
-          <nav className="hidden md:flex items-center gap-4 flex-1 max-w-2xl">
-            <div className="relative group flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors" size={18} />
+          {/* Location Selector */}
+          <button className="hidden lg:flex items-center gap-2 px-4 py-2.5 rounded-xl border-2 border-transparent hover:border-gray-200 hover:bg-gray-50 transition-all group max-w-[220px]">
+            <MapPin className="text-primary shrink-0" size={18} strokeWidth={2.5} />
+            <div className="text-left overflow-hidden">
+              <p className="text-[11px] text-[#686B78] font-medium leading-none mb-0.5">Delivering to</p>
+              <p className="text-sm font-bold text-[#1C1C1C] truncate">{city || 'Select Location'}</p>
+            </div>
+            <ChevronDown size={16} className="text-[#686B78] group-hover:text-primary transition-colors shrink-0 ml-1" />
+          </button>
+
+          {/* Search Bar */}
+          <div className="hidden md:flex flex-1 max-w-xl">
+            <div className="relative w-full group">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#686B78] group-focus-within:text-primary transition-colors" size={18} />
               <input 
                 type="text" 
-                placeholder="Search for restaurants, cuisines..." 
-                className="bg-gray-50 dark:bg-gray-800 border border-transparent focus:border-primary/20 focus:ring-4 focus:ring-primary/5 rounded-xl pl-10 pr-12 py-2.5 text-sm w-full outline-none transition-all text-[#02060C] dark:text-white font-medium"
+                placeholder="Search for restaurants, cuisines or a dish" 
+                className="w-full bg-[#F5F5F6] border border-transparent focus:border-primary/30 focus:bg-white focus:ring-4 focus:ring-primary/5 rounded-xl pl-11 pr-12 py-3 text-sm outline-none transition-all text-[#1C1C1C] font-medium placeholder:text-[#9093A4] placeholder:font-normal"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={(e) => {
@@ -140,156 +146,227 @@ const Header = () => {
               <button 
                 onClick={handleVoiceSearch}
                 className={cn(
-                  "absolute right-3 top-1/2 -translate-y-1/2 transition-all p-1.5 rounded-lg",
-                  isListening ? "text-primary animate-pulse bg-primary/10" : "text-gray-400 hover:text-primary"
+                  "absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-lg transition-all",
+                  isListening 
+                    ? "text-primary animate-pulse bg-primary/10" 
+                    : "text-[#686B78] hover:text-primary hover:bg-gray-100"
                 )}
               >
                 <Mic size={18} />
               </button>
             </div>
-          </nav>
+          </div>
 
-          {/* Desktop Actions */}
-          <div className="hidden md:flex items-center gap-4 shrink-0">
+          {/* Right Actions */}
+          <div className="hidden md:flex items-center gap-2 shrink-0 ml-auto">
             {isAuthenticated && <WalletBadge />}
-            {/* Theme Toggle */}
-            <button 
-              onClick={toggleTheme}
-              className="p-2.5 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-text-secondary"
-            >
-              {isDark ? <Sun size={20} className="text-yellow-500" /> : <Moon size={20} />}
-            </button>
 
+            {/* Cart */}
             <button 
               onClick={() => toggleDrawer(true)}
-              className="relative p-2.5 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              className="relative flex items-center gap-2 px-4 py-2.5 rounded-xl hover:bg-gray-50 transition-colors group"
             >
-              <ShoppingBag
-                size={22} 
-                className="text-[#1A1A1A] dark:text-white hover:text-primary transition-all cursor-pointer" 
-                strokeWidth={2.5}
-              />
-              {cartItemCount > 0 && (
-                <span className="absolute top-1 right-1 bg-primary text-white text-[10px] font-bold h-5 w-5 rounded-full flex items-center justify-center border-2 border-white dark:border-card-main">
-                  {cartItemCount}
-                </span>
-              )}
+              <div className="relative">
+                <ShoppingBag size={22} className="text-[#1C1C1C] group-hover:text-primary transition-colors" strokeWidth={2} />
+                {cartItemCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-primary text-white text-[10px] font-black h-5 w-5 rounded-full flex items-center justify-center border-2 border-white shadow-sm">
+                    {cartItemCount}
+                  </span>
+                )}
+              </div>
+              <span className="text-sm font-bold text-[#1C1C1C] group-hover:text-primary transition-colors">Cart</span>
             </button>
 
+            {/* Auth */}
             {isAuthenticated ? (
-              <div className="relative">
+              <div className="relative" id="profile-dropdown">
                 <button 
                   onClick={() => setIsProfileOpen(!isProfileOpen)}
-                  className="flex items-center gap-2 p-1.5 rounded-xl hover:bg-gray-100 transition-colors"
+                  className="flex items-center gap-2.5 pl-2 pr-3 py-2 rounded-xl hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-200"
                 >
-                  <div className="h-9 w-9 bg-primary/10 rounded-full flex items-center justify-center text-primary font-bold">
-                    {user?.name?.charAt(0) || 'U'}
+                  <div className="h-8 w-8 bg-primary rounded-full flex items-center justify-center text-white font-black text-sm shadow-sm">
+                    {user?.name?.charAt(0)?.toUpperCase() || 'U'}
                   </div>
-                  <ChevronDown size={16} className={cn("text-gray-400 transition-transform", isProfileOpen && "rotate-180")} />
+                  <div className="text-left hidden lg:block">
+                    <p className="text-sm font-bold text-[#1C1C1C] leading-tight">{user?.name?.split(' ')[0]}</p>
+                    <p className="text-[10px] text-[#686B78] leading-tight capitalize">{user?.role?.toLowerCase()}</p>
+                  </div>
+                  <ChevronDown size={14} className={cn("text-[#686B78] transition-transform duration-200", isProfileOpen && "rotate-180")} />
                 </button>
 
+                {/* Profile Dropdown */}
                 {isProfileOpen && (
-                  <div className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-premium border border-gray-100 overflow-hidden py-1 animate-in fade-in zoom-in-95 duration-200">
-                    <div className="px-4 py-3 border-b border-gray-50">
-                      <div className="flex items-center gap-2">
-                         <p className="text-sm font-bold text-text-primary">{user?.name}</p>
-                         {user?.isPremium && (
-                            <span className="bg-yellow-100 text-yellow-700 text-[10px] font-black px-1.5 py-0.5 rounded uppercase tracking-widest flex items-center gap-1">
-                               <Crown size={10} /> Gold
-                            </span>
-                         )}
-                      </div>
-                      <p className="text-xs text-text-secondary truncate">{user?.email}</p>
-                    </div>
-                    {isAuthenticated && (
-                       <div className="px-4 py-2.5 border-b border-gray-50 flex justify-between items-center bg-gray-50/50">
-                          <Link to="/gold" className="flex items-center gap-2 text-sm font-bold hover:text-yellow-600">
-                             <Crown size={16} className="text-yellow-500" /> 
-                             {user?.isPremium ? 'Manage Gold' : 'Join Gold'}
-                          </Link>
-                          <div className="flex items-center gap-1 text-sm font-black text-primary">
-                             <Coins size={16} /> {coins}
+                  <div className="absolute right-0 top-full mt-2 w-64 bg-white rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] border border-[#F0F0F0] overflow-hidden z-50">
+                    {/* User info */}
+                    <div className="px-4 py-4 bg-gray-50/80 border-b border-[#F0F0F0]">
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 bg-primary rounded-full flex items-center justify-center text-white font-black">
+                          {user?.name?.charAt(0)?.toUpperCase() || 'U'}
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <p className="text-sm font-black text-[#1C1C1C]">{user?.name}</p>
+                            {user?.isPremium && (
+                              <span className="bg-yellow-400 text-[10px] font-black px-1.5 py-0.5 rounded text-yellow-900 uppercase tracking-wider flex items-center gap-0.5">
+                                <Crown size={8} /> Gold
+                              </span>
+                            )}
                           </div>
-                       </div>
-                    )}
-                    <Link to="/orders" className="flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:bg-gray-50 hover:text-primary transition-colors">
-                      <ShoppingCart size={16} /> My Orders
-                    </Link>
-                    {user?.role === 'ADMIN' && (
-                      <Link to="/admin" className="flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:bg-gray-50 hover:text-primary transition-colors">
-                        <User size={16} /> Admin Panel
+                          <p className="text-xs text-[#686B78] truncate">{user?.email}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Gold / Coins */}
+                    {isAuthenticated && (
+                      <Link to="/gold" className="flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition-colors border-b border-[#F0F0F0] group">
+                        <div className="flex items-center gap-2.5">
+                          <Crown size={18} className="text-yellow-500" />
+                          <span className="text-sm font-bold text-[#1C1C1C] group-hover:text-primary transition-colors">
+                            {user?.isPremium ? 'Manage Gold' : 'Join Tomato Gold'}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-1 text-sm font-black text-primary bg-primary/5 px-2 py-1 rounded-lg">
+                          <Coins size={14} /> {coins}
+                        </div>
                       </Link>
                     )}
-                    {user?.role === 'ADMIN' && (
-                      <Link to="/admin/blogs" className="flex items-center gap-3 px-4 py-2.5 text-sm text-text-secondary hover:bg-gray-50 hover:text-primary transition-colors">
-                        <ClipboardList size={16} /> Manage Blogs
+
+                    <div className="py-1">
+                      <Link to="/profile" className="flex items-center gap-3 px-4 py-3 text-sm text-[#1C1C1C] hover:bg-gray-50 hover:text-primary transition-colors font-medium">
+                        <UserCircle size={18} className="text-[#686B78]" /> My Profile
+                        <ChevronRight size={14} className="text-[#686B78] ml-auto" />
                       </Link>
-                    )}
-                    <button 
-                      onClick={() => { logout(); navigate('/'); }}
-                      className="flex items-center gap-3 px-4 py-3 text-sm text-red-500 hover:bg-red-50 w-full text-left transition-colors font-medium"
-                    >
-                      <LogOut size={16} /> Logout
-                    </button>
+                      <Link to="/orders" className="flex items-center gap-3 px-4 py-3 text-sm text-[#1C1C1C] hover:bg-gray-50 hover:text-primary transition-colors font-medium">
+                        <ShoppingCart size={18} className="text-[#686B78]" /> My Orders
+                        <ChevronRight size={14} className="text-[#686B78] ml-auto" />
+                      </Link>
+                      {user?.role === 'ADMIN' && (
+                        <>
+                          <Link to="/admin" className="flex items-center gap-3 px-4 py-3 text-sm text-[#1C1C1C] hover:bg-gray-50 hover:text-primary transition-colors font-medium">
+                            <User size={18} className="text-[#686B78]" /> Admin Panel
+                            <ChevronRight size={14} className="text-[#686B78] ml-auto" />
+                          </Link>
+                          <Link to="/admin/blogs" className="flex items-center gap-3 px-4 py-3 text-sm text-[#1C1C1C] hover:bg-gray-50 hover:text-primary transition-colors font-medium">
+                            <ClipboardList size={18} className="text-[#686B78]" /> Manage Blogs
+                            <ChevronRight size={14} className="text-[#686B78] ml-auto" />
+                          </Link>
+                        </>
+                      )}
+                    </div>
+
+                    <div className="border-t border-[#F0F0F0]">
+                      <button 
+                        onClick={() => { logout(); navigate('/'); setIsProfileOpen(false); }}
+                        className="flex items-center gap-3 px-4 py-3.5 text-sm text-red-500 hover:bg-red-50 w-full text-left transition-colors font-bold"
+                      >
+                        <LogOut size={18} /> Logout
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
             ) : (
               <div className="flex items-center gap-2">
                 <Link to="/login">
-                  <Button variant="ghost" size="sm">Login</Button>
+                  <button className="px-5 py-2.5 text-sm font-bold text-[#1C1C1C] hover:bg-gray-100 rounded-xl transition-colors">Login</button>
                 </Link>
                 <Link to="/register">
-                  <Button size="sm">Sign Up</Button>
+                  <button className="px-5 py-2.5 text-sm font-bold text-white bg-primary hover:bg-primary-dark rounded-xl transition-colors shadow-sm shadow-primary/20">Sign Up</button>
                 </Link>
               </div>
             )}
           </div>
 
-          {/* Mobile Actions */}
-          <div className="flex md:hidden items-center gap-2">
-            <button 
-              onClick={toggleTheme}
-              className="p-2 rounded-xl bg-gray-50 dark:bg-gray-800 text-text-secondary transition-colors"
-            >
-              {isDark ? <Sun size={20} className="text-yellow-500" /> : <Moon size={20} />}
-            </button>
-            <button 
-              onClick={() => toggleDrawer(true)}
-            >
-              <div className="relative p-2 rounded-xl group hover:bg-white transition-all transform active:scale-95">
-                <ShoppingCart size={24} className="text-black dark:text-white transition-colors" strokeWidth={2.5} />
-                {cartItemCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-primary text-white text-[10px] font-black h-5 w-5 rounded-full flex items-center justify-center border-2 border-white shadow-lg">
-                    {cartItemCount}
-                  </span>
-                )}
-              </div>
+          {/* Mobile right icons */}
+          <div className="flex md:hidden items-center gap-1 ml-auto">
+            <button onClick={() => toggleDrawer(true)} className="relative p-2.5 rounded-xl hover:bg-gray-100 transition-colors">
+              <ShoppingCart size={22} className="text-[#1C1C1C]" strokeWidth={2} />
+              {cartItemCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 bg-primary text-white text-[9px] font-black h-4.5 w-4.5 min-w-[18px] rounded-full flex items-center justify-center border-2 border-white text-[9px] px-0.5">
+                  {cartItemCount}
+                </span>
+              )}
             </button>
             <button 
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2 rounded-lg bg-gray-50 dark:bg-gray-800 text-text-primary dark:text-white"
+              className="p-2.5 rounded-xl hover:bg-gray-100 transition-colors text-[#1C1C1C]"
             >
               {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
           </div>
         </div>
 
-        {/* Mobile Menu */}
-        <AnimatedMobileMenu 
-          isOpen={isMobileMenuOpen} 
-          onClose={() => setIsMobileMenuOpen(false)}
-          isAuthenticated={isAuthenticated}
-          user={user}
-          logout={logout}
-          cartItemCount={cartItemCount}
-          navigate={navigate}
-        />
+        {/* Mobile Search */}
+        <div className="md:hidden px-4 pb-3">
+          <div className="relative">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9093A4]" size={16} />
+            <input 
+              type="text" 
+              placeholder="Search for food & restaurants..."
+              className="w-full bg-[#F5F5F6] rounded-xl pl-10 pr-4 py-2.5 text-sm outline-none text-[#1C1C1C] font-medium placeholder:text-[#9093A4] placeholder:font-normal border border-transparent focus:border-primary/30 focus:bg-white transition-all"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && e.target.value.trim()) {
+                  navigate(`/restaurants?search=${e.target.value}`);
+                }
+              }}
+            />
+          </div>
+        </div>
+
+        {/* Mobile Slide Menu */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden bg-white border-t border-[#F0F0F0] shadow-lg">
+            <div className="p-4 space-y-3">
+              <div className="grid grid-cols-2 gap-2">
+                <Link to="/restaurants" onClick={() => setIsMobileMenuOpen(false)}>
+                  <button className="w-full py-3 text-sm font-bold text-[#1C1C1C] border border-[#E8E8E8] rounded-xl hover:border-primary hover:text-primary transition-colors">Restaurants</button>
+                </Link>
+                <Link to="/cart" onClick={() => setIsMobileMenuOpen(false)}>
+                  <button className="w-full py-3 text-sm font-bold text-[#1C1C1C] border border-[#E8E8E8] rounded-xl hover:border-primary hover:text-primary transition-colors">Cart ({cartItemCount})</button>
+                </Link>
+              </div>
+              {isAuthenticated ? (
+                <div className="border-t border-[#F0F0F0] pt-3 space-y-2">
+                  <div className="flex items-center gap-3 px-2 py-1">
+                    <div className="h-9 w-9 bg-primary rounded-full flex items-center justify-center text-white font-black text-sm">
+                      {user?.name?.charAt(0)?.toUpperCase() || 'U'}
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-[#1C1C1C]">{user?.name}</p>
+                      <p className="text-xs text-[#686B78]">{user?.email}</p>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <Link to="/orders" onClick={() => setIsMobileMenuOpen(false)}>
+                      <button className="w-full py-2.5 text-sm font-bold text-[#1C1C1C] border border-[#E8E8E8] rounded-xl hover:border-primary hover:text-primary transition-colors">My Orders</button>
+                    </Link>
+                    <button 
+                      className="w-full py-2.5 text-sm font-bold text-red-500 border border-red-100 rounded-xl hover:bg-red-50 transition-colors"
+                      onClick={() => { logout(); setIsMobileMenuOpen(false); }}
+                    >
+                      Logout
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 gap-2 border-t border-[#F0F0F0] pt-3">
+                  <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>
+                    <button className="w-full py-3 text-sm font-bold text-[#1C1C1C] border border-[#E8E8E8] rounded-xl hover:border-primary hover:text-primary transition-colors">Login</button>
+                  </Link>
+                  <Link to="/register" onClick={() => setIsMobileMenuOpen(false)}>
+                    <button className="w-full py-3 text-sm font-bold text-white bg-primary rounded-xl hover:bg-primary-dark transition-colors">Sign Up</button>
+                  </Link>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </header>
 
-      {/* Mobile Bottom Navigation - Fully Active with Highlights */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-lg border-t border-gray-100 z-50 safe-pb">
-        <div className="flex items-center justify-around py-1.5">
+      {/* Mobile Bottom Navigation */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-[#E8E8E8] z-50 safe-pb shadow-[0_-2px_12px_rgba(0,0,0,0.06)]">
+        <div className="flex items-center justify-around py-2">
           {bottomNavItems.map((item, i) => {
             const active = isActive(item.to);
             return (
@@ -297,99 +374,28 @@ const Header = () => {
                 key={i} 
                 to={item.to} 
                 className={cn(
-                  "flex flex-col items-center gap-0.5 p-1.5 rounded-xl transition-all duration-300 relative min-w-[56px]",
-                  active 
-                    ? "text-primary" 
-                    : "text-text-secondary hover:text-primary"
+                  "flex flex-col items-center gap-1 py-1 px-3 rounded-xl transition-all duration-200 relative min-w-[56px]",
+                  active ? "text-primary" : "text-[#9093A4] hover:text-[#686B78]"
                 )}
               >
-                {/* Active indicator dot */}
-                {active && (
-                  <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 h-1 w-5 bg-primary rounded-full" />
-                )}
                 <div className="relative">
                   <item.icon size={22} strokeWidth={active ? 2.5 : 1.8} />
-                  {/* Cart badge */}
                   {item.badge > 0 && (
                     <span className="absolute -top-1.5 -right-2 bg-primary text-white text-[8px] font-black h-4 min-w-[16px] px-0.5 rounded-full flex items-center justify-center border-2 border-white">
                       {item.badge}
                     </span>
                   )}
                 </div>
-                <span className={cn(
-                  "text-[10px] leading-tight",
-                  active ? "font-black" : "font-semibold"
-                )}>{item.label}</span>
+                <span className={cn("text-[10px] leading-tight font-semibold", active && "font-black text-primary")}>
+                  {item.label}
+                </span>
+                {active && <div className="absolute -top-0 left-1/2 -translate-x-1/2 h-0.5 w-6 bg-primary rounded-full" />}
               </Link>
             );
           })}
         </div>
       </nav>
     </>
-  );
-};
-
-// Animated Mobile Menu Component
-const AnimatedMobileMenu = ({ isOpen, onClose, isAuthenticated, user, logout, cartItemCount, navigate }) => {
-  if (!isOpen) return null;
-  
-  return (
-    <div className="md:hidden bg-white border-t border-gray-100 animate-in slide-in-from-top duration-300 shadow-lg">
-      <div className="p-4 space-y-3">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-          <input 
-            type="text" 
-            placeholder="Search for food & restaurants..." 
-            className="bg-gray-50 border border-gray-100 rounded-xl pl-10 pr-4 py-3 text-sm w-full outline-none"
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && e.target.value.trim()) {
-                navigate(`/restaurants?search=${e.target.value}`);
-                onClose();
-              }
-            }}
-          />
-        </div>
-        
-        <div className="grid grid-cols-2 gap-2">
-          <Link to="/restaurants" onClick={onClose}>
-            <Button variant="outline" className="w-full text-sm" size="md">Restaurants</Button>
-          </Link>
-          <Link to="/cart" onClick={onClose}>
-            <Button variant="outline" className="w-full text-sm" size="md">Cart ({cartItemCount})</Button>
-          </Link>
-        </div>
-
-        {isAuthenticated ? (
-          <div className="border-t border-gray-100 pt-3 space-y-2">
-            <div className="flex items-center gap-3 px-2">
-              <div className="h-8 w-8 bg-primary/10 rounded-full flex items-center justify-center text-primary font-bold text-sm">
-                {user?.name?.charAt(0) || 'U'}
-              </div>
-              <div>
-                <p className="text-sm font-bold">{user?.name}</p>
-                <p className="text-xs text-text-secondary">{user?.email}</p>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-2">
-              <Link to="/orders" onClick={onClose}>
-                <Button variant="ghost" className="w-full text-sm" size="sm">My Orders</Button>
-              </Link>
-              <Button variant="danger" className="w-full text-sm" size="sm" onClick={() => { logout(); onClose(); }}>Logout</Button>
-            </div>
-          </div>
-        ) : (
-          <div className="grid grid-cols-2 gap-2">
-            <Link to="/login" onClick={onClose}>
-              <Button variant="ghost" className="w-full text-sm" size="md">Login</Button>
-            </Link>
-            <Link to="/register" onClick={onClose}>
-              <Button className="w-full text-sm" size="md">Sign Up</Button>
-            </Link>
-          </div>
-        )}
-      </div>
-    </div>
   );
 };
 

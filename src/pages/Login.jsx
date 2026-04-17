@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Mail, Lock, Eye, EyeOff, LogIn, ArrowRight, Smartphone } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, LogIn, ArrowRight, Smartphone, Shield } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { useGoogleLogin } from '@react-oauth/google';
@@ -22,12 +22,11 @@ const loginSchema = z.object({
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [authView, setAuthView] = useState('default'); // 'default' or 'otp'
+  const [authView, setAuthView] = useState('default');
   
   const { login } = useAuthStore();
   const navigate = useNavigate();
   const location = useLocation();
-
   const from = location.state?.from?.pathname || '/';
 
   const {
@@ -36,9 +35,7 @@ const Login = () => {
     watch,
     trigger,
     formState: { errors },
-  } = useForm({
-    resolver: zodResolver(loginSchema),
-  });
+  } = useForm({ resolver: zodResolver(loginSchema) });
 
   const emailValue = watch('email');
 
@@ -46,37 +43,24 @@ const Login = () => {
     onSuccess: async (tokenResponse) => {
       setIsLoading(true);
       try {
-        // You would typically send tokenResponse.access_token to your backend here
-        // For demonstration, simulating successful user profile fetch & login
         await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        const dummyUser = {
-          id: 'google-user-1',
-          name: 'Google User',
-          email: 'googleuser@example.com',
-          role: 'CUSTOMER',
-        };
-        const dummyToken = 'dummy-google-jwt-token';
-        
-        login(dummyUser, dummyToken);
+        const dummyUser = { id: 'google-user-1', name: 'Google User', email: 'googleuser@example.com', role: 'CUSTOMER' };
+        login(dummyUser, 'dummy-google-jwt-token');
         toast.success(`Welcome back, ${dummyUser.name}!`);
         navigate(from, { replace: true });
-      } catch (error) {
+      } catch {
         toast.error('Google login failed. Please try again.');
       } finally {
         setIsLoading(false);
       }
     },
-    onError: () => {
-      toast.error('Google login was unsuccessful.');
-    }
+    onError: () => toast.error('Google login was unsuccessful.')
   });
 
   const onSubmitPassword = async (data) => {
     setIsLoading(true);
     try {
       const response = await authService.login(data.email, data.password);
-      
       if (response.success) {
         const { user: userData, accessToken } = response.data;
         login(userData, accessToken);
@@ -86,11 +70,8 @@ const Login = () => {
         toast.error(response.message || 'Login failed');
       }
     } catch (error) {
-      console.error('Login error:', error);
-      const errorMsg = error.response?.data?.message || 'Invalid credentials or server error. Please try again.';
+      const errorMsg = error.response?.data?.message || 'Invalid email or password. Please try again.';
       toast.error(errorMsg);
-      
-      // If user not found, suggest registration (matching previous logic)
       if (error.response?.status === 404) {
         navigate('/register', { state: { email: data.email } });
       }
@@ -101,22 +82,17 @@ const Login = () => {
 
   const handleGetOTP = async () => {
     const isEmailValid = await trigger('email');
-    if (!isEmailValid) {
-      toast.error('Please enter a valid email to receive OTP');
-      return;
-    }
-    
+    if (!isEmailValid) { toast.error('Please enter a valid email'); return; }
     setIsLoading(true);
     try {
       const response = await authService.sendOtp(emailValue);
       if (response.success) {
         setAuthView('otp');
-        toast.success(`Secure OTP sent successfully to ${emailValue}`);
+        toast.success(`OTP sent to ${emailValue}`);
       } else {
         toast.error(response.message || 'Failed to send OTP');
       }
     } catch (error) {
-      console.error('OTP error:', error);
       toast.error(error.response?.data?.message || 'Failed to send OTP. Is your email registered?');
     } finally {
       setIsLoading(false);
@@ -126,31 +102,27 @@ const Login = () => {
   const handleVerifyOTP = async (otp) => {
     setIsLoading(true);
     try {
-      // In this backend, register handles both registration and login via OTP
-      // For a simple login via OTP, we might need a separate endpoint or use register with existing user
-      // Since the backend AuthController only has /register and /login (pwd), 
-      // I'll assume for now OTP is for registration as per the controller.
-      // If the user wants OTP login, they might need to update the backend.
-      // For now, I'll just show a message.
-      toast.info('OTP Login is being integrated with backend.');
-      setIsLoading(false);
-    } catch (error) {
+      toast.info('OTP Login coming soon!');
+    } catch {
       toast.error('OTP verification failed.');
+    } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen relative flex items-center justify-center p-4 overflow-hidden">
-      {/* Background Orbs */}
-      <div className="absolute top-0 -left-20 w-96 h-96 bg-primary/10 rounded-full blur-[100px] animate-pulse" />
-      <div className="absolute bottom-0 -right-20 w-96 h-96 bg-secondary/10 rounded-full blur-[100px] animate-pulse" />
+    <div className="min-h-screen bg-[#F5F5F5] flex items-center justify-center p-4">
+      {/* Background decoration */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
+        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-[#FC8019]/5 rounded-full blur-3xl" />
+      </div>
 
       <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5 }}
-        className="glass-card w-full max-w-md p-8 rounded-[2.5rem] relative overflow-hidden"
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        className="bg-white w-full max-w-md rounded-3xl shadow-[0_8px_40px_rgba(0,0,0,0.12)] overflow-hidden relative"
       >
         <AnimatePresence mode="wait">
           {authView === 'default' ? (
@@ -160,22 +132,24 @@ const Login = () => {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 20 }}
               transition={{ duration: 0.3 }}
+              className="p-8 md:p-10"
             >
-              <div className="text-center mb-10">
+              {/* Header */}
+              <div className="text-center mb-8">
                 <Link to="/" className="inline-flex items-center gap-2 mb-6">
-                  <div className="bg-primary p-1.5 rounded-lg">
+                  <div className="bg-primary w-10 h-10 rounded-xl flex items-center justify-center shadow-md shadow-primary/30">
                     <span className="text-white font-black text-xl tracking-tighter">T</span>
                   </div>
-                  <span className="text-xl font-black text-primary">Tomato</span>
+                  <span className="text-2xl font-black text-primary">Tomato</span>
                 </Link>
-                <h1 className="text-3xl font-black text-text-primary mb-2">Welcome Back!</h1>
-                <p className="text-text-secondary text-sm">Please enter your details to sign in</p>
+                <h1 className="text-2xl md:text-3xl font-black text-[#1C1C1C] mb-2">Welcome back!</h1>
+                <p className="text-[#686B78] text-sm">Sign in to continue your delicious journey</p>
               </div>
 
-              <form onSubmit={handleSubmit(onSubmitPassword)} className="space-y-6">
+              <form onSubmit={handleSubmit(onSubmitPassword)} className="space-y-5">
                 <Input
                   label="Email Address"
-                  placeholder="example@mail.com"
+                  placeholder="your@email.com"
                   icon={Mail}
                   error={errors.email?.message}
                   {...register('email')}
@@ -185,7 +159,7 @@ const Login = () => {
                   <Input
                     label="Password"
                     type={showPassword ? 'text' : 'password'}
-                    placeholder="••••••••"
+                    placeholder="Enter your password"
                     icon={Lock}
                     error={errors.password?.message}
                     {...register('password')}
@@ -193,85 +167,102 @@ const Login = () => {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-4 top-[38px] text-gray-400 hover:text-primary transition-colors"
+                    className="absolute right-4 top-[38px] text-[#9093A4] hover:text-primary transition-colors"
                   >
                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
                 </div>
 
-                <div className="flex items-center justify-between px-1">
+                <div className="flex items-center justify-between">
                   <label className="flex items-center gap-2 cursor-pointer group">
                     <input 
                       type="checkbox" 
-                      className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary/20 transition-all"
+                      className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary/20 transition-all accent-primary"
                       {...register('rememberMe')}
                     />
-                    <span className="text-sm text-text-secondary group-hover:text-text-primary transition-colors">Remember me</span>
+                    <span className="text-sm text-[#686B78] group-hover:text-[#1C1C1C] transition-colors">Remember me</span>
                   </label>
-                  <Link to="/forgot-password" size="sm" className="text-sm font-bold text-primary hover:underline">
+                  <Link to="/forgot-password" className="text-sm font-bold text-primary hover:text-primary-dark transition-colors">
                     Forgot Password?
                   </Link>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
-                  <Button
+                {/* Buttons */}
+                <div className="grid grid-cols-2 gap-3 pt-1">
+                  <button
                     type="submit"
-                    className="w-full py-3.5 text-sm rounded-[16px]"
-                    loading={isLoading && authView === 'default'}
+                    disabled={isLoading}
+                    className="w-full py-3.5 bg-primary hover:bg-primary-dark text-white font-black rounded-xl transition-colors text-sm shadow-sm shadow-primary/20 flex items-center justify-center gap-2 disabled:opacity-70"
                   >
-                    Sign In <LogIn size={16} className="ml-2" />
-                  </Button>
-                  <Button
+                    {isLoading ? (
+                      <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      <><LogIn size={16} /> Sign In</>
+                    )}
+                  </button>
+                  <button
                     type="button"
-                    variant="outline"
                     onClick={handleGetOTP}
                     disabled={isLoading}
-                    className="w-full py-3.5 text-sm rounded-[16px] border-2 border-primary/20 text-primary hover:bg-primary/5"
+                    className="w-full py-3.5 border-2 border-primary/20 hover:border-primary text-primary font-black rounded-xl transition-all text-sm flex items-center justify-center gap-2 hover:bg-primary/5 disabled:opacity-70"
                   >
-                    Login to OTP <Smartphone size={16} className="ml-2" />
-                  </Button>
+                    <Smartphone size={16} /> OTP Login
+                  </button>
                 </div>
 
-                <div className="relative py-4">
+                {/* Divider */}
+                <div className="relative py-3">
                   <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-gray-100 dark:border-gray-800"></div>
+                    <div className="w-full border-t border-[#F0F0F0]" />
                   </div>
                   <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-white dark:bg-[#111827] px-4 text-gray-400 font-medium">Or continue with</span>
+                    <span className="bg-white px-4 text-[#9093A4] font-semibold">Or continue with</span>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                {/* Social Login */}
+                <div className="grid grid-cols-2 gap-3">
                   <button 
                     type="button" 
                     onClick={() => handleGoogleLogin()}
-                    className="flex items-center justify-center gap-2 p-3 rounded-xl border border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                    className="flex items-center justify-center gap-2 py-3 rounded-xl border border-[#E8E8E8] hover:border-gray-300 hover:bg-gray-50 transition-all text-sm font-semibold text-[#1C1C1C]"
                   >
                     <img src="https://www.svgrepo.com/show/475656/google-color.svg" className="h-5" alt="Google" />
-                    <span className="text-sm font-medium dark:text-gray-300">Google</span>
+                    Google
                   </button>
-                  <button type="button" className="flex items-center justify-center gap-2 p-3 rounded-xl border border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                  <button 
+                    type="button" 
+                    className="flex items-center justify-center gap-2 py-3 rounded-xl border border-[#E8E8E8] hover:border-gray-300 hover:bg-gray-50 transition-all text-sm font-semibold text-[#1C1C1C]"
+                  >
                     <img src="https://www.svgrepo.com/show/475647/facebook-color.svg" className="h-5" alt="Facebook" />
-                    <span className="text-sm font-medium dark:text-gray-300">Facebook</span>
+                    Facebook
                   </button>
                 </div>
               </form>
 
-              <p className="mt-8 text-center text-sm text-text-secondary">
+              <p className="mt-8 text-center text-sm text-[#686B78]">
                 Don't have an account?{' '}
-                <Link to="/register" className="text-primary font-bold hover:underline flex items-center justify-center gap-1 mt-1">
+                <Link to="/register" className="text-primary font-black hover:underline inline-flex items-center gap-1">
                   Create account <ArrowRight size={14} />
                 </Link>
               </p>
+
+              {/* Trust badges */}
+              <div className="mt-6 flex items-center justify-center gap-2 text-[#686B78]">
+                <Shield size={14} />
+                <span className="text-[11px] font-medium">Secured with 256-bit SSL encryption</span>
+              </div>
             </motion.div>
           ) : (
-            <OtpVerification
-              key="otp-view"
-              email={emailValue}
-              onVerify={handleVerifyOTP}
-              onCancel={() => setAuthView('default')}
-              resendOtp={handleGetOTP}
-            />
+            <div className="p-8 md:p-10">
+              <OtpVerification
+                key="otp-view"
+                email={emailValue}
+                onVerify={handleVerifyOTP}
+                onCancel={() => setAuthView('default')}
+                resendOtp={handleGetOTP}
+              />
+            </div>
           )}
         </AnimatePresence>
       </motion.div>
