@@ -27,7 +27,7 @@ const registerSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
   email: z.string().email('Please enter a valid email address'),
   phone: z.string().regex(/^[0-9]{10}$/, 'Please enter a valid 10-digit phone number'),
-  password: z.string().min(6, 'Password must be at least 6 characters').optional().or(z.literal('')),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
   address: z.string().min(10, 'Please enter a detailed address'),
   role: z.enum(['CUSTOMER', 'DELIVERY_PARTNER', 'ADMIN']),
 });
