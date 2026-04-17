@@ -9,6 +9,7 @@ import SocialProof from './components/common/SocialProof';
 import CartDrawer from './components/cart/CartDrawer';
 import { Spinner } from './components/common/Loader'; 
 import { ThemeProvider } from './context/ThemeContext';
+import { useEffect } from 'react';
 
 // Lazy loaded pages
 const Home = lazy(() => import('./pages/Home'));
@@ -55,6 +56,18 @@ const PageLoader = () => (
 );
 
 function App() {
+  useEffect(() => {
+    const handleError = (e) => {
+      if (e.message?.includes('Failed to fetch dynamically imported module') || 
+          e.message?.includes('Importing a module script failed')) {
+        console.warn('Chunk load error detected, reloading page...');
+        window.location.reload();
+      }
+    };
+    window.addEventListener('error', handleError);
+    return () => window.removeEventListener('error', handleError);
+  }, []);
+
   return (
     <ThemeProvider>
       <QueryClientProvider client={queryClient}>
