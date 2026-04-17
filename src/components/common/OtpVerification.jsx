@@ -54,8 +54,11 @@ const OtpVerification = ({ email, onVerify, onCancel, resendOtp }) => {
     const otpValue = otp.join('');
     if (otpValue.length === 6) {
       setIsVerifying(true);
-      await onVerify(otpValue);
-      setIsVerifying(false);
+      try {
+        await onVerify(otpValue);
+      } finally {
+        setIsVerifying(false);
+      }
     }
   };
 

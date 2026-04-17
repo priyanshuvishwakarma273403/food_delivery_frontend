@@ -5,6 +5,7 @@ import { useAuthStore } from '../store/authStore';
 const apiClient = axios.create({
   baseURL: BASE_URL,
   withCredentials: true,
+  timeout: 30000, // 30 seconds timeout
   headers: {
     'Content-Type': 'application/json',
   },
