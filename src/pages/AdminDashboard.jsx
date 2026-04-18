@@ -8,8 +8,10 @@ import {
   Plus,
   MoreVertical,
   Search,
-  LayoutDashboard
+  LayoutDashboard,
+  Home as HomeIcon
 } from 'lucide-react';
+
 import { 
   LineChart, 
   Line, 
@@ -82,10 +84,16 @@ const AdminDashboard = () => {
              <Link to="/admin/orders" className="flex items-center gap-4 text-text-secondary font-bold hover:text-primary p-4 rounded-2xl transition-all">
                <ShoppingBag size={20} /> Manage Orders
              </Link>
-             <Link to="/admin/users" className="flex items-center gap-4 text-text-secondary font-bold hover:text-primary p-4 rounded-2xl transition-all">
-               <Users size={20} /> User Management
-             </Link>
+              <Link to="/admin/users" className="flex items-center gap-4 text-text-secondary font-bold hover:text-primary p-4 rounded-2xl transition-all">
+                <Users size={20} /> User Management
+              </Link>
+              <div className="pt-6 mt-6 border-t border-gray-100">
+                <Link to="/" className="flex items-center gap-4 text-text-secondary font-bold hover:text-primary p-4 rounded-2xl transition-all">
+                  <HomeIcon size={20} /> Back to Home
+                </Link>
+              </div>
           </nav>
+
         </aside>
 
         {/* Main Content */}
