@@ -1,18 +1,29 @@
 import { motion } from 'framer-motion';
 import { Search, MapPin, Navigation, ArrowRight, TrendingUp, Flame, Star, Clock, ChevronRight, Sparkles, Shield, Zap, Heart } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import RestaurantCard from '../components/restaurant/RestaurantCard';
-import { CUISINE_CATEGORIES, getTopRatedRestaurants, getTotalFoodItems, getTotalRestaurants } from '../data/restaurants';
+import restaurantService from '../services/restaurantService';
+import { CUISINE_CATEGORIES } from '../data/restaurants';
 import StoryViewer from '../components/common/StoryViewer';
 import MoodSearch from '../components/ai/MoodSearch';
+import { Spinner } from '../components/common/Loader';
 
 const Home = () => {
   const [searchValue, setSearchValue] = useState('');
   const navigate = useNavigate();
-  const topRestaurants = getTopRatedRestaurants(8);
-  const totalFoods = getTotalFoodItems();
-  const totalRestaurants = getTotalRestaurants();
+
+  const { data: restaurantsResponse, isLoading, error } = useQuery({
+    queryKey: ['restaurants'],
+    queryFn: () => restaurantService.getAllRestaurants()
+  });
+
+  const restaurants = restaurantsResponse?.data || [];
+  const topRestaurants = [...restaurants].sort((a, b) => b.rating - a.rating).slice(0, 8);
+  const totalRestaurants = restaurants.length || 1500;
+  const totalFoods = restaurants.reduce((acc, r) => acc + (r.menuItems?.length || 0), 0) || 5000;
+
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -191,10 +202,19 @@ const Home = () => {
           </div>
 
           <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-            {topRestaurants.map((restaurant) => (
-              <RestaurantCard key={restaurant.id} restaurant={restaurant} />
-            ))}
+            {isLoading ? (
+              Array(8).fill(0).map((_, i) => (
+                <div key={i} className="h-[300px] bg-gray-100 animate-pulse rounded-2xl" />
+              ))
+            ) : topRestaurants.length > 0 ? (
+              topRestaurants.map((restaurant) => (
+                <RestaurantCard key={restaurant.id} restaurant={restaurant} />
+              ))
+            ) : (
+              <div className="col-span-full text-center py-10 text-gray-400 font-bold">No restaurants found in database.</div>
+            )}
           </div>
+
         </div>
       </section>
 
