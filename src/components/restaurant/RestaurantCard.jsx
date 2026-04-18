@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion';
 import { Star, Clock, Percent } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { getOptimizedImageUrl } from '../../utils/cloudinary';
+
 
 const RestaurantCard = ({ restaurant }) => {
   const {
@@ -29,8 +31,9 @@ const RestaurantCard = ({ restaurant }) => {
         {/* Image Container */}
         <div className="relative aspect-[16/9] overflow-hidden rounded-t-2xl">
           <img 
-            src={image} 
+            src={getOptimizedImageUrl(image, { width: 500, height: 300 })} 
             alt={name}
+
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             loading="lazy"
           />

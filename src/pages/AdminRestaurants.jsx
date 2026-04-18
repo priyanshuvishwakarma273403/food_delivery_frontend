@@ -11,8 +11,10 @@ import {
   ArrowLeft,
   ChevronDown,
   Eye,
-  UtensilsCrossed
+  UtensilsCrossed,
+  Upload
 } from 'lucide-react';
+
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import Button from '../components/common/Button';
@@ -20,12 +22,41 @@ import Badge from '../components/common/Badge';
 import Input from '../components/common/Input';
 import { toast } from 'react-hot-toast';
 import { ALL_RESTAURANTS } from '../data/restaurants';
+import mediaService from '../services/mediaService';
+import { getOptimizedImageUrl } from '../utils/cloudinary';
+
 
 const AdminRestaurants = () => {
   const [search, setSearch] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [uploading, setUploading] = useState(false);
+
+  const handleUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    try {
+      setUploading(true);
+      const loadingToast = toast.loading('Uploading image to Cloudinary...');
+      const response = await mediaService.uploadImage(file);
+      toast.dismiss(loadingToast);
+      
+      if (response.success) {
+        setFormData(prev => ({ ...prev, image: response.data.url }));
+        toast.success('Image uploaded successfully!');
+      } else {
+        toast.error('Failed to upload image');
+      }
+    } catch (error) {
+      console.error('Upload error:', error);
+      toast.error('Error uploading image');
+    } finally {
+      setUploading(false);
+    }
+  };
+
   
   // Initialize with ALL restaurants from our mega database
   const [restaurants, setRestaurants] = useState(
@@ -180,7 +211,8 @@ const AdminRestaurants = () => {
                 className="bg-white rounded-2xl md:rounded-[2rem] overflow-hidden shadow-sm border border-gray-100 group"
               >
                 <div className="relative h-36 md:h-48">
-                  <img src={res.image} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt={res.name} loading="lazy" />
+                  <img src={getOptimizedImageUrl(res.image, { width: 400, height: 250 })} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt={res.name} loading="lazy" />
+
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                   <div className="absolute top-3 right-3 flex gap-2">
                     <button onClick={() => toggleStatus(res.id)} className={`h-8 w-8 md:h-10 md:w-10 rounded-xl flex items-center justify-center backdrop-blur-md transition-all ${res.isOpen ? 'bg-green-500/80 text-white' : 'bg-red-500/80 text-white'}`}>
@@ -255,18 +287,35 @@ const AdminRestaurants = () => {
                   <Input label="Restaurant Name" placeholder="e.g. Pizza Palace" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} required />
                   <Input label="Cuisine Types" placeholder="Italian, Fast Food" value={formData.cuisine} onChange={(e) => setFormData({...formData, cuisine: e.target.value})} required />
                 </div>
-                <Input 
-                  label="Cover Image URL" 
-                  placeholder="https://images.unsplash.com/..." 
-                  icon={ImageIcon}
-                  value={formData.image}
-                  onChange={(e) => setFormData({...formData, image: e.target.value})}
-                />
+                <div className="flex gap-2 items-end">
+                  <div className="flex-1">
+                    <Input 
+                      label="Cover Image URL" 
+                      placeholder="https://images.unsplash.com/..." 
+                      icon={ImageIcon}
+                      value={formData.image}
+                      onChange={(e) => setFormData({...formData, image: e.target.value})}
+                    />
+                  </div>
+                  <label className="shrink-0 h-[46px] px-4 bg-gray-50 hover:bg-primary/10 text-text-secondary hover:text-primary rounded-xl flex items-center justify-center cursor-pointer transition-all border border-gray-100 font-bold text-xs">
+                    {uploading ? (
+                      <div className="h-4 w-4 border-2 border-primary border-t-transparent rounded-full animate-spin mr-2" />
+                    ) : (
+                      <Upload size={14} className="mr-1.5" />
+                    )}
+                    {uploading ? 'Uploading...' : 'Upload Image'}
+                    <input type="file" className="hidden" onChange={handleUpload} accept="image/*" disabled={uploading} />
+                  </label>
+                </div>
                 {formData.image && (
-                  <div className="h-32 rounded-2xl overflow-hidden border border-gray-100">
-                    <img src={formData.image} className="w-full h-full object-cover" alt="Preview" />
+                  <div className="h-32 rounded-2xl overflow-hidden border border-gray-100 relative group">
+                    <img src={getOptimizedImageUrl(formData.image, { width: 400 })} className="w-full h-full object-cover" alt="Preview" />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <p className="text-white text-[10px] font-bold">Cloudinary Optimized Preview</p>
+                    </div>
                   </div>
                 )}
+
                 <Input label="Address" placeholder="Sector 62, Noida" value={formData.address} onChange={(e) => setFormData({...formData, address: e.target.value})} />
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
                   <Input label="Rating" type="number" step="0.1" min="1" max="5" placeholder="4.5" value={formData.rating} onChange={(e) => setFormData({...formData, rating: e.target.value})} />

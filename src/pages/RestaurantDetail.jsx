@@ -21,6 +21,8 @@ import { getRestaurantById } from '../data/restaurants';
 import Button from '../components/common/Button';
 import Badge from '../components/common/Badge';
 import { cn } from '../utils/cn';
+import { getOptimizedImageUrl } from '../utils/cloudinary';
+
 
 const RestaurantDetail = () => {
   const { id } = useParams();
@@ -83,7 +85,7 @@ const RestaurantDetail = () => {
 
       <div className="relative shrink-0">
         <div className="h-20 w-20 md:h-32 md:w-32 rounded-xl md:rounded-2xl overflow-hidden shadow-premium">
-          <img src={item.image} alt={item.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy" />
+          <img src={getOptimizedImageUrl(item.image, { width: 300, height: 300 })} alt={item.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy" />
         </div>
         
         <div className="absolute -bottom-2 md:-bottom-3 left-1/2 -translate-x-1/2">
@@ -120,7 +122,7 @@ const RestaurantDetail = () => {
     <div className="min-h-screen">
       {/* Hero Banner */}
       <div className="h-[200px] sm:h-[280px] md:h-[400px] relative overflow-hidden">
-        <img src={restaurant.image} className="w-full h-full object-cover" alt={restaurant.name} loading="lazy" />
+        <img src={getOptimizedImageUrl(restaurant.image, { width: 1200, height: 600 })} className="w-full h-full object-cover" alt={restaurant.name} loading="lazy" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
         
         <Link to="/restaurants" className="absolute top-4 md:top-8 left-4 md:left-8 h-8 w-8 md:h-10 md:w-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white hover:text-primary transition-all">

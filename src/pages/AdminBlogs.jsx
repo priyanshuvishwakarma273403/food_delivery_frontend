@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import { useBlogStore } from '../store/blogStore';
 import { motion } from 'framer-motion';
-import { Plus, Trash2, Edit3, X, Image as ImageIcon, Send } from 'lucide-react';
+import { Plus, Trash2, Edit3, X, Image as ImageIcon, Send, Upload } from 'lucide-react';
+import mediaService from '../services/mediaService';
+import { getOptimizedImageUrl } from '../utils/cloudinary';
+
 import Button from '../components/common/Button';
 import Input from '../components/common/Input';
 import toast from 'react-hot-toast';
@@ -16,6 +19,26 @@ const AdminBlogs = () => {
     image: '',
     category: 'Festival',
   });
+  const [uploading, setUploading] = useState(false);
+
+  const handleUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    try {
+      setUploading(true);
+      const response = await mediaService.uploadImage(file);
+      if (response.success) {
+        setNewBlog(prev => ({ ...prev, image: response.data.url }));
+        toast.success('Image uploaded!');
+      }
+    } catch (error) {
+      toast.error('Upload failed');
+    } finally {
+      setUploading(false);
+    }
+  };
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -75,20 +98,39 @@ const AdminBlogs = () => {
                   onChange={e => setNewBlog({...newBlog, title: e.target.value})}
                 />
                 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Input 
                     label="Category" 
                     placeholder="e.g. Festival, Health" 
                     value={newBlog.category}
                     onChange={e => setNewBlog({...newBlog, category: e.target.value})}
                   />
-                  <Input 
-                    label="Image URL" 
-                    placeholder="Unsplash image URL" 
-                    value={newBlog.image}
-                    onChange={e => setNewBlog({...newBlog, image: e.target.value})}
-                  />
+                  <div className="flex gap-2 items-end">
+                    <div className="flex-1">
+                      <Input 
+                        label="Image" 
+                        placeholder="Paste URL or upload" 
+                        value={newBlog.image}
+                        onChange={e => setNewBlog({...newBlog, image: e.target.value})}
+                      />
+                    </div>
+                    <label className="shrink-0 h-[46px] w-12 bg-gray-50 hover:bg-primary/10 text-text-secondary hover:text-primary rounded-xl flex items-center justify-center cursor-pointer transition-all border border-gray-100">
+                      {uploading ? (
+                        <div className="h-4 w-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                      ) : (
+                        <Upload size={18} />
+                      )}
+                      <input type="file" className="hidden" onChange={handleUpload} accept="image/*" disabled={uploading} />
+                    </label>
+                  </div>
                 </div>
+
+                {newBlog.image && (
+                  <div className="h-32 rounded-2xl overflow-hidden border border-gray-100">
+                    <img src={getOptimizedImageUrl(newBlog.image, { width: 500 })} className="w-full h-full object-cover" alt="Preview" />
+                  </div>
+                )}
+
 
                 <div className="space-y-2">
                   <label className="text-xs font-black uppercase tracking-widest text-text-secondary">Content</label>
@@ -123,7 +165,8 @@ const AdminBlogs = () => {
                 <tr key={blog.id} className="hover:bg-gray-50/50 transition-colors">
                   <td className="px-6 py-5">
                     <div className="flex items-center gap-4">
-                      <img src={blog.image} className="w-12 h-12 rounded-xl object-cover" />
+                      <img src={getOptimizedImageUrl(blog.image, { width: 100, height: 100 })} className="w-12 h-12 rounded-xl object-cover" />
+
                       <div>
                         <p className="font-bold text-text-primary leading-tight">{blog.title}</p>
                         <p className="text-xs text-text-secondary truncate max-w-[200px]">{blog.content}</p>
