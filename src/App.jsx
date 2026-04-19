@@ -25,7 +25,9 @@ const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 const AdminRestaurants = lazy(() => import('./pages/AdminRestaurants'));
 const AdminOrders = lazy(() => import('./pages/AdminOrders'));
 const AdminUsers = lazy(() => import('./pages/AdminUsers'));
+const AdminSales = lazy(() => import('./pages/AdminSales'));
 const DeliveryDashboard = lazy(() => import('./pages/DeliveryDashboard'));
+
 
 const NotFound = lazy(() => import('./pages/NotFound'));
 const About = lazy(() => import('./pages/About'));
@@ -100,6 +102,8 @@ function App() {
                 <Route path="/admin/orders" element={<ProtectedRoute roles={['ADMIN']}><AdminOrders /></ProtectedRoute>} />
                 <Route path="/admin/users" element={<ProtectedRoute roles={['ADMIN']}><AdminUsers /></ProtectedRoute>} />
                 <Route path="/admin/blogs" element={<ProtectedRoute roles={['ADMIN']}><AdminBlogs /></ProtectedRoute>} />
+                <Route path="/admin/sales" element={<ProtectedRoute roles={['ADMIN']}><AdminSales /></ProtectedRoute>} />
+
 
                 <Route path="/delivery/dashboard" element={<ProtectedRoute roles={['DELIVERY_PARTNER']}><DeliveryDashboard /></ProtectedRoute>} />
                 <Route path="*" element={<NotFound />} />
