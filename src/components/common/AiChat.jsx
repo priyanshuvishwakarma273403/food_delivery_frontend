@@ -27,7 +27,8 @@ const AiChat = () => {
     setIsTyping(true);
 
     try {
-      const response = await apiClient.post('/ai/chat', userMsg);
+      const response = await apiClient.post('/ai/chat', { message: userMsg });
+
       if (response.data.success) {
         setMessages(prev => [...prev, { role: 'bot', text: response.data.data }]);
       }
