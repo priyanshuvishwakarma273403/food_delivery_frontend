@@ -169,6 +169,12 @@
   animation: fadeIn 0.3s ease-out forwards;
 }
 
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+
 /* Snap scrolling for horizontal lists */
 .snap-x {
   scroll-snap-type: x mandatory;

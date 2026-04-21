@@ -20,6 +20,7 @@ import { useCartStore } from '../store/cartStore';
 import { getRestaurantById } from '../data/restaurants';
 import Button from '../components/common/Button';
 import Badge from '../components/common/Badge';
+import CoinRewardPopup from '../components/common/CoinRewardPopup';
 import { cn } from '../utils/cn';
 import { getOptimizedImageUrl } from '../utils/cloudinary';
 
@@ -32,7 +33,20 @@ const RestaurantDetail = () => {
   );
   const [menuSearch, setMenuSearch] = useState('');
   const [vegOnly, setVegOnly] = useState(false);
+  const [showReward, setShowReward] = useState(false);
+  const [rewardCoins, setRewardCoins] = useState(0);
   const { items, addItem, updateQuantity, getTotalAmount } = useCartStore();
+
+  const handleAddItem = (item, restaurantId) => {
+    addItem(item, restaurantId);
+    // Show 1% coin reward preview
+    const coins = Math.floor(item.price * 0.01);
+    if (coins > 0) {
+      setRewardCoins(coins);
+      setShowReward(true);
+    }
+  };
+
 
   if (!restaurant) {
     return (
@@ -99,7 +113,7 @@ const RestaurantDetail = () => {
               </button>
               <span className="px-2 md:px-3 font-black text-xs md:text-sm">{getItemQuantity(item.id)}</span>
               <button 
-                onClick={() => addItem(item, restaurant.id)}
+                onClick={() => handleAddItem(item, restaurant.id)}
                 className="px-2 md:px-3 py-1.5 md:py-2 hover:bg-primary/5 transition-colors"
               >
                 <Plus size={12} strokeWidth={3} />
@@ -107,12 +121,13 @@ const RestaurantDetail = () => {
             </div>
           ) : (
             <Button 
-              onClick={() => addItem(item, restaurant.id)}
+              onClick={() => handleAddItem(item, restaurant.id)}
               className="bg-white text-primary border border-primary/20 hover:border-primary shadow-premium px-4 md:px-8 py-1.5 md:py-2.5 rounded-lg md:rounded-xl font-black uppercase text-[10px] md:text-xs whitespace-nowrap"
             >
               ADD
             </Button>
           )}
+
         </div>
       </div>
     </div>
@@ -260,8 +275,15 @@ const RestaurantDetail = () => {
           </div>
         </div>
       )}
+      {/* Coin Reward Popup */}
+      <CoinRewardPopup 
+        show={showReward} 
+        coins={rewardCoins} 
+        onClose={() => setShowReward(false)} 
+      />
     </div>
   );
 };
+
 
 export default RestaurantDetail;

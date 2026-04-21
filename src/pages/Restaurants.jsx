@@ -13,10 +13,12 @@ import {
 } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import RestaurantCard from '../components/restaurant/RestaurantCard';
+import Skeleton from '../components/common/Skeleton';
 import { ALL_RESTAURANTS, CUISINE_CATEGORIES } from '../data/restaurants';
 import Button from '../components/common/Button';
 import Badge from '../components/common/Badge';
 import { cn } from '../utils/cn';
+import { useEffect } from 'react';
 
 const Restaurants = () => {
   const [searchParams] = useSearchParams();
@@ -29,6 +31,14 @@ const Restaurants = () => {
   const [showMobileFilters, setShowMobileFilters] = useState(false);
   const [viewMode, setViewMode] = useState('grid');
   const [visibleCount, setVisibleCount] = useState(20);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Simulate loading
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 1200);
+    return () => clearTimeout(timer);
+  }, []);
+
 
   const filters = [
     { id: 'veg', label: 'Pure Veg', emoji: '🥬' },
@@ -203,20 +213,32 @@ const Restaurants = () => {
 
         {/* Results Grid */}
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">
-          <AnimatePresence>
-            {displayedRestaurants.map((res) => (
-              <motion.div
-                key={res.id}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                layout
-              >
-                <RestaurantCard restaurant={res} />
-              </motion.div>
-            ))}
-          </AnimatePresence>
+          {isLoading ? (
+            // Show 8 skeleton cards
+            Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="bg-white rounded-2xl overflow-hidden shadow-premium p-3">
+                <Skeleton className="aspect-[16/9] w-full rounded-xl mb-3" />
+                <Skeleton className="h-6 w-3/4 mb-2" />
+                <Skeleton className="h-4 w-1/2" />
+              </div>
+            ))
+          ) : (
+            <AnimatePresence>
+              {displayedRestaurants.map((res) => (
+                <motion.div
+                  key={res.id}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  layout
+                >
+                  <RestaurantCard restaurant={res} />
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          )}
         </div>
+
 
         {/* Load More */}
         {visibleCount < filteredRestaurants.length && (
