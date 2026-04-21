@@ -19,7 +19,15 @@ const authService = {
   logout: async () => {
     // Backend logout if needed, usually just client side
     return { success: true };
+  },
+  
+  googleLogin: async (idToken) => {
+    const response = await apiClient.post('/auth/google', idToken, {
+      headers: { 'Content-Type': 'text/plain' }
+    });
+    return response.data;
   }
 };
+
 
 export default authService;

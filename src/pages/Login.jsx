@@ -43,12 +43,16 @@ const Login = () => {
     onSuccess: async (tokenResponse) => {
       setIsLoading(true);
       try {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        const dummyUser = { id: 'google-user-1', name: 'Google User', email: 'googleuser@example.com', role: 'CUSTOMER' };
-        login(dummyUser, 'dummy-google-jwt-token');
-        toast.success(`Welcome back, ${dummyUser.name}!`);
-        navigate(from, { replace: true });
-      } catch {
+        const response = await authService.googleLogin(tokenResponse.credential);
+        if (response.success) {
+          const { user: userData, accessToken } = response.data;
+          login(userData, accessToken);
+          toast.success(`Welcome back, ${userData.name}!`);
+          navigate(from, { replace: true });
+        } else {
+          toast.error(response.message || 'Google login failed');
+        }
+      } catch (error) {
         toast.error('Google login failed. Please try again.');
       } finally {
         setIsLoading(false);
@@ -56,6 +60,7 @@ const Login = () => {
     },
     onError: () => toast.error('Google login was unsuccessful.')
   });
+
 
   const onSubmitPassword = async (data) => {
     setIsLoading(true);
