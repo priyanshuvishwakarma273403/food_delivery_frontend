@@ -32,38 +32,47 @@ import { Link } from 'react-router-dom';
 import Badge from '../components/common/Badge';
 import Button from '../components/common/Button';
 
-// Dummy Stats
-const STATS = [
-  { label: 'Total Orders', value: '1,280', color: 'bg-blue-500', icon: ShoppingBag, change: '+12.5%' },
-  { label: 'Total Revenue', value: '₹4.2L', color: 'bg-green-500', icon: DollarSign, change: '+8.2%' },
-  { label: 'Total Customers', value: '3,450', color: 'bg-orange-500', icon: Users, change: '+15.3%' },
-  { label: 'Active Riders', value: '45', color: 'bg-primary', icon: Package, change: '+5.0%' },
-];
-
-const CHART_DATA = [
-  { day: 'Mon', orders: 120, revenue: 12000 },
-  { day: 'Tue', orders: 150, revenue: 15000 },
-  { day: 'Wed', orders: 180, revenue: 21000 },
-  { day: 'Thu', orders: 140, revenue: 11000 },
-  { day: 'Fri', orders: 250, revenue: 35000 },
-  { day: 'Sat', orders: 400, revenue: 60000 },
-  { day: 'Sun', orders: 350, revenue: 52000 },
-];
-
-const PIE_DATA = [
-  { name: 'Delivered', value: 400, color: '#26A541' },
-  { name: 'Cancelled', value: 50, color: '#E23744' },
-  { name: 'Preparing', value: 100, color: '#FC8019' },
-  { name: 'On its way', value: 80, color: '#2563eb' },
-];
-
-const RECENT_ORDERS = [
-  { id: 'ORD5542', customer: 'John Doe', restaurant: 'Burger King', amount: 450, status: 'DELIVERED' },
-  { id: 'ORD5589', customer: 'Jane Smith', restaurant: 'Pizza Express', amount: 850, status: 'PREPARING' },
-  { id: 'ORD6021', customer: 'Bob Marley', restaurant: 'Spice Garden', amount: 320, status: 'PLACED' },
-];
+import { useState, useEffect } from 'react';
+import apiClient from '../api/axios';
 
 const AdminDashboard = () => {
+  const [stats, setStats] = useState({
+    totalOrders: '0',
+    totalRevenue: '₹0',
+    totalCustomers: '0',
+    activeRestaurants: '0'
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const response = await apiClient.get('/admin/analytics/stats');
+        if (response.data.success) {
+          const data = response.data.data;
+          setStats({
+            totalOrders: data.totalOrders.toLocaleString(),
+            totalRevenue: `₹${(data.totalRevenue / 100000).toFixed(1)}L`,
+            totalCustomers: data.totalCustomers.toLocaleString(),
+            activeRestaurants: data.activeRestaurants.toLocaleString()
+          });
+        }
+      } catch (error) {
+        console.error('Failed to fetch stats:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchStats();
+  }, []);
+
+  const DYNAMIC_STATS = [
+    { label: 'Total Orders', value: stats.totalOrders, color: 'bg-blue-500', icon: ShoppingBag, change: '+12.5%' },
+    { label: 'Total Revenue', value: stats.totalRevenue, color: 'bg-green-500', icon: DollarSign, change: '+8.2%' },
+    { label: 'Total Customers', value: stats.totalCustomers, color: 'bg-orange-500', icon: Users, change: '+15.3%' },
+    { label: 'Active Restaurants', value: stats.activeRestaurants, color: 'bg-primary', icon: Package, change: '+5.0%' },
+  ];
+
   return (
     <div className="min-h-screen bg-gray-50/50">
       <div className="flex">
@@ -122,7 +131,7 @@ const AdminDashboard = () => {
 
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-            {STATS.map((stat, i) => (
+            {DYNAMIC_STATS.map((stat, i) => (
               <motion.div
                 key={i}
                 initial={{ opacity: 0, y: 20 }}
@@ -141,6 +150,7 @@ const AdminDashboard = () => {
               </motion.div>
             ))}
           </div>
+
 
           {/* Charts Row */}
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 mb-12">
