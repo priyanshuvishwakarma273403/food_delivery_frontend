@@ -22,11 +22,11 @@ const restaurantService = {
     return response.data;
   },
   getMenuByRestaurantId: async (id) => {
-    const response = await apiClient.get(`/menu-items/restaurant/${id}`);
+    const response = await apiClient.get(`/menu/restaurant/${id}`);
     return response.data;
   },
   createMenuItem: async (restaurantId, data) => {
-    const response = await apiClient.post(`/menu-items?restaurantId=${restaurantId}`, data);
+    const response = await apiClient.post(`/menu/restaurant/${restaurantId}`, data);
     return response.data;
   }
 };
