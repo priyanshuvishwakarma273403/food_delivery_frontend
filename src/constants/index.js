@@ -1,7 +1,8 @@
-export const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api';
+export const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://food-delivery-backend-7vtm.onrender.com/api';
 
 
-export const WS_URL = import.meta.env.VITE_WS_URL || 'http://localhost:8080/ws';
+export const WS_URL = import.meta.env.VITE_WS_URL || 'https://food-delivery-backend-7vtm.onrender.com/ws';
+
 
 export const ORDER_STATUS = {
   PLACED: 'PLACED',
