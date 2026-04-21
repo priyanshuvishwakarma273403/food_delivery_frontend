@@ -71,14 +71,14 @@ const Home = () => {
             </p>
 
             {/* Search Box */}
-            <form onSubmit={handleSearch} className="bg-white rounded-2xl shadow-2xl flex flex-col sm:flex-row overflow-hidden max-w-2xl">
-              <div className="flex items-center gap-3 px-5 py-4 border-b sm:border-b-0 sm:border-r border-gray-100 flex-shrink-0">
+            <form onSubmit={handleSearch} className="bg-white rounded-2xl shadow-2xl flex flex-col md:flex-row overflow-hidden max-w-2xl border border-gray-100">
+              <div className="flex items-center gap-3 px-5 py-4 border-b md:border-b-0 md:border-r border-gray-100 flex-1">
                 <MapPin className="text-primary shrink-0" size={20} strokeWidth={2.5} />
                 <div className="flex-1 min-w-0">
-                  <p className="text-[11px] text-[#686B78] font-semibold leading-none mb-1">LOCATION</p>
+                  <p className="text-[11px] text-[#686B78] font-bold leading-none mb-1">LOCATION</p>
                   <input 
                     type="text" 
-                    placeholder="Enter your area..." 
+                    placeholder="Enter area..." 
                     className="bg-transparent outline-none text-[#1C1C1C] text-sm w-full font-bold min-w-0 placeholder:font-normal placeholder:text-gray-400"
                   />
                 </div>
@@ -86,13 +86,13 @@ const Home = () => {
                   <Navigation size={16} />
                 </button>
               </div>
-              <div className="flex items-center gap-3 px-5 py-4 flex-1">
+              <div className="flex items-center gap-3 px-5 py-4 flex-[1.5]">
                 <Search className="text-[#9093A4] shrink-0" size={20} />
                 <div className="flex-1 min-w-0">
-                  <p className="text-[11px] text-[#686B78] font-semibold leading-none mb-1">SEARCH</p>
+                  <p className="text-[11px] text-[#686B78] font-bold leading-none mb-1">SEARCH</p>
                   <input 
                     type="text" 
-                    placeholder="Search for food..." 
+                    placeholder="Search food or restaurants..." 
                     className="bg-transparent outline-none text-[#1C1C1C] text-sm w-full font-bold min-w-0 placeholder:font-normal placeholder:text-gray-400"
                     value={searchValue}
                     onChange={(e) => setSearchValue(e.target.value)}
@@ -101,11 +101,12 @@ const Home = () => {
               </div>
               <button 
                 type="submit" 
-                className="bg-primary hover:bg-primary-dark text-white font-black px-8 py-4 transition-colors text-sm tracking-wide"
+                className="bg-primary hover:bg-primary-dark text-white font-black px-8 py-5 md:py-4 transition-colors text-sm tracking-wide md:w-auto w-full"
               >
                 Find Food
               </button>
             </form>
+
           </motion.div>
         </div>
       </section>

@@ -365,8 +365,8 @@ const Header = () => {
       </header>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-[#E8E8E8] z-50 safe-pb shadow-[0_-2px_12px_rgba(0,0,0,0.06)]">
-        <div className="flex items-center justify-around py-2">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-[#F0F0F0] z-[100] safe-pb shadow-[0_-8px_24px_rgba(0,0,0,0.08)]">
+        <div className="flex items-center justify-around py-2.5 px-2">
           {bottomNavItems.map((item, i) => {
             const active = isActive(item.to);
             return (
@@ -374,27 +374,40 @@ const Header = () => {
                 key={i} 
                 to={item.to} 
                 className={cn(
-                  "flex flex-col items-center gap-1 py-1 px-3 rounded-xl transition-all duration-200 relative min-w-[56px]",
-                  active ? "text-primary" : "text-[#9093A4] hover:text-[#686B78]"
+                  "flex flex-col items-center gap-1.5 py-1 px-3 rounded-2xl transition-all duration-300 relative min-w-[64px]",
+                  active ? "text-primary bg-primary/5" : "text-[#9093A4]"
                 )}
               >
                 <div className="relative">
-                  <item.icon size={22} strokeWidth={active ? 2.5 : 1.8} />
+                  <item.icon 
+                    size={24} 
+                    strokeWidth={active ? 3 : 2} 
+                    className={cn("transition-transform duration-300", active && "scale-110")}
+                  />
                   {item.badge > 0 && (
-                    <span className="absolute -top-1.5 -right-2 bg-primary text-white text-[8px] font-black h-4 min-w-[16px] px-0.5 rounded-full flex items-center justify-center border-2 border-white">
+                    <span className="absolute -top-1.5 -right-2 bg-primary text-white text-[9px] font-black h-4.5 min-w-[18px] px-1 rounded-full flex items-center justify-center border-2 border-white shadow-sm">
                       {item.badge}
                     </span>
                   )}
                 </div>
-                <span className={cn("text-[10px] leading-tight font-semibold", active && "font-black text-primary")}>
+                <span className={cn(
+                  "text-[10px] leading-tight font-bold tracking-tight", 
+                  active ? "text-primary" : "text-[#9093A4]"
+                )}>
                   {item.label}
                 </span>
-                {active && <div className="absolute -top-0 left-1/2 -translate-x-1/2 h-0.5 w-6 bg-primary rounded-full" />}
+                {active && (
+                  <motion.div 
+                    layoutId="nav-indicator"
+                    className="absolute -top-2.5 left-1/2 -translate-x-1/2 h-1 w-8 bg-primary rounded-full shadow-[0_2px_8px_rgba(252,128,25,0.4)]" 
+                  />
+                )}
               </Link>
             );
           })}
         </div>
       </nav>
+
     </>
   );
 };

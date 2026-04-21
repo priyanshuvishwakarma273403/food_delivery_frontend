@@ -89,29 +89,32 @@ const RestaurantCard = ({ restaurant }) => {
         </div>
 
         {/* Info */}
-        <div className="p-3 md:p-4">
-          <h3 className="font-black text-[#1C1C1C] text-sm md:text-base truncate leading-tight mb-0.5 group-hover:text-primary transition-colors">
+        <div className="p-2.5 md:p-4">
+          <h3 className="font-black text-[#1C1C1C] text-[13px] md:text-base truncate leading-tight mb-0.5 group-hover:text-primary transition-colors">
             {name}
           </h3>
-          <p className="text-[#686B78] text-[11px] md:text-xs truncate font-medium mb-2.5">
+          <p className="text-[#686B78] text-[10px] md:text-xs truncate font-bold mb-2">
             {displayCuisine || 'Cuisine'}
           </p>
 
           {/* Rating & Info Row */}
-          <div className="flex items-center gap-2 pt-2.5 border-t border-[#F0F0F0]">
+          <div className="flex items-center gap-1.5 pt-2 border-t border-[#F0F0F0]">
             {/* Rating Badge */}
-            <div className={`flex items-center gap-1 ${ratingColor} text-white px-1.5 py-0.5 rounded-md`}>
-              <Star size={10} fill="white" strokeWidth={0} />
-              <span className="text-[11px] font-black">{rating || '4.0'}</span>
+            <div className={`flex items-center gap-1 ${ratingColor} text-white px-1.5 py-0.5 rounded-md shadow-sm`}>
+              <Star size={9} fill="white" strokeWidth={0} />
+              <span className="text-[10px] md:text-[11px] font-black">
+                {rating ? Number(rating).toFixed(1) : '4.0'}
+              </span>
             </div>
             
-            <span className="text-[#D4D5D9] text-xs">•</span>
+            <span className="text-[#D4D5D9] text-[10px]">•</span>
             
             {(totalRatings || 100) && (
-              <span className="text-[#686B78] text-[10px] md:text-xs font-medium">
-                {(totalRatings || 100) > 1000 ? `${((totalRatings || 100)/1000).toFixed(1)}k+` : `${(totalRatings || 100)}+`} ratings
+              <span className="text-[#686B78] text-[9px] md:text-xs font-bold truncate">
+                {(totalRatings || 100) > 1000 ? `${((totalRatings || 100)/1000).toFixed(1)}k+` : `${(totalRatings || 100)}+`}
               </span>
             )}
+
             
             {displayCostForTwo && (
               <>
