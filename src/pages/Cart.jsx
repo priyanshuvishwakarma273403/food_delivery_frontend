@@ -12,8 +12,12 @@ import {
   ChevronLeft
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useCartStore } from '../store/cartStore';
 import { useWalletStore } from '../store/walletStore';
 import CoinRedeemer from '../components/wallet/CoinRedeemer';
+import Button from '../components/common/Button';
+import { cn } from '../utils/cn';
+
 
 const Cart = () => {
   const { items, updateQuantity, removeItem, clearCart, getTotalAmount } = useCartStore();
