@@ -8,7 +8,9 @@ import restaurantService from '../services/restaurantService';
 import { CUISINE_CATEGORIES } from '../data/restaurants';
 import StoryViewer from '../components/common/StoryViewer';
 import MoodSearch from '../components/ai/MoodSearch';
+import { RestaurantSkeleton } from '../components/common/Skeleton';
 import { Spinner } from '../components/common/Loader';
+
 
 const Home = () => {
   const [searchValue, setSearchValue] = useState('');
@@ -204,9 +206,10 @@ const Home = () => {
           <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
             {isLoading ? (
               Array(8).fill(0).map((_, i) => (
-                <div key={i} className="h-[300px] bg-gray-100 animate-pulse rounded-2xl" />
+                <RestaurantSkeleton key={i} />
               ))
             ) : topRestaurants.length > 0 ? (
+
               topRestaurants.map((restaurant) => (
                 <RestaurantCard key={restaurant.id} restaurant={restaurant} />
               ))

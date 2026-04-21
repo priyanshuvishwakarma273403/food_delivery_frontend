@@ -13,7 +13,8 @@ import {
 } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import RestaurantCard from '../components/restaurant/RestaurantCard';
-import Skeleton from '../components/common/Skeleton';
+import Skeleton, { RestaurantSkeleton } from '../components/common/Skeleton';
+
 import { ALL_RESTAURANTS, CUISINE_CATEGORIES } from '../data/restaurants';
 import Button from '../components/common/Button';
 import Badge from '../components/common/Badge';
@@ -216,13 +217,10 @@ const Restaurants = () => {
           {isLoading ? (
             // Show 8 skeleton cards
             Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="bg-white rounded-2xl overflow-hidden shadow-premium p-3">
-                <Skeleton className="aspect-[16/9] w-full rounded-xl mb-3" />
-                <Skeleton className="h-6 w-3/4 mb-2" />
-                <Skeleton className="h-4 w-1/2" />
-              </div>
+              <RestaurantSkeleton key={i} />
             ))
           ) : (
+
             <AnimatePresence>
               {displayedRestaurants.map((res) => (
                 <motion.div

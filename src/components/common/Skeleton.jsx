@@ -1,16 +1,28 @@
-import React from 'react';
+import { motion } from 'framer-motion';
 
-const Skeleton = ({ className }) => {
-  return (
-    <div 
-      className={`animate-pulse bg-gray-200 rounded-md ${className}`}
-      style={{
-        backgroundImage: 'linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)',
-        backgroundSize: '200% 100%',
-        animation: 'shimmer 1.5s infinite linear'
-      }}
-    />
-  );
-};
+const Skeleton = ({ className }) => (
+  <motion.div
+    animate={{ opacity: [0.5, 1, 0.5] }}
+    transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+    className={`bg-gray-200 dark:bg-gray-800 rounded-xl ${className}`}
+  />
+);
+
+export const RestaurantSkeleton = () => (
+  <div className="bg-white dark:bg-card-main rounded-[2rem] p-4 shadow-sm border border-gray-100 dark:border-gray-800 space-y-4">
+    <Skeleton className="w-full aspect-[4/3] rounded-2xl" />
+    <div className="space-y-3">
+      <div className="flex justify-between items-start">
+        <Skeleton className="h-6 w-3/4" />
+        <Skeleton className="h-6 w-10" />
+      </div>
+      <Skeleton className="h-4 w-1/2" />
+      <div className="flex gap-4 pt-2">
+        <Skeleton className="h-4 w-20" />
+        <Skeleton className="h-4 w-20" />
+      </div>
+    </div>
+  </div>
+);
 
 export default Skeleton;
