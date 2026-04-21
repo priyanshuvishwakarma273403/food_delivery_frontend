@@ -4,7 +4,7 @@ import { Toaster } from 'react-hot-toast';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Layout from './components/layout/Layout';
 import { useAuthStore } from './store/authStore';
-import AiAssistant from './components/common/AiAssistant';
+import AiChat from './components/common/AiChat';
 import SocialProof from './components/common/SocialProof';
 import CartDrawer from './components/cart/CartDrawer';
 import { Spinner } from './components/common/Loader'; 
@@ -40,6 +40,7 @@ const TomatoGold = lazy(() => import('./pages/TomatoGold'));
 const Profile = lazy(() => import('./pages/Profile'));
 const Blogs = lazy(() => import('./pages/Blogs'));
 const AdminBlogs = lazy(() => import('./pages/AdminBlogs'));
+const FoodieFeed = lazy(() => import('./pages/FoodieFeed'));
 
 const queryClient = new QueryClient();
 
@@ -106,12 +107,15 @@ function App() {
 
 
                 <Route path="/delivery/dashboard" element={<ProtectedRoute roles={['DELIVERY_PARTNER']}><DeliveryDashboard /></ProtectedRoute>} />
+                <Route path="/feed" element={<ProtectedRoute roles={['CUSTOMER']}><FoodieFeed /></ProtectedRoute>} />
                 <Route path="*" element={<NotFound />} />
+
               </Route>
             </Routes>
           </Suspense>
-          <AiAssistant />
+          <AiChat />
           <SocialProof />
+
           <CartDrawer />
           <Toaster position="bottom-right" />
         </BrowserRouter>
