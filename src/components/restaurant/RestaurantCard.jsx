@@ -50,10 +50,14 @@ const RestaurantCard = ({ restaurant }) => {
           <img 
             src={getOptimizedImageUrl(displayImage, { width: 500, height: 300 })} 
             alt={name}
-
+            onError={(e) => {
+              e.target.src = 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500&q=80';
+              e.target.onerror = null;
+            }}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             loading="lazy"
           />
+
           
           {/* Gradient */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
