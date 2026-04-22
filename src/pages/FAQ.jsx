@@ -180,16 +180,28 @@ const FAQ = () => {
                    <p className="text-gray-400 text-sm font-medium mb-8">Our support superheroes are ready to assist you 24/7.</p>
                    
                    <div className="space-y-3">
-                      <button className="w-full bg-primary py-4 rounded-2xl flex items-center justify-center gap-3 font-black text-sm hover:scale-[1.02] transition-transform">
+                      <a 
+                        href="https://wa.me/919369420619?text=Hi Tomato Support, I need help with my order." 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="w-full bg-primary py-4 rounded-2xl flex items-center justify-center gap-3 font-black text-sm hover:scale-[1.02] transition-transform"
+                      >
                          <MessageCircle size={20} /> Chat with us
-                      </button>
-                      <button className="w-full bg-white/10 py-4 rounded-2xl flex items-center justify-center gap-3 font-black text-sm hover:bg-white/20 transition-all">
+                      </a>
+                      <a 
+                        href="tel:+919369420619"
+                        className="w-full bg-white/10 py-4 rounded-2xl flex items-center justify-center gap-3 font-black text-sm hover:bg-white/20 transition-all"
+                      >
                          <Phone size={20} /> Call Support
-                      </button>
-                      <button className="w-full border border-white/10 py-4 rounded-2xl flex items-center justify-center gap-3 font-black text-sm hover:bg-white/5 transition-all">
+                      </a>
+                      <a 
+                        href="mailto:support@tomato.food?subject=Support Request from Tomato App"
+                        className="w-full border border-white/10 py-4 rounded-2xl flex items-center justify-center gap-3 font-black text-sm hover:bg-white/5 transition-all"
+                      >
                          <Mail size={20} /> Send an Email
-                      </button>
+                      </a>
                    </div>
+
                 </div>
              </div>
 
