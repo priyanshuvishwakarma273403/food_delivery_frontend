@@ -12,13 +12,19 @@ import { RestaurantSkeleton } from '../components/common/Skeleton';
 import { Spinner } from '../components/common/Loader';
 import Button from '../components/common/Button';
 import CategoryTabs from '../components/home/CategoryTabs';
+import LocationModal from '../components/layout/LocationModal';
+import { useLocationStore } from '../store/locationStore';
+
 
 
 
 
 const Home = () => {
   const [searchValue, setSearchValue] = useState('');
+  const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
+  const { currentLocation, detectLocation } = useLocationStore();
   const navigate = useNavigate();
+
 
   const { data: restaurantsResponse, isLoading, error } = useQuery({
     queryKey: ['restaurants'],
@@ -86,21 +92,28 @@ const Home = () => {
             </p>
 
             {/* Search Box */}
-            <form onSubmit={handleSearch} className="bg-white rounded-2xl shadow-2xl flex flex-col md:flex-row overflow-hidden max-w-2xl border border-gray-100">
-              <div className="flex items-center gap-3 px-5 py-4 border-b md:border-b-0 md:border-r border-gray-100 flex-1">
-                <MapPin className="text-primary shrink-0" size={20} strokeWidth={2.5} />
+            <div className="bg-white rounded-2xl shadow-2xl flex flex-col md:flex-row overflow-hidden max-w-2xl border border-gray-100">
+              <div 
+                onClick={() => setIsLocationModalOpen(true)}
+                className="flex items-center gap-3 px-5 py-4 border-b md:border-b-0 md:border-r border-gray-100 flex-1 cursor-pointer hover:bg-gray-50 transition-colors group"
+              >
+                <MapPin className="text-primary shrink-0 group-hover:scale-110 transition-transform" size={20} strokeWidth={2.5} />
                 <div className="flex-1 min-w-0">
                   <p className="text-[11px] text-[#686B78] font-bold leading-none mb-1">LOCATION</p>
-                  <input 
-                    type="text" 
-                    placeholder="Enter area..." 
-                    className="bg-transparent outline-none text-[#1C1C1C] text-sm w-full font-bold min-w-0 placeholder:font-normal placeholder:text-gray-400"
-                  />
+                  <p className="text-[#1C1C1C] text-sm font-bold truncate">
+                    {currentLocation?.name || 'Select Location'}
+                  </p>
                 </div>
-                <button type="button" className="text-primary hover:bg-primary/10 p-1.5 rounded-lg transition-colors shrink-0">
+                <button 
+                  type="button" 
+                  onClick={(e) => { e.stopPropagation(); detectLocation(); }}
+                  className="text-primary hover:bg-primary/10 p-1.5 rounded-lg transition-colors shrink-0"
+                  title="Detect my location"
+                >
                   <Navigation size={16} />
                 </button>
               </div>
+
               <div className="flex items-center gap-3 px-5 py-4 flex-[1.5]">
                 <Search className="text-[#9093A4] shrink-0" size={20} />
                 <div className="flex-1 min-w-0">
@@ -115,12 +128,15 @@ const Home = () => {
                 </div>
               </div>
               <button 
-                type="submit" 
+                onClick={handleSearch}
+                type="button" 
                 className="bg-primary hover:bg-primary-dark text-white font-black px-8 py-5 md:py-4 transition-colors text-sm tracking-wide md:w-auto w-full"
               >
                 Find Food
               </button>
-            </form>
+            </div>
+
+
 
           </motion.div>
         </div>
@@ -327,7 +343,13 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      <LocationModal 
+        isOpen={isLocationModalOpen} 
+        onClose={() => setIsLocationModalOpen(false)} 
+      />
     </div>
+
   );
 };
 
