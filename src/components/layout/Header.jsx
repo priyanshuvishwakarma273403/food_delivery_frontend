@@ -27,7 +27,9 @@ import { useLocationStore } from '../../store/locationStore';
 import { useWalletStore } from '../../store/walletStore';
 import WalletBadge from '../wallet/WalletBadge';
 import Button from '../common/Button';
+import LocationModal from './LocationModal';
 import { cn } from '../../utils/cn';
+
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -36,12 +38,14 @@ const Header = () => {
   
   const { user, logout, isAuthenticated } = useAuthStore();
   const { items, toggleDrawer } = useCartStore();
-  const { city } = useLocationStore();
+  const { currentLocation } = useLocationStore();
   const wallet = useWalletStore();
   const coins = wallet?.coins ?? 0;
 
   const [searchQuery, setSearchQuery] = useState('');
   const [isListening, setIsListening] = useState(false);
+  const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -120,14 +124,18 @@ const Header = () => {
           </Link>
 
           {/* Location Selector */}
-          <button className="hidden lg:flex items-center gap-2 px-4 py-2.5 rounded-xl border-2 border-transparent hover:border-gray-200 hover:bg-gray-50 transition-all group max-w-[220px]">
+          <button 
+            onClick={() => setIsLocationModalOpen(true)}
+            className="hidden lg:flex items-center gap-2 px-4 py-2.5 rounded-xl border-2 border-transparent hover:border-gray-200 hover:bg-gray-50 transition-all group max-w-[220px]"
+          >
             <MapPin className="text-primary shrink-0" size={18} strokeWidth={2.5} />
             <div className="text-left overflow-hidden">
               <p className="text-[11px] text-[#686B78] font-medium leading-none mb-0.5">Delivering to</p>
-              <p className="text-sm font-bold text-[#1C1C1C] truncate">{city || 'Select Location'}</p>
+              <p className="text-sm font-bold text-[#1C1C1C] truncate">{currentLocation?.name || 'Select Location'}</p>
             </div>
             <ChevronDown size={16} className="text-[#686B78] group-hover:text-primary transition-colors shrink-0 ml-1" />
           </button>
+
 
           {/* Search Bar */}
           <div className="hidden md:flex flex-1 max-w-xl">
@@ -410,7 +418,12 @@ const Header = () => {
         </div>
       </nav>
 
+      <LocationModal 
+        isOpen={isLocationModalOpen} 
+        onClose={() => setIsLocationModalOpen(false)} 
+      />
     </>
+
   );
 };
 
