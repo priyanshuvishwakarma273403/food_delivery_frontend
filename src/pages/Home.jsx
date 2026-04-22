@@ -22,10 +22,21 @@ const Home = () => {
 
   const { data: restaurantsResponse, isLoading, error } = useQuery({
     queryKey: ['restaurants'],
-    queryFn: () => restaurantService.getAllRestaurants()
+    queryFn: () => restaurantService.getAllRestaurants(),
+    retry: 1,
+    refetchOnWindowFocus: false,
+    onSuccess: (data) => console.log("Restaurants Data Loaded:", data),
+    onError: (err) => console.error("Restaurants Fetch Error:", err)
   });
 
+  useEffect(() => {
+    if (isLoading) {
+      console.log("Restaurants are currently loading...");
+    }
+  }, [isLoading]);
+
   const restaurants = restaurantsResponse?.data || [];
+
   const topRestaurants = [...restaurants].sort((a, b) => b.rating - a.rating).slice(0, 8);
   const totalRestaurants = restaurants.length || 1500;
   const totalFoods = restaurants.reduce((acc, r) => acc + (r.menuItems?.length || 0), 0) || 5000;
