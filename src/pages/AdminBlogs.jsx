@@ -4,6 +4,8 @@ import { motion } from 'framer-motion';
 import { Plus, Trash2, Edit3, X, Image as ImageIcon, Send, Upload } from 'lucide-react';
 import mediaService from '../services/mediaService';
 import { getOptimizedImageUrl } from '../utils/cloudinary';
+import { blogService } from '../api/blogService';
+
 
 import Button from '../components/common/Button';
 import Input from '../components/common/Input';
@@ -40,25 +42,46 @@ const AdminBlogs = () => {
   };
 
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!newBlog.title || !newBlog.content || !newBlog.image) {
       toast.error('Please fill all fields');
       return;
     }
 
-    addBlog({
-      ...newBlog,
-      id: Date.now(),
-      author: 'Admin',
-      date: new Date().toISOString(),
-      isDraft: false,
-    });
-
-    setIsAdding(false);
-    setNewBlog({ title: '', content: '', image: '', category: 'Festival' });
-    toast.success('Blog published successfully!');
+    try {
+      const blogData = {
+        ...newBlog,
+        author: 'Admin',
+        isDraft: false,
+      };
+      
+      const response = await blogService.createBlog(blogData);
+      if (response.success) {
+        addBlog(response.data);
+        setIsAdding(false);
+        setNewBlog({ title: '', content: '', image: '', category: 'Festival' });
+        toast.success('Blog published successfully!');
+        // Refresh from backend to ensure everything is in sync
+        useBlogStore.getState().fetchBlogs();
+      }
+    } catch (err) {
+      toast.error('Failed to publish blog');
+    }
   };
+
+  const handleDelete = async (id) => {
+    if (window.confirm('Delete this blog?')) {
+      try {
+        await blogService.deleteBlog(id);
+        deleteBlog(id);
+        toast.success('Blog deleted');
+      } catch (err) {
+        toast.error('Failed to delete');
+      }
+    }
+  };
+
 
   return (
     <div className="min-h-screen pb-20 pt-16 md:pt-24 bg-gray-50/50">
@@ -187,11 +210,12 @@ const AdminBlogs = () => {
                           <Edit3 size={18} />
                        </button>
                        <button 
-                        onClick={() => deleteBlog(blog.id)}
+                        onClick={() => handleDelete(blog.id)}
                         className="p-2 text-gray-400 hover:text-red-500 transition-colors hover:bg-white rounded-lg shadow-sm"
                        >
                           <Trash2 size={18} />
                        </button>
+
                     </div>
                   </td>
                 </tr>

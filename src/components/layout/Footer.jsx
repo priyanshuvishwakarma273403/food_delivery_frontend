@@ -31,10 +31,12 @@ const Footer = () => {
             <ul className="space-y-3 md:space-y-4">
               <li><Link to="/restaurants" className="text-text-secondary text-xs md:text-sm hover:text-primary transition-colors">Find Restaurants</Link></li>
               <li><Link to="/orders" className="text-text-secondary text-xs md:text-sm hover:text-primary transition-colors">My Orders</Link></li>
+              <li><Link to="/blogs" className="text-text-secondary text-xs md:text-sm hover:text-primary transition-colors font-bold">Food Blogs</Link></li>
+              <li><Link to="/feed" className="text-text-secondary text-xs md:text-sm hover:text-primary transition-colors font-bold">Foodie Feed</Link></li>
               <li><Link to="/about" className="text-text-secondary text-xs md:text-sm hover:text-primary transition-colors">About Us</Link></li>
-              <li><Link to="/contact" className="text-text-secondary text-xs md:text-sm hover:text-primary transition-colors">Contact</Link></li>
             </ul>
           </div>
+
 
           <div>
             <h4 className="font-bold text-text-primary mb-4 md:mb-6 text-sm md:text-base">Support</h4>
