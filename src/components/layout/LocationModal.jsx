@@ -138,8 +138,9 @@ const LocationModal = ({ isOpen, onClose }) => {
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
+
     </AnimatePresence>
   );
 };
