@@ -17,6 +17,8 @@ import { useWalletStore } from '../store/walletStore';
 import CoinRedeemer from '../components/wallet/CoinRedeemer';
 import Button from '../components/common/Button';
 import { cn } from '../utils/cn';
+import { getOptimizedImageUrl } from '../utils/cloudinary';
+
 
 
 const Cart = () => {
@@ -89,55 +91,65 @@ const Cart = () => {
                 {items.map((item) => (
                   <motion.div
                     key={item.id}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 20, height: 0 }}
-                    className="bg-white rounded-xl md:rounded-2xl p-3 md:p-5 shadow-sm border border-gray-100 flex gap-3 md:gap-5 items-center"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    className="bg-white dark:bg-card-main rounded-[1.5rem] p-3 md:p-4 shadow-sm border border-gray-100 dark:border-gray-800 flex gap-4 md:gap-6 items-center group transition-all hover:shadow-md"
                   >
                     {/* Image */}
-                    <div className="h-16 w-16 md:h-20 md:w-20 rounded-xl overflow-hidden shrink-0 shadow-sm">
-                      <img src={item.image} alt={item.name} className="w-full h-full object-cover" loading="lazy" />
+                    <div className="h-20 w-20 md:h-24 md:w-24 rounded-2xl overflow-hidden shrink-0 shadow-sm border border-gray-50 dark:border-gray-700">
+                      <img 
+                        src={getOptimizedImageUrl(item.image || item.imageUrl || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300')} 
+                        alt={item.name} 
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
+                        loading="lazy" 
+                        onError={(e) => {
+                          e.target.src = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300';
+                          e.target.onerror = null;
+                        }}
+                      />
                     </div>
                     
                     {/* Info */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2">
                         <div className="min-w-0">
-                          <h3 className="text-sm md:text-base font-bold text-text-primary truncate">{item.name}</h3>
-                          <p className="text-[10px] md:text-xs text-text-secondary line-clamp-1 mt-0.5 hidden sm:block">
-                            {item.description}
+                          <h3 className="text-sm md:text-lg font-black text-[#1C1C1C] dark:text-white truncate leading-tight">{item.name}</h3>
+                          <p className="text-[10px] md:text-xs text-[#686B78] line-clamp-1 mt-1 font-medium">
+                            {item.description || 'Deliciously prepared with fresh ingredients.'}
                           </p>
                         </div>
                         <button 
                           onClick={() => removeItem(item.id)}
                           className="p-1.5 text-gray-300 hover:text-red-500 transition-colors shrink-0"
                         >
-                          <Trash2 size={14} />
+                          <Trash2 size={16} />
                         </button>
                       </div>
                       
-                      <div className="flex items-center justify-between mt-2">
-                        <span className="text-sm md:text-base font-black text-primary">₹{item.price * item.quantity}</span>
+                      <div className="flex items-center justify-between mt-3 md:mt-4">
+                        <span className="text-base md:text-xl font-black text-primary">₹{item.price * item.quantity}</span>
                         
                         {/* Quantity Controls */}
-                        <div className="bg-gray-50 rounded-lg flex items-center">
+                        <div className="bg-gray-50 dark:bg-gray-800 rounded-xl flex items-center p-1 border border-gray-100 dark:border-gray-700">
                           <button 
                             onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                            className="h-7 w-7 md:h-8 md:w-8 flex items-center justify-center text-text-secondary hover:text-primary transition-colors"
+                            className="h-7 w-7 md:h-9 md:w-9 flex items-center justify-center text-[#686B78] hover:text-primary transition-colors"
                           >
-                            <Minus size={14} />
+                            <Minus size={14} strokeWidth={3} />
                           </button>
-                          <span className="w-6 md:w-8 text-center font-black text-xs md:text-sm">{item.quantity}</span>
+                          <span className="w-6 md:w-10 text-center font-black text-xs md:text-base text-[#1C1C1C] dark:text-white">{item.quantity}</span>
                           <button 
                             onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                            className="h-7 w-7 md:h-8 md:w-8 flex items-center justify-center text-text-secondary hover:text-primary transition-colors"
+                            className="h-7 w-7 md:h-9 md:w-9 flex items-center justify-center text-[#686B78] hover:text-primary transition-colors"
                           >
-                            <Plus size={14} />
+                            <Plus size={14} strokeWidth={3} />
                           </button>
                         </div>
                       </div>
                     </div>
                   </motion.div>
+
                 ))}
               </AnimatePresence>
             </div>
