@@ -11,6 +11,8 @@ import MoodSearch from '../components/ai/MoodSearch';
 import { RestaurantSkeleton } from '../components/common/Skeleton';
 import { Spinner } from '../components/common/Loader';
 import Button from '../components/common/Button';
+import CategoryTabs from '../components/home/CategoryTabs';
+
 
 
 
@@ -174,8 +176,11 @@ const Home = () => {
         </div>
       </section>
 
+      <CategoryTabs />
+
       {/* ── Section Divider ── */}
       <div className="h-2 bg-[#F5F5F5]" />
+
 
       {/* ── AI Mood Search ── */}
       <section className="bg-white py-8 md:py-12">
