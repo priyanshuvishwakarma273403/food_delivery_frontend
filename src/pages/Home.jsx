@@ -10,6 +10,8 @@ import StoryViewer from '../components/common/StoryViewer';
 import MoodSearch from '../components/ai/MoodSearch';
 import { RestaurantSkeleton } from '../components/common/Skeleton';
 import { Spinner } from '../components/common/Loader';
+import Button from '../components/common/Button';
+
 
 
 const Home = () => {
@@ -204,23 +206,56 @@ const Home = () => {
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-            {isLoading ? (
-              Array(8).fill(0).map((_, i) => (
-                <RestaurantSkeleton key={i} />
-              ))
-            ) : topRestaurants.length > 0 ? (
-
-              topRestaurants.map((restaurant) => (
+          {isLoading ? (
+            <div className="space-y-6">
+               <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+                  {Array(8).fill(0).map((_, i) => (
+                    <RestaurantSkeleton key={i} />
+                  ))}
+               </div>
+               <motion.div 
+                 initial={{ opacity: 0 }}
+                 animate={{ opacity: 1 }}
+                 className="text-center py-6 bg-[#FC8019]/5 rounded-2xl border border-dashed border-primary/20"
+               >
+                  <p className="text-xs md:text-sm font-bold text-primary px-4">
+                    🚀 Kitchen is warming up! The backend (Render free tier) takes about 30s to start. <br className="hidden sm:block"/>
+                    Hang tight, your food data is on the way!
+                  </p>
+               </motion.div>
+            </div>
+          ) : error ? (
+            <div className="text-center py-12 bg-red-50 rounded-3xl border border-red-100">
+               <div className="h-12 w-12 bg-red-100 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Zap size={24} />
+               </div>
+               <h3 className="text-lg font-black text-red-900 mb-1">Server Connection Issue</h3>
+               <p className="text-xs text-red-700/70 max-w-xs mx-auto mb-6 font-bold">Please check if the backend is running or refresh the page.</p>
+               <Button 
+                 onClick={() => window.location.reload()}
+                 className="bg-red-500 hover:bg-red-600 text-white shadow-lg shadow-red-200 text-xs px-6"
+               >
+                 Retry Connection
+               </Button>
+            </div>
+          ) : topRestaurants.length > 0 ? (
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+              {topRestaurants.map((restaurant) => (
                 <RestaurantCard key={restaurant.id} restaurant={restaurant} />
-              ))
-            ) : (
-              <div className="col-span-full text-center py-10 text-gray-400 font-bold">No restaurants found in database.</div>
-            )}
-          </div>
-
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12 bg-gray-50 rounded-3xl border border-dashed border-gray-200">
+               <div className="h-12 w-12 bg-gray-100 text-gray-400 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Search size={24} />
+               </div>
+               <h3 className="text-lg font-black text-[#1C1C1C] mb-1">No Data from Admin</h3>
+               <p className="text-xs text-[#686B78] max-w-xs mx-auto font-bold uppercase tracking-widest">Please add restaurants in Admin Panel</p>
+            </div>
+          )}
         </div>
       </section>
+
 
       <div className="h-2 bg-[#F5F5F5]" />
 

@@ -24,11 +24,27 @@ const RestaurantCard = ({ restaurant }) => {
     costForTwo
   } = restaurant;
 
+  // Create a unique fallback image based on the restaurant name/id
+  const fallbackImages = [
+    'https://images.unsplash.com/photo-1546069901-ba9599a7e63c', // Healthy
+    'https://images.unsplash.com/photo-1567620905732-2d1ec7bb7445', // Pancakes
+    'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38', // Pizza
+    'https://images.unsplash.com/photo-1482049016688-2d3e1b311543', // Burger
+    'https://images.unsplash.com/photo-1504674900247-0877df9cc836', // Mixed
+    'https://images.unsplash.com/photo-1473093226795-af9932fe5856', // Pasta
+    'https://images.unsplash.com/photo-1555939594-58d7cb561ad1', // Grill
+  ];
+  
+  // Deterministic index based on name
+  const imageIndex = name ? name.length % fallbackImages.length : 0;
+  const uniqueFallback = `${fallbackImages[imageIndex]}?w=500&q=80&auto=format&fit=crop`;
+
   // Sync field names between backend and mock data
-  const displayImage = imageUrl || image || 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500';
+  const displayImage = imageUrl || image || uniqueFallback;
   const displayCuisine = cuisineType || cuisine || 'Multi-cuisine';
   const displayDeliveryTime = avgDeliveryTime || deliveryTime || 30;
   const displayCostForTwo = costForTwo || minOrderAmount || minOrder || 250;
+
   
   // Logic to determine if open: check both 'open' (backend) and 'isOpen' (mock)
   // If both are undefined, default to true
