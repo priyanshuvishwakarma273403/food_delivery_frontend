@@ -3,8 +3,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ShoppingBag, ChevronRight, Clock, MapPin, 
   Package, RotateCcw, Search, Filter, 
-  HelpCircle, Receipt, TrendingUp, CheckCircle2
+  HelpCircle, Receipt, TrendingUp, CheckCircle2,
+  Star
 } from 'lucide-react';
+
 import { Link } from 'react-router-dom';
 import Badge from '../components/common/Badge';
 import Button from '../components/common/Button';
