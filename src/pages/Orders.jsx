@@ -1,8 +1,14 @@
-import { motion } from 'framer-motion';
-import { ShoppingBag, ChevronRight, Clock, MapPin, Star, Package, RotateCcw, ArrowLeft } from 'lucide-react';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  ShoppingBag, ChevronRight, Clock, MapPin, 
+  Package, RotateCcw, Search, Filter, 
+  HelpCircle, Receipt, TrendingUp, CheckCircle2
+} from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Badge from '../components/common/Badge';
 import Button from '../components/common/Button';
+import { cn } from '../utils/cn';
 
 const DUMMY_ORDERS = [
   { id: 'ORD5542', date: 'Oct 24, 2023 08:30 PM', restaurant: 'The Burger King', total: 450, status: 'DELIVERED', items: 3, image: 'https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=400&q=80' },
@@ -13,80 +19,134 @@ const DUMMY_ORDERS = [
 ];
 
 const statusConfig = {
-  PLACED: { label: 'Order Placed', variant: 'info', color: 'text-blue-500' },
-  PREPARING: { label: 'Preparing', variant: 'warning', color: 'text-orange-500' },
-  OUT_FOR_DELIVERY: { label: 'On the Way', variant: 'warning', color: 'text-orange-500' },
-  DELIVERED: { label: 'Delivered', variant: 'success', color: 'text-green-500' },
-  CANCELLED: { label: 'Cancelled', variant: 'error', color: 'text-red-500' },
+  PLACED: { label: 'Confirmed', variant: 'info', color: 'text-blue-500', step: 1 },
+  PREPARING: { label: 'Preparing', variant: 'warning', color: 'text-orange-500', step: 2 },
+  OUT_FOR_DELIVERY: { label: 'Out for Delivery', variant: 'warning', color: 'text-orange-500', step: 3 },
+  DELIVERED: { label: 'Delivered', variant: 'success', color: 'text-green-500', step: 4 },
+  CANCELLED: { label: 'Cancelled', variant: 'error', color: 'text-red-500', step: 0 },
 };
 
 const Orders = () => {
-  const activeOrders = DUMMY_ORDERS.filter(o => o.status !== 'DELIVERED' && o.status !== 'CANCELLED');
-  const pastOrders = DUMMY_ORDERS.filter(o => o.status === 'DELIVERED' || o.status === 'CANCELLED');
+  const [activeTab, setActiveTab] = useState('active');
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredOrders = DUMMY_ORDERS.filter(order => {
+    const matchesSearch = order.restaurant.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                         order.id.toLowerCase().includes(searchQuery.toLowerCase());
+    const isActive = order.status !== 'DELIVERED' && order.status !== 'CANCELLED';
+    return activeTab === 'active' ? (isActive && matchesSearch) : (!isActive && matchesSearch);
+  });
+
+  const stats = [
+    { label: 'Total Spent', value: '₹14,580', icon: TrendingUp, color: 'text-green-500' },
+    { label: 'Orders Made', value: DUMMY_ORDERS.length, icon: ShoppingBag, color: 'text-primary' },
+    { label: 'Saved', value: '₹2,400', icon: Star, color: 'text-yellow-500' },
+  ];
 
   return (
-    <div className="min-h-screen pb-20 md:pb-10">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-100 sticky top-[56px] md:top-[72px] z-30">
-        <div className="container mx-auto px-4 py-3 md:py-5 lg:max-w-5xl">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-xl md:text-3xl font-black text-text-primary">My Orders</h1>
-              <p className="text-text-secondary text-xs md:text-sm mt-0.5">{DUMMY_ORDERS.length} orders placed</p>
-            </div>
-            <div className="h-10 w-10 md:h-12 md:w-12 bg-primary/10 rounded-xl md:rounded-2xl flex items-center justify-center text-primary">
-              <ShoppingBag size={20} />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="container mx-auto px-4 py-4 md:py-8 lg:max-w-5xl">
-        {/* Active Orders */}
-        {activeOrders.length > 0 && (
-          <div className="mb-6 md:mb-10">
-            <h2 className="text-sm md:text-base font-black text-text-primary mb-3 md:mb-4 flex items-center gap-2">
-              <div className="h-2 w-2 bg-orange-500 rounded-full animate-pulse" />
-              Active Orders ({activeOrders.length})
-            </h2>
-            <div className="space-y-3 md:space-y-4">
-              {activeOrders.map((order, idx) => (
-                <OrderCard key={order.id} order={order} idx={idx} isActive />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Past Orders */}
-        <div>
-          <h2 className="text-sm md:text-base font-black text-text-primary mb-3 md:mb-4">
-            Past Orders ({pastOrders.length})
-          </h2>
-          <div className="space-y-3 md:space-y-4">
-            {pastOrders.map((order, idx) => (
-              <OrderCard key={order.id} order={order} idx={idx} />
-            ))}
-          </div>
+    <div className="min-h-screen pb-24 bg-[#F8F9FB] pt-16 md:pt-24">
+      <div className="container mx-auto px-4 lg:max-w-6xl">
+        
+        {/* ── Stats Header ── */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
+          {stats.map((stat, i) => (
+            <motion.div 
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.1 }}
+              className="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-xl shadow-black/5 flex items-center gap-4"
+            >
+              <div className={cn("h-12 w-12 rounded-2xl bg-gray-50 flex items-center justify-center", stat.color)}>
+                <stat.icon size={24} strokeWidth={2.5} />
+              </div>
+              <div>
+                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1">{stat.label}</p>
+                <p className="text-2xl font-black text-[#1C1C1C] leading-none">{stat.value}</p>
+              </div>
+            </motion.div>
+          ))}
         </div>
 
-        {/* Empty State */}
-        {DUMMY_ORDERS.length === 0 && (
-          <div className="text-center py-16 md:py-24">
-            <div className="text-6xl mb-4">🛒</div>
-            <h3 className="text-xl md:text-2xl font-black mb-2">No Orders Yet</h3>
-            <p className="text-text-secondary text-sm mb-6">Looks like you haven't placed any orders</p>
-            <Link to="/restaurants">
-              <Button className="rounded-2xl px-8">Order Now</Button>
-            </Link>
-          </div>
-        )}
+        {/* ── Main Dashboard ── */}
+        <div className="bg-white rounded-[3rem] border border-gray-100 shadow-2xl overflow-hidden">
+          <div className="p-8 md:p-10 border-b border-gray-100 bg-white sticky top-0 z-20">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+              <div>
+                <h1 className="text-3xl md:text-4xl font-black text-[#1C1C1C] tracking-tighter">Order Dashboard</h1>
+                <div className="flex items-center gap-6 mt-4">
+                  <button 
+                    onClick={() => setActiveTab('active')}
+                    className={cn(
+                      "text-sm font-black transition-all relative pb-2 px-1",
+                      activeTab === 'active' ? "text-primary" : "text-gray-400 hover:text-[#1C1C1C]"
+                    )}
+                  >
+                    Active Orders
+                    {activeTab === 'active' && <motion.div layoutId="tab" className="absolute bottom-0 left-0 right-0 h-1 bg-primary rounded-full" />}
+                  </button>
+                  <button 
+                    onClick={() => setActiveTab('past')}
+                    className={cn(
+                      "text-sm font-black transition-all relative pb-2 px-1",
+                      activeTab === 'past' ? "text-primary" : "text-gray-400 hover:text-[#1C1C1C]"
+                    )}
+                  >
+                    Order History
+                    {activeTab === 'past' && <motion.div layoutId="tab" className="absolute bottom-0 left-0 right-0 h-1 bg-primary rounded-full" />}
+                  </button>
+                </div>
+              </div>
 
-        <div className="mt-8 md:mt-12 text-center">
-          <p className="text-text-secondary text-xs md:text-sm mb-4 font-medium">Ordering for a large group?</p>
-          <div className="inline-flex items-center gap-2 px-4 md:px-6 py-2.5 md:py-3 bg-white rounded-full shadow-sm border border-gray-100">
-            <MapPin size={14} className="text-primary" />
-            <span className="text-xs md:text-sm font-bold text-text-primary">Bulk Order for Corporate</span>
-            <Badge variant="info" className="text-[10px]">Coming Soon</Badge>
+              <div className="relative w-full md:w-80 group">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors" size={18} />
+                <input 
+                  type="text" 
+                  placeholder="Search by restaurant or ID..." 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full bg-gray-50 border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-2xl pl-12 pr-4 py-3.5 text-sm font-bold outline-none transition-all"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="p-4 md:p-8 space-y-4">
+            <AnimatePresence mode="wait">
+              {filteredOrders.length > 0 ? (
+                <motion.div
+                  key={activeTab + searchQuery}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  className="space-y-4"
+                >
+                  {filteredOrders.map((order, idx) => (
+                    <OrderCard 
+                      key={order.id} 
+                      order={order} 
+                      idx={idx} 
+                      isActive={activeTab === 'active'} 
+                    />
+                  ))}
+                </motion.div>
+              ) : (
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="text-center py-24"
+                >
+                  <div className="h-20 w-20 bg-gray-50 rounded-[2rem] flex items-center justify-center mx-auto mb-6">
+                    <ShoppingBag size={40} className="text-gray-200" />
+                  </div>
+                  <h3 className="text-2xl font-black text-[#1C1C1C] mb-2">No orders found</h3>
+                  <p className="text-[#686B78] font-medium max-w-xs mx-auto">Try adjusting your search or browse our top restaurants.</p>
+                  <Link to="/restaurants">
+                    <Button className="mt-8 rounded-2xl px-10 py-4 h-auto font-black text-sm">Explore Restaurants</Button>
+                  </Link>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </div>
@@ -94,7 +154,6 @@ const Orders = () => {
   );
 };
 
-// Order Card Component
 const OrderCard = ({ order, idx, isActive }) => {
   const config = statusConfig[order.status];
   
@@ -103,95 +162,105 @@ const OrderCard = ({ order, idx, isActive }) => {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: idx * 0.05 }}
+      className="bg-white rounded-[2.5rem] border border-gray-100 hover:border-primary/20 p-5 md:p-8 transition-all hover:shadow-2xl hover:shadow-primary/5 group"
     >
-      <Link to={`/orders/${order.id}`}>
-        <div className={`bg-white rounded-2xl md:rounded-[2rem] p-4 md:p-6 shadow-sm border border-gray-100 group hover:shadow-premium transition-all ${isActive ? 'border-l-4 border-l-primary' : ''}`}>
-          <div className="flex gap-3 md:gap-6 items-start">
-            {/* Image */}
-            <div className="h-16 w-16 md:h-24 md:w-24 rounded-xl md:rounded-2xl overflow-hidden shrink-0 shadow-sm">
-              <img 
-                src={order.image} 
-                alt={order.restaurant} 
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
-                loading="lazy"
-              />
+      <div className="flex flex-col md:flex-row gap-6 md:items-center">
+        {/* Restaurant Profile */}
+        <div className="flex items-center gap-4 flex-1">
+          <div className="h-20 w-20 md:h-24 md:w-24 rounded-[2rem] overflow-hidden shrink-0 border-4 border-gray-50 shadow-inner">
+            <img 
+              src={order.image} 
+              alt={order.restaurant} 
+              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
+            />
+          </div>
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <Badge variant={config.variant} className="text-[9px] uppercase tracking-widest font-black px-2.5 py-1">
+                {config.label}
+              </Badge>
+              <span className="text-[10px] font-black text-gray-300 uppercase tracking-widest">#{order.id}</span>
             </div>
-            
-            {/* Info */}
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1">
-                <Badge variant={config.variant} className="text-[9px] md:text-[10px] px-1.5 md:px-2 py-0.5">
-                  {config.label}
-                </Badge>
-                <span className="text-[10px] md:text-xs font-bold text-gray-400 hidden sm:block">#{order.id}</span>
-              </div>
-              
-              <h3 className="text-sm md:text-lg font-bold text-text-primary truncate group-hover:text-primary transition-colors">
-                {order.restaurant}
-              </h3>
-              
-              <div className="flex items-center gap-2 text-[10px] md:text-xs text-text-secondary mt-1">
-                <Clock size={12} className="text-gray-300 shrink-0" />
-                <span className="truncate">{order.date}</span>
-              </div>
-              
-              <div className="flex items-center justify-between mt-2 md:mt-3">
-                <div className="flex items-center gap-3 md:gap-6">
-                  <div>
-                    <p className="text-[9px] md:text-[10px] font-bold text-gray-400 uppercase">Items</p>
-                    <p className="text-xs md:text-sm font-bold text-text-primary">{order.items}</p>
-                  </div>
-                  <div>
-                    <p className="text-[9px] md:text-[10px] font-bold text-gray-400 uppercase">Total</p>
-                    <p className="text-xs md:text-sm font-black text-primary">₹{order.total}</p>
-                  </div>
-                </div>
-                
-                {/* Action Buttons */}
-                <div className="flex items-center gap-2">
-                  {order.status === 'DELIVERED' && (
-                    <button 
-                      onClick={(e) => { e.preventDefault(); }}
-                      className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 rounded-lg text-[10px] md:text-xs font-bold text-text-secondary hover:text-primary hover:bg-primary/5 transition-colors"
-                    >
-                      <RotateCcw size={12} /> Reorder
-                    </button>
-                  )}
-                  <div className="h-8 w-8 md:h-9 md:w-9 bg-gray-50 group-hover:bg-primary group-hover:text-white rounded-lg md:rounded-xl flex items-center justify-center text-gray-400 transition-all">
-                    <ChevronRight size={16} />
-                  </div>
-                </div>
-              </div>
+            <h3 className="text-xl md:text-2xl font-black text-[#1C1C1C] tracking-tight group-hover:text-primary transition-colors">
+              {order.restaurant}
+            </h3>
+            <div className="flex items-center gap-2 text-xs text-[#686B78] font-bold mt-1">
+              <Clock size={14} className="text-gray-300" />
+              {order.date}
             </div>
           </div>
-          
-          {/* Active Order Progress */}
-          {isActive && order.status !== 'DELIVERED' && (
-            <div className="mt-3 pt-3 border-t border-gray-50">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                  <div 
-                    className="h-full bg-primary rounded-full transition-all duration-1000"
-                    style={{ 
-                      width: order.status === 'PLACED' ? '25%' : 
-                             order.status === 'PREPARING' ? '50%' : 
-                             order.status === 'OUT_FOR_DELIVERY' ? '75%' : '100%' 
-                    }}
-                  />
-                </div>
-                <span className={`text-[10px] font-bold ${config.color}`}>
-                  {order.status === 'OUT_FOR_DELIVERY' ? 'Arriving soon' : config.label}
-                </span>
-              </div>
-              <Button className="w-full py-2.5 rounded-xl text-sm font-black bg-primary/10 text-primary hover:bg-primary hover:text-white transition-colors border-none">
-                 <MapPin size={16} className="mr-2 inline" /> Track on Live Map
-              </Button>
-            </div>
-          )}
         </div>
-      </Link>
+
+        {/* Price & Summary */}
+        <div className="flex items-center md:flex-col md:items-end gap-6 md:gap-2 px-4 md:px-0 border-t md:border-t-0 pt-4 md:pt-0 border-gray-50">
+          <div className="text-left md:text-right">
+            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Amount Paid</p>
+            <p className="text-2xl font-black text-primary leading-tight">₹{order.total}</p>
+          </div>
+          <div className="text-left md:text-right">
+            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Items</p>
+            <p className="text-sm font-black text-[#1C1C1C] leading-tight">{order.items} Packs</p>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Conditional Footer ── */}
+      <div className="mt-8 pt-6 border-t border-gray-50 flex flex-col md:flex-row md:items-center justify-between gap-6">
+        
+        {isActive ? (
+          <div className="flex-1 max-w-xl">
+             <div className="flex justify-between mb-3 px-1">
+                <p className="text-xs font-black text-[#1C1C1C] uppercase tracking-widest">Live Status Tracker</p>
+                <p className={cn("text-xs font-black uppercase", config.color)}>{config.label}</p>
+             </div>
+             <div className="flex items-center gap-1">
+                {[1, 2, 3, 4].map((step) => (
+                  <div key={step} className="flex-1 h-2 rounded-full relative">
+                     <div className="absolute inset-0 bg-gray-100 rounded-full" />
+                     <motion.div 
+                        initial={{ width: 0 }}
+                        animate={{ width: config.step >= step ? '100%' : '0%' }}
+                        className={cn(
+                          "absolute inset-0 rounded-full transition-all duration-1000",
+                          config.step >= step ? (step === 4 ? "bg-green-500" : "bg-primary") : ""
+                        )}
+                     />
+                  </div>
+                ))}
+             </div>
+          </div>
+        ) : (
+          <div className="flex items-center gap-2 text-green-500">
+             <CheckCircle2 size={16} strokeWidth={3} />
+             <span className="text-xs font-black uppercase tracking-widest">Successfully Delivered</span>
+          </div>
+        )}
+
+        <div className="flex items-center gap-3">
+          {isActive ? (
+            <Link to={`/orders/${order.id}`} className="flex-1 md:flex-none">
+              <Button className="w-full md:px-8 py-3.5 rounded-2xl h-auto font-black text-xs shadow-xl shadow-primary/10">
+                <MapPin size={16} className="mr-2" /> Track Live
+              </Button>
+            </Link>
+          ) : (
+            <>
+              <Button variant="secondary" className="flex-1 md:flex-none px-6 py-3.5 rounded-2xl h-auto font-black text-xs text-[#1C1C1C] bg-gray-100 hover:bg-gray-200 border-none">
+                <RotateCcw size={16} className="mr-2" /> Reorder
+              </Button>
+              <Link to="/faq" className="h-12 w-12 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-400 hover:text-primary hover:bg-primary/5 transition-all">
+                <HelpCircle size={20} />
+              </Link>
+            </>
+          )}
+          <Link to={`/orders/${order.id}`} className="h-12 w-12 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-400 hover:text-[#1C1C1C] hover:bg-gray-100 transition-all">
+             <Receipt size={20} />
+          </Link>
+        </div>
+      </div>
     </motion.div>
   );
 };
 
 export default Orders;
+
