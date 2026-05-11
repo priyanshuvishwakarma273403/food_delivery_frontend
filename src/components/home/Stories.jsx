@@ -1,13 +1,14 @@
 import { motion } from 'framer-motion';
 
 const CRAVINGS = [
-  { id: 1, name: 'Biryani', video: 'https://cdn.pixabay.com/video/2021/08/21/85750-591148818_large.mp4', image: 'https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=200' },
-  { id: 2, name: 'Pizza', video: 'https://cdn.pixabay.com/video/2023/11/01/187309-880026210_large.mp4', image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200' },
-  { id: 3, name: 'Burgers', video: 'https://cdn.pixabay.com/video/2022/05/24/117965-713247076_large.mp4', image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=200' },
-  { id: 4, name: 'Desserts', video: 'https://cdn.pixabay.com/video/2020/03/15/33621-397856424_large.mp4', image: 'https://images.unsplash.com/photo-1567620905732-2d1ec7bb7445?w=200' },
-  { id: 5, name: 'Healthy', video: 'https://cdn.pixabay.com/video/2021/09/01/87229-598585474_large.mp4', image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200' },
-  { id: 6, name: 'Coffee', video: 'https://cdn.pixabay.com/video/2020/03/30/34720-399723230_large.mp4', image: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=200' },
-  { id: 7, name: 'Chinese', video: 'https://cdn.pixabay.com/video/2021/07/27/82967-582531631_large.mp4', image: 'https://images.unsplash.com/photo-1593560708920-61dd98c46a4e?w=200' },
+  { id: 1, name: 'Biryani', image: 'https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=400&q=80' },
+  { id: 2, name: 'Pizza', image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400&q=80' },
+  { id: 3, name: 'Burgers', image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&q=80' },
+  { id: 4, name: 'Desserts', image: 'https://images.unsplash.com/photo-1567620905732-2d1ec7bb7445?w=400&q=80' },
+  { id: 5, name: 'Healthy', image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&q=80' },
+  { id: 6, name: 'Coffee', image: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&q=80' },
+  { id: 7, name: 'Chinese', image: 'https://images.unsplash.com/photo-1593560708920-61dd98c46a4e?w=400&q=80' },
+  { id: 8, name: 'Egg', image: 'https://images.unsplash.com/photo-1525351484163-7529414344d8?w=400&q=80' },
 ];
 
 const Stories = () => {
@@ -15,56 +16,65 @@ const Stories = () => {
     const element = document.getElementById('category-tabs');
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
-      // Logic to trigger category change can be added via a store or event
     }
   };
 
   return (
-    <section className="bg-white py-6 md:py-10">
+    <section className="bg-white py-8 md:py-12">
       <div className="container mx-auto px-4 md:px-6">
-        <h3 className="text-xs font-black text-primary uppercase tracking-[0.2em] mb-4">Trending Cravings</h3>
-        <div className="flex overflow-x-auto gap-4 md:gap-8 pb-4 scrollbar-hide snap-x snap-mandatory">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="h-8 w-8 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
+             <motion.div
+               animate={{ scale: [1, 1.2, 1] }}
+               transition={{ repeat: Infinity, duration: 2 }}
+             >
+               ✨
+             </motion.div>
+          </div>
+          <h3 className="text-sm font-black text-[#1C1C1C] uppercase tracking-[0.2em]">Trending Cravings</h3>
+        </div>
+        
+        <div className="flex overflow-x-auto gap-5 md:gap-10 pb-6 scrollbar-hide snap-x snap-mandatory">
           {CRAVINGS.map((item) => (
             <motion.div
               key={item.id}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => scrollToCategory(item.name)}
-              className="flex flex-col items-center gap-3 cursor-pointer snap-start min-w-[80px]"
+              className="flex flex-col items-center gap-4 cursor-pointer snap-start min-w-[85px]"
             >
               <div className="relative group">
-                {/* Instagram-style Ring */}
-                <div className="absolute -inset-1.5 bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] rounded-full p-[2px] animate-spin-slow group-hover:p-[3px] transition-all duration-300">
+                {/* Instagram-style Ring with smooth gradient */}
+                <div className="absolute -inset-[3px] bg-gradient-to-tr from-[#FFD600] via-[#FF0069] to-[#7638FA] rounded-full p-[2px] animate-spin-slow group-hover:p-[4px] transition-all duration-500 shadow-lg">
                   <div className="bg-white rounded-full h-full w-full" />
                 </div>
                 
-                {/* Video/Image Container */}
-                <div className="h-16 w-16 md:h-20 md:w-20 rounded-full overflow-hidden relative z-10 border-2 border-white shadow-xl">
-                  {/* Background Fallback Image */}
-                  <img 
+                {/* Image Container with Ken Burns effect on hover */}
+                <div className="h-16 w-16 md:h-22 md:w-22 rounded-full overflow-hidden relative z-10 border-[3px] border-white shadow-2xl">
+                  <motion.img 
                     src={item.image} 
                     alt={item.name} 
+                    whileHover={{ scale: 1.2, rotate: 5 }}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
                     className="absolute inset-0 w-full h-full object-cover" 
                   />
-                  {/* High Quality Video on Hover/Loop */}
-                  <video
-                    src={item.video}
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                  />
+                  
+                  {/* Subtle Overlay */}
+                  <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors" />
                 </div>
                 
-                {/* LIVE Badge for some */}
+                {/* LIVE / HOT Badge */}
                 {item.id % 3 === 1 && (
-                  <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 z-20 bg-primary text-[8px] font-black text-white px-2 py-0.5 rounded-full border-2 border-white shadow-lg uppercase tracking-tighter">
-                    LIVE
-                  </div>
+                  <motion.div 
+                    animate={{ scale: [1, 1.1, 1] }}
+                    transition={{ repeat: Infinity, duration: 1 }}
+                    className="absolute -bottom-1 left-1/2 -translate-x-1/2 z-20 bg-primary text-[8px] font-black text-white px-2 py-0.5 rounded-full border-2 border-white shadow-xl uppercase tracking-widest whitespace-nowrap"
+                  >
+                    HOT NOW
+                  </motion.div>
                 )}
               </div>
-              <span className="text-[10px] md:text-xs font-black text-[#1C1C1C] uppercase tracking-wider">{item.name}</span>
+              <span className="text-[10px] md:text-xs font-black text-[#1C1C1C] uppercase tracking-widest group-hover:text-primary transition-colors">{item.name}</span>
             </motion.div>
           ))}
         </div>
