@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import apiClient from '../api/axios';
 
 export const useWalletStore = create(
   persist(
@@ -12,12 +13,8 @@ export const useWalletStore = create(
       fetchCoins: async (userId) => {
         if (!userId) return;
         try {
-          // Note: In real prod, this should have Authorization header
-          const response = await fetch(`/api/wallets/user/${userId}`);
-          if (response.ok) {
-            const data = await response.json();
-            set({ coins: data.balance || 0 });
-          }
+          const response = await apiClient.get(`/wallets/user/${userId}`);
+          set({ coins: response.data.balance || 0 });
         } catch (error) {
           console.error("Failed to sync coins with server:", error);
         }
