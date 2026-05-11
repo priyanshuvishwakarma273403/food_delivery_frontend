@@ -112,8 +112,8 @@ const Home = () => {
   const restaurants = restaurantsResponse?.data || [];
 
   const topRestaurants = [...restaurants].sort((a, b) => b.rating - a.rating).slice(0, 8);
-  const totalRestaurants = restaurants.length || 1500;
-  const totalFoods = restaurants.reduce((acc, r) => acc + (r.menuItems?.length || 0), 0) || 5000;
+  const totalRestaurants = restaurants.length || 2000;
+  const totalFoods = restaurants.reduce((acc, r) => acc + (r.menuItems?.length || 0), 0) || 10000;
 
 
   const handleSearch = (e) => {
@@ -470,7 +470,7 @@ const Home = () => {
             {[
               { icon: <Zap size={28} className="text-[#FC8019]" />, title: 'Lightning Fast', desc: 'Average delivery in just 25-35 minutes, guaranteed fresh.' },
               { icon: <Shield size={28} className="text-[#26A541]" />, title: 'Safe & Hygienic', desc: 'Every restaurant is quality-checked and hygiene-verified.' },
-              { icon: <Heart size={28} className="text-primary" />, title: '5M+ Happy Users', desc: 'Loved by millions across India for great food every day.' },
+              { icon: <Heart size={28} className="text-primary" />, title: '10,000+ Choices', desc: 'From local street food to fine dining, we have the largest variety in India.' },
             ].map((item, i) => (
               <div key={i} className="text-center p-6 rounded-2xl border border-[#F0F0F0] hover:border-primary/20 hover:shadow-md transition-all duration-300 group">
                 <div className="inline-flex items-center justify-center w-14 h-14 bg-gray-50 group-hover:bg-primary/5 rounded-2xl mb-4 transition-colors">
