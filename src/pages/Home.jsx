@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { Search, MapPin, Navigation, ArrowRight, TrendingUp, Flame, Star, Clock, ChevronRight, Sparkles, Shield, Zap, Heart } from 'lucide-react';
-import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState, useEffect, useMemo } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import RestaurantCard from '../components/restaurant/RestaurantCard';
 import restaurantService from '../services/restaurantService';
@@ -19,11 +19,74 @@ import { useLocationStore } from '../store/locationStore';
 
 
 
+const HERO_THEMES = {
+  all: {
+    primary: '#FC8019',
+    secondary: '#FF9F54',
+    gradient: 'from-[#FC8019]/20 via-[#FC8019]/5 to-transparent',
+    accent: 'bg-[#FC8019]',
+    image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1800&q=80',
+    light: 'bg-orange-50'
+  },
+  fresh: {
+    primary: '#26A541',
+    secondary: '#34D399',
+    gradient: 'from-[#26A541]/20 via-[#26A541]/5 to-transparent',
+    accent: 'bg-[#26A541]',
+    image: 'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=1800&q=80',
+    light: 'bg-green-50'
+  },
+  summer: {
+    primary: '#0C831F',
+    secondary: '#10B981',
+    gradient: 'from-[#0C831F]/20 via-[#0C831F]/5 to-transparent',
+    accent: 'bg-[#0C831F]',
+    image: 'https://images.unsplash.com/photo-1504387828636-adbd50779770?w=1800&q=80',
+    light: 'bg-emerald-50'
+  },
+  sweets: {
+    primary: '#E03546',
+    secondary: '#F87171',
+    gradient: 'from-[#E03546]/20 via-[#E03546]/5 to-transparent',
+    accent: 'bg-[#E03546]',
+    image: 'https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=1800&q=80',
+    light: 'bg-red-50'
+  },
+  drinks: {
+    primary: '#1A73E8',
+    secondary: '#60A5FA',
+    gradient: 'from-[#1A73E8]/20 via-[#1A73E8]/5 to-transparent',
+    accent: 'bg-[#1A73E8]',
+    image: 'https://images.unsplash.com/photo-1544145945-f904253d0c71?w=1800&q=80',
+    light: 'bg-blue-50'
+  },
+  bakery: {
+    primary: '#8B4513',
+    secondary: '#D97706',
+    gradient: 'from-[#8B4513]/20 via-[#8B4513]/5 to-transparent',
+    accent: 'bg-[#8B4513]',
+    image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=1800&q=80',
+    light: 'bg-amber-50'
+  },
+  healthy: {
+    primary: '#00B8D9',
+    secondary: '#22D3EE',
+    gradient: 'from-[#00B8D9]/20 via-[#00B8D9]/5 to-transparent',
+    accent: 'bg-[#00B8D9]',
+    image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=1800&q=80',
+    light: 'bg-cyan-50'
+  },
+};
+
 const Home = () => {
   const [searchValue, setSearchValue] = useState('');
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
   const { currentLocation, detectLocation } = useLocationStore();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  
+  const activeCategory = searchParams.get('category') || 'all';
+  const theme = useMemo(() => HERO_THEMES[activeCategory] || HERO_THEMES.all, [activeCategory]);
 
 
   const { data: restaurantsResponse, isLoading, error } = useQuery({
@@ -59,47 +122,114 @@ const Home = () => {
     <div className="bg-white pb-20 md:pb-0">
 
       {/* ── Hero Section ── */}
-      <section className="relative min-h-[480px] md:h-[580px] flex items-center overflow-hidden">
-        {/* Background */}
+      <section className="relative min-h-[500px] md:h-[620px] flex items-center overflow-hidden transition-colors duration-700">
+        {/* Animated Background Layers */}
         <div className="absolute inset-0 z-0">
-          <img 
-            src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1800&q=80" 
+          <motion.img 
+            key={theme.image}
+            initial={{ opacity: 0, scale: 1.1 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
+            src={theme.image} 
             alt="Food hero"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/50 to-black/20" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+          
+          {/* Dynamic Overlays */}
+          <motion.div 
+            animate={{ background: `linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, transparent 100%)` }}
+            className="absolute inset-0 z-10" 
+          />
+          
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            key={`gradient-${activeCategory}`}
+            className={`absolute inset-0 z-20 bg-gradient-to-br ${theme.gradient} mix-blend-overlay`}
+          />
+
+          {/* Decorative Floating Elements */}
+          <div className="absolute inset-0 z-15 overflow-hidden pointer-events-none">
+            <motion.div 
+              animate={{ 
+                y: [0, -20, 0],
+                rotate: [0, 10, 0],
+                scale: [1, 1.1, 1]
+              }}
+              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+              className={`absolute top-20 right-[15%] w-64 h-64 rounded-full blur-[80px] opacity-30 ${theme.accent}`}
+            />
+            <motion.div 
+              animate={{ 
+                y: [0, 30, 0],
+                rotate: [0, -15, 0],
+                scale: [1, 1.2, 1]
+              }}
+              transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+              className={`absolute bottom-10 right-[5%] w-80 h-80 rounded-full blur-[100px] opacity-20 ${theme.accent}`}
+            />
+          </div>
         </div>
 
-        <div className="container mx-auto px-4 md:px-6 relative z-10 py-12 md:py-0">
+        <div className="container mx-auto px-4 md:px-6 relative z-30 py-12 md:py-0">
           <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className="max-w-2xl"
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            className="max-w-3xl"
           >
-            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 mb-6">
-              <div className="h-2 w-2 bg-green-400 rounded-full animate-pulse" />
-              <span className="text-white text-sm font-semibold">{totalRestaurants}+ restaurants open now</span>
-            </div>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-4 py-2 mb-8 shadow-xl"
+            >
+              <div className={`h-2 w-2 rounded-full animate-pulse transition-colors duration-500`} style={{ backgroundColor: theme.primary }} />
+              <span className="text-white text-xs md:text-sm font-bold tracking-wide uppercase">{totalRestaurants}+ restaurants live near you</span>
+            </motion.div>
 
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white mb-4 leading-[1.05] tracking-tight">
-              Deliciousness<br />
-              <span className="text-[#FC8019]">Delivered</span> Fast.
+            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-white mb-6 leading-[0.95] tracking-tight">
+              <motion.span
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+              >
+                Crave the <br />
+              </motion.span>
+              <motion.span 
+                key={activeCategory}
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                style={{ color: theme.primary }}
+                className="drop-shadow-2xl filter brightness-110"
+              >
+                {activeCategory === 'all' ? 'Best Food' : activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1)}
+              </motion.span>
             </h1>
-            <p className="text-base md:text-xl text-gray-200 mb-8 max-w-lg leading-relaxed font-medium">
-              Order from <span className="text-[#FC8019] font-black">{totalRestaurants}+</span> restaurants and <span className="text-[#FC8019] font-black">{totalFoods}+</span> dishes. Fast, fresh & reliable.
-            </p>
+            
+            <motion.p 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4 }}
+              className="text-lg md:text-2xl text-gray-100 mb-10 max-w-xl leading-relaxed font-medium drop-shadow-md"
+            >
+              Discover <span className="font-black" style={{ color: theme.primary }}>{totalFoods}+</span> dishes from top-rated kitchens. Freshness delivered in <span className="font-black" style={{ color: theme.primary }}>30 mins</span>.
+            </motion.p>
 
-            {/* Search Box */}
-            <div className="bg-white rounded-2xl shadow-2xl flex flex-col md:flex-row overflow-hidden max-w-2xl border border-gray-100">
+            {/* Search Box with Theme Accent */}
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6, duration: 0.6 }}
+              className="bg-white rounded-[24px] shadow-[0_20px_50px_rgba(0,0,0,0.3)] flex flex-col md:flex-row overflow-hidden max-w-3xl border border-white/20 p-2 gap-1 group"
+            >
               <div 
                 onClick={() => setIsLocationModalOpen(true)}
-                className="flex items-center gap-3 px-5 py-4 border-b md:border-b-0 md:border-r border-gray-100 flex-1 cursor-pointer hover:bg-gray-50 transition-colors group"
+                className="flex items-center gap-4 px-6 py-4 rounded-2xl cursor-pointer hover:bg-gray-50 transition-all flex-1"
               >
-                <MapPin className="text-primary shrink-0 group-hover:scale-110 transition-transform" size={20} strokeWidth={2.5} />
+                <MapPin style={{ color: theme.primary }} className="shrink-0 group-hover:scale-110 transition-transform" size={22} strokeWidth={2.5} />
                 <div className="flex-1 min-w-0">
-                  <p className="text-[11px] text-[#686B78] font-bold leading-none mb-1">LOCATION</p>
+                  <p className="text-[10px] text-gray-400 font-black leading-none mb-1 uppercase tracking-widest">Your Location</p>
                   <p className="text-[#1C1C1C] text-sm font-bold truncate">
                     {currentLocation?.name || 'Select Location'}
                   </p>
@@ -107,37 +237,40 @@ const Home = () => {
                 <button 
                   type="button" 
                   onClick={(e) => { e.stopPropagation(); detectLocation(); }}
-                  className="text-primary hover:bg-primary/10 p-1.5 rounded-lg transition-colors shrink-0"
+                  className="hover:bg-gray-200 p-2 rounded-xl transition-colors shrink-0"
                   title="Detect my location"
                 >
-                  <Navigation size={16} />
+                  <Navigation size={18} style={{ color: theme.primary }} />
                 </button>
               </div>
 
-              <div className="flex items-center gap-3 px-5 py-4 flex-[1.5]">
-                <Search className="text-[#9093A4] shrink-0" size={20} />
+              <div className="h-10 w-[1px] bg-gray-100 self-center hidden md:block" />
+
+              <div className="flex items-center gap-4 px-6 py-4 rounded-2xl flex-[1.5] group/input">
+                <Search className="text-gray-300 group-focus-within/input:text-primary transition-colors" size={22} />
                 <div className="flex-1 min-w-0">
-                  <p className="text-[11px] text-[#686B78] font-bold leading-none mb-1">SEARCH</p>
+                  <p className="text-[10px] text-gray-400 font-black leading-none mb-1 uppercase tracking-widest">Search</p>
                   <input 
                     type="text" 
-                    placeholder="Search food or restaurants..." 
+                    placeholder="Search for 'Biryani' or 'Pizza'..." 
                     className="bg-transparent outline-none text-[#1C1C1C] text-sm w-full font-bold min-w-0 placeholder:font-normal placeholder:text-gray-400"
                     value={searchValue}
                     onChange={(e) => setSearchValue(e.target.value)}
                   />
                 </div>
               </div>
-              <button 
+              
+              <motion.button 
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
                 onClick={handleSearch}
                 type="button" 
-                className="bg-primary hover:bg-primary-dark text-white font-black px-8 py-5 md:py-4 transition-colors text-sm tracking-wide md:w-auto w-full"
+                style={{ backgroundColor: theme.primary }}
+                className="text-white font-black px-10 py-4 rounded-2xl transition-all text-sm tracking-widest uppercase shadow-lg shadow-primary/20 md:w-auto w-full"
               >
                 Find Food
-              </button>
-            </div>
-
-
-
+              </motion.button>
+            </motion.div>
           </motion.div>
         </div>
       </section>
@@ -153,21 +286,27 @@ const Home = () => {
       </section>
 
       {/* ── Stats Bar ── */}
-      <section className="bg-primary">
-        <div className="container mx-auto px-4 md:px-6 py-5 flex flex-wrap justify-center gap-8 md:gap-16">
+      <section className="transition-colors duration-700" style={{ backgroundColor: theme.primary }}>
+        <div className="container mx-auto px-4 md:px-6 py-6 flex flex-wrap justify-center gap-8 md:gap-16">
           {[
-            { value: `${totalRestaurants}+`, label: 'Restaurants', icon: <Flame size={18} /> },
-            { value: `${totalFoods}+`, label: 'Dishes', icon: <Sparkles size={18} /> },
-            { value: '30 min', label: 'Avg. Delivery', icon: <Zap size={18} /> },
-            { value: '4.5★', label: 'Avg. Rating', icon: <Star size={18} /> },
+            { value: `${totalRestaurants}+`, label: 'Restaurants', icon: <Flame size={20} /> },
+            { value: `${totalFoods}+`, label: 'Dishes', icon: <Sparkles size={20} /> },
+            { value: '30 min', label: 'Avg. Delivery', icon: <Zap size={20} /> },
+            { value: '4.5★', label: 'Avg. Rating', icon: <Star size={20} /> },
           ].map((stat, i) => (
-            <div key={i} className="flex items-center gap-3 text-white">
-              <div className="bg-white/15 p-2.5 rounded-xl">{stat.icon}</div>
+            <motion.div 
+              key={i} 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 * i }}
+              className="flex items-center gap-4 text-white"
+            >
+              <div className="bg-white/20 backdrop-blur-md p-3 rounded-2xl shadow-lg border border-white/10">{stat.icon}</div>
               <div>
-                <p className="text-lg md:text-2xl font-black leading-none">{stat.value}</p>
-                <p className="text-[11px] font-semibold opacity-75 mt-0.5">{stat.label}</p>
+                <p className="text-xl md:text-3xl font-black leading-none">{stat.value}</p>
+                <p className="text-[10px] font-bold opacity-80 mt-1 uppercase tracking-widest">{stat.label}</p>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </section>
