@@ -37,25 +37,34 @@ const ReviewsModal = ({ isOpen, onClose }) => {
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             className="relative w-full max-w-4xl max-h-[85vh] bg-white rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col"
           >
-            {/* Header */}
-            <div className="p-6 md:p-8 border-b border-gray-100 flex items-center justify-between bg-white sticky top-0 z-10">
-              <div>
-                <h3 className="text-2xl md:text-3xl font-black text-[#1C1C1C] tracking-tight">All Reviews</h3>
-                <div className="flex items-center gap-3 mt-1">
-                   <div className="flex">
-                     {[1,2,3,4,5].map(i => <Star key={i} size={14} fill="#FBBC05" strokeWidth={0} />)}
-                   </div>
-                   <span className="text-xs font-bold text-gray-500">Based on 2,540 verified reviews</span>
-                   <div className="h-1 w-1 bg-gray-300 rounded-full" />
-                   <span className="text-xs font-bold text-orange-600 bg-orange-50 px-2 py-0.5 rounded-md">5M+ Total Users</span>
+            <div className="p-6 md:p-10 border-b border-gray-100 bg-white sticky top-0 z-10">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div>
+                  <h3 className="text-3xl md:text-5xl font-black text-[#1C1C1C] tracking-tight mb-2">Customer Reviews</h3>
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-1 bg-green-50 px-3 py-1 rounded-lg border border-green-100">
+                       <span className="text-lg font-black text-green-600">4.8</span>
+                       <Star size={16} fill="#16A34A" className="text-green-600" />
+                    </div>
+                    <div className="h-10 w-[1px] bg-gray-200" />
+                    <div>
+                      <p className="text-2xl font-black text-[#1C1C1C] leading-none">2,540</p>
+                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">Verified Reviews</p>
+                    </div>
+                    <div className="h-10 w-[1px] bg-gray-200" />
+                    <div className="bg-orange-50 px-4 py-2 rounded-2xl border border-orange-100">
+                       <p className="text-xs font-black text-orange-600 uppercase tracking-widest">5M+ Foodies</p>
+                    </div>
+                  </div>
                 </div>
+                
+                <button 
+                  onClick={onClose}
+                  className="h-14 w-14 rounded-2xl bg-gray-50 flex items-center justify-center text-gray-500 hover:bg-primary hover:text-white transition-all duration-300 shadow-sm"
+                >
+                  <X size={28} />
+                </button>
               </div>
-              <button 
-                onClick={onClose}
-                className="h-12 w-12 rounded-full bg-gray-50 flex items-center justify-center text-gray-500 hover:bg-gray-100 transition-colors"
-              >
-                <X size={24} />
-              </button>
             </div>
 
             {/* Body - Scrollable Area */}

@@ -586,14 +586,26 @@ const Home = () => {
           <motion.div 
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            className="mt-16 text-center"
+            className="mt-16 flex flex-col items-center gap-6"
           >
+            <div className="flex items-center gap-4 bg-gray-50 px-6 py-3 rounded-full border border-gray-100">
+               <div className="flex -space-x-1">
+                 {[1,2,3,4,5].map(i => <Star key={i} size={14} fill="#FBBC05" strokeWidth={0} />)}
+               </div>
+               <span className="text-xs font-black text-[#1C1C1C]">4.8 Rating from 2,540+ Customers</span>
+            </div>
+            
             <button 
               onClick={() => setIsReviewsModalOpen(true)}
-              className="bg-[#1C1C1C] text-white px-8 py-3 rounded-2xl font-black text-sm tracking-widest uppercase hover:bg-primary transition-all shadow-xl shadow-gray-200"
+              className="group relative bg-[#1C1C1C] text-white px-12 py-5 rounded-[2rem] font-black text-sm tracking-[0.2em] uppercase hover:bg-primary transition-all shadow-[0_20px_50px_rgba(0,0,0,0.2)] hover:shadow-primary/30 flex items-center gap-4"
             >
-              View all 2,540 Reviews
+              <span>See All 2,540 Reviews</span>
+              <div className="h-8 w-8 bg-white/10 rounded-full flex items-center justify-center group-hover:bg-white group-hover:text-primary transition-all">
+                <ChevronRight size={20} />
+              </div>
             </button>
+            
+            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">⭐ Verified by Google Trust</p>
           </motion.div>
         </div>
       </section>
