@@ -116,7 +116,7 @@ const Header = () => {
           ? 'bg-white border-b border-[#E8E8E8] shadow-sm' 
           : 'bg-white border-b border-[#E8E8E8]'
       )}>
-        <div className="container mx-auto px-4 md:px-6 flex items-center gap-4 h-16 md:h-[72px]">
+        <div className="container mx-auto px-4 md:px-6 flex items-center gap-2 md:gap-4 h-16 md:h-[72px]">
 
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 shrink-0">
@@ -129,7 +129,7 @@ const Header = () => {
           {/* Location Selector */}
           <button 
             onClick={() => setIsLocationModalOpen(true)}
-            className="hidden lg:flex items-center gap-2 px-4 py-2.5 rounded-xl border-2 border-transparent hover:border-gray-200 hover:bg-gray-50 transition-all group max-w-[220px]"
+            className="hidden xl:flex items-center gap-2 px-3 py-2 rounded-xl border border-transparent hover:border-gray-200 hover:bg-gray-50 transition-all group max-w-[180px]"
           >
             <MapPin className="text-primary shrink-0" size={18} strokeWidth={2.5} />
             <div className="text-left overflow-hidden">
@@ -139,23 +139,23 @@ const Header = () => {
             <ChevronDown size={16} className="text-[#686B78] group-hover:text-primary transition-colors shrink-0 ml-1" />
           </button>
 
-          <div className="hidden lg:flex items-center gap-1 ml-4 bg-gray-50 p-1 rounded-2xl border border-gray-100">
+          <div className="hidden lg:flex items-center gap-0.5 bg-gray-50 p-1 rounded-2xl border border-gray-100 shrink-0">
             {[
               { label: 'Delivery', icon: ShoppingBag, path: '/', color: 'text-primary' },
-              { label: 'Dining Out', icon: Utensils, path: '/dining', color: 'text-blue-600' },
-              { label: 'Live Events', icon: Ticket, path: '/events', color: 'text-purple-600' },
+              { label: 'Dining', icon: Utensils, path: '/dining', color: 'text-blue-600' },
+              { label: 'Events', icon: Ticket, path: '/events', color: 'text-purple-600' },
             ].map((nav) => (
               <Link 
                 key={nav.path} 
                 to={nav.path}
                 className={cn(
-                  "flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300 font-bold text-sm",
+                  "flex items-center gap-1.5 px-3 py-1.5 rounded-xl transition-all duration-300 font-bold text-xs whitespace-nowrap",
                   location.pathname === nav.path 
                     ? "bg-white shadow-sm text-[#1C1C1C]" 
                     : "text-gray-400 hover:text-[#1C1C1C] hover:bg-white/50"
                 )}
               >
-                <nav.icon size={16} className={location.pathname === nav.path ? nav.color : 'text-gray-400'} />
+                <nav.icon size={14} className={location.pathname === nav.path ? nav.color : 'text-gray-400'} />
                 {nav.label}
               </Link>
             ))}
@@ -163,9 +163,9 @@ const Header = () => {
 
 
           {/* Search Bar */}
-          <div className="hidden md:flex flex-1 max-w-xl">
+          <div className="hidden md:flex flex-1 max-w-md mx-2">
             <div className="relative w-full group">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#686B78] group-focus-within:text-primary transition-colors" size={18} />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#686B78] group-focus-within:text-primary transition-colors" size={16} />
               <input 
                 type="text" 
                 placeholder="Search for restaurants, cuisines or a dish" 

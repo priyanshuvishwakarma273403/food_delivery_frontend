@@ -523,27 +523,94 @@ const Home = () => {
             <p className="text-[#686B78] text-sm md:text-lg max-w-2xl mx-auto font-medium">Authentic reviews from our community across India</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-            {[
-              { 
-                name: 'Ashu Yadav', 
-                date: '2 days ago', 
-                text: 'The best food delivery app in Mumbai! Delivery is always before time and the packaging is superb. Highly recommended for daily office lunches.',
-                avatar: 'https://i.pravatar.cc/150?u=ashu'
-              },
-              { 
-                name: 'Faiz Khan', 
-                date: '1 week ago', 
-                text: 'Love the variety of cuisines. The dynamic hero section and category tabs make it so easy to find exactly what I am craving for. Great job!',
-                   "{review.text}"
-                </p>
-                
-                {/* Decorative Quote Mark */}
-                <div className="absolute top-8 right-8 text-6xl text-gray-50 -z-10 font-serif select-none group-hover:text-primary/5 transition-colors">
-                  &rdquo;
-                </div>
+          {/* Desktop Grid / Mobile Marquee */}
+          <div className="relative overflow-hidden py-10">
+            {/* Mobile: Infinite Horizontal Slider */}
+            <div className="md:hidden">
+              <motion.div 
+                animate={{ x: [0, -1200] }}
+                transition={{ 
+                  x: {
+                    repeat: Infinity,
+                    repeatType: "loop",
+                    duration: 25,
+                    ease: "linear",
+                  },
+                }}
+                className="flex gap-4 px-4"
+              >
+                {[
+                  { name: 'Ashu Yadav', date: '2 days ago', text: 'The best food delivery app in Mumbai! Delivery is always before time.', avatar: 'https://i.pravatar.cc/150?u=ashu' },
+                  { name: 'Faiz Khan', date: '1 week ago', text: 'Love the variety of cuisines. The dynamic hero section is so easy to use.', avatar: 'https://i.pravatar.cc/150?u=faiz' },
+                  { name: 'Ankit Kumar', date: '3 weeks ago', text: 'Lightning fast delivery. I ordered Biryani and it reached in 20 minutes!', avatar: 'https://i.pravatar.cc/150?u=ankit' },
+                  { name: 'Rahul Sharma', date: '1 month ago', text: 'Great experience overall. The food was hot and fresh.', avatar: 'https://i.pravatar.cc/150?u=rahul' },
+                  // Repeat for infinite effect
+                  { name: 'Ashu Yadav', date: '2 days ago', text: 'The best food delivery app in Mumbai! Delivery is always before time.', avatar: 'https://i.pravatar.cc/150?u=ashu' },
+                  { name: 'Faiz Khan', date: '1 week ago', text: 'Love the variety of cuisines. The dynamic hero section is so easy to use.', avatar: 'https://i.pravatar.cc/150?u=faiz' },
+                ].map((review, i) => (
+                  <div 
+                    key={i}
+                    className="min-w-[280px] bg-white p-6 rounded-[2rem] shadow-xl border border-gray-50 relative"
+                  >
+                    <div className="absolute top-6 right-6 opacity-20">
+                      <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google" className="h-4" />
+                    </div>
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="h-10 w-10 rounded-full overflow-hidden border-2 border-white shadow-sm">
+                        <img src={review.avatar} alt={review.name} className="h-full w-full object-cover" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-black text-[#1C1C1C]">{review.name}</p>
+                        <p className="text-[8px] font-bold text-gray-400 uppercase tracking-widest">{review.date}</p>
+                      </div>
+                    </div>
+                    <div className="flex gap-0.5 mb-3">
+                      {[1,2,3,4,5].map(star => <Star key={star} size={10} fill="#FBBC05" strokeWidth={0} />)}
+                    </div>
+                    <p className="text-[#1C1C1C] text-xs leading-relaxed font-medium">"{review.text}"</p>
+                  </div>
+                ))}
               </motion.div>
-            ))}
+              {/* Gradient overlays for smooth fading at edges */}
+              <div className="absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
+              <div className="absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
+            </div>
+
+            {/* Desktop: Professional Grid */}
+            <div className="hidden md:grid grid-cols-3 gap-8">
+              {[
+                { name: 'Ashu Yadav', date: '2 days ago', text: 'The best food delivery app in Mumbai! Delivery is always before time and the packaging is superb. Highly recommended for daily office lunches.', avatar: 'https://i.pravatar.cc/150?u=ashu' },
+                { name: 'Faiz Khan', date: '1 week ago', text: 'Love the variety of cuisines. The dynamic hero section and category tabs make it so easy to find exactly what I am craving for. Great job!', avatar: 'https://i.pravatar.cc/150?u=faiz' },
+                { name: 'Ankit Kumar', date: '3 weeks ago', text: 'Lightning fast delivery. I ordered Biryani and it reached me in 20 minutes! The live tracking feature is really smooth and accurate.', avatar: 'https://i.pravatar.cc/150?u=ankit' }
+              ].map((review, i) => (
+                <motion.div 
+                  key={i}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  whileHover={{ y: -10 }}
+                  className="bg-white p-8 rounded-[3rem] shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-gray-100 relative group"
+                >
+                  <div className="absolute top-8 right-8 opacity-20 group-hover:opacity-100 transition-opacity">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google" className="h-5" />
+                  </div>
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="h-14 w-14 rounded-full overflow-hidden border-2 border-white shadow-xl group-hover:scale-110 transition-transform duration-500">
+                      <img src={review.avatar} alt={review.name} className="h-full w-full object-cover" />
+                    </div>
+                    <div>
+                      <p className="text-base font-black text-[#1C1C1C]">{review.name}</p>
+                      <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-0.5">{review.date}</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-0.5 mb-6">
+                    {[1,2,3,4,5].map(star => <Star key={star} size={14} fill="#FBBC05" strokeWidth={0} />)}
+                  </div>
+                  <p className="text-[#1C1C1C] text-base leading-relaxed font-medium">"{review.text}"</p>
+                </motion.div>
+              ))}
+            </div>
           </div>
           
           <motion.div 
