@@ -486,6 +486,104 @@ const Home = () => {
 
       <div className="h-2 bg-[#F5F5F5]" />
 
+      {/* ── Tomato Gold Section ── */}
+      <section className="py-12 md:py-20 bg-white">
+        <div className="container mx-auto px-4 md:px-6">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="relative overflow-hidden rounded-[3rem] md:rounded-[4rem] bg-gradient-to-br from-[#1C1C1C] via-[#2D2D2D] to-[#1C1C1C] p-8 md:p-16 shadow-[0_40px_100px_rgba(0,0,0,0.3)]"
+          >
+            {/* Animated Gold Glow */}
+            <div className="absolute -top-24 -right-24 w-96 h-96 bg-yellow-500/10 rounded-full blur-[100px] animate-pulse" />
+            <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-yellow-500/10 rounded-full blur-[100px] animate-pulse" />
+            
+            <div className="flex flex-col md:flex-row items-center justify-between gap-12 relative z-10">
+              <div className="max-w-xl text-center md:text-left">
+                <div className="inline-flex items-center gap-2 bg-yellow-500/20 border border-yellow-500/30 rounded-full px-4 py-2 mb-8">
+                  <Crown className="text-yellow-500" size={16} />
+                  <span className="text-yellow-500 text-xs font-black uppercase tracking-widest">Tomato Gold</span>
+                </div>
+                
+                <h2 className="text-4xl md:text-6xl font-black text-white mb-6 leading-tight tracking-tighter">
+                  One membership, <br />
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-200">unlimited benefits</span>
+                </h2>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+                  {[
+                    { icon: '🚀', text: 'Free delivery on all orders' },
+                    { icon: '💰', text: 'Flat 10% extra coins back' },
+                    { icon: '⭐', text: 'Priority customer support' },
+                    { icon: '💎', text: 'Exclusive restaurant offers' },
+                  ].map((item, i) => (
+                    <div key={i} className="flex items-center gap-3 bg-white/5 backdrop-blur-md rounded-2xl p-4 border border-white/10">
+                      <span className="text-xl">{item.icon}</span>
+                      <span className="text-white/80 text-sm font-bold">{item.text}</span>
+                    </div>
+                  ))}
+                </div>
+                
+                <button className="group bg-yellow-500 hover:bg-yellow-400 text-[#1C1C1C] px-10 py-5 rounded-[2rem] font-black text-sm tracking-widest uppercase transition-all shadow-[0_20px_50px_rgba(234,179,8,0.3)] flex items-center gap-4 mx-auto md:mx-0">
+                  Get Tomato Gold @ ₹99
+                  <ArrowRight size={20} className="group-hover:translate-x-2 transition-transform" />
+                </button>
+              </div>
+              
+              <div className="relative">
+                {/* 3D-like Card Preview */}
+                <motion.div
+                  animate={{ 
+                    y: [0, -20, 0],
+                    rotate: [5, 2, 5]
+                  }}
+                  transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                  className="w-64 h-80 md:w-80 md:h-[450px] bg-gradient-to-br from-yellow-400 to-amber-600 rounded-[2.5rem] p-8 shadow-[0_50px_100px_rgba(234,179,8,0.4)] border-4 border-yellow-300 relative overflow-hidden"
+                >
+                  <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20" />
+                  <div className="relative z-10 h-full flex flex-col justify-between">
+                    <div>
+                      <div className="flex justify-between items-start">
+                        <Crown size={40} className="text-[#1C1C1C]" strokeWidth={2.5} />
+                        <span className="text-[10px] font-black text-[#1C1C1C] uppercase tracking-widest">Premium</span>
+                      </div>
+                      <div className="mt-8">
+                        <p className="text-[#1C1C1C] text-2xl font-black tracking-tight leading-none">TOMATO</p>
+                        <p className="text-[#1C1C1C] text-5xl font-black tracking-tighter">GOLD</p>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-4">
+                      <div className="h-2 w-full bg-[#1C1C1C]/10 rounded-full" />
+                      <div className="h-2 w-2/3 bg-[#1C1C1C]/10 rounded-full" />
+                      <div className="flex justify-between items-end mt-8">
+                        <div>
+                          <p className="text-[8px] font-black text-[#1C1C1C] uppercase opacity-50">Member Name</p>
+                          <p className="text-[#1C1C1C] font-black uppercase text-sm tracking-widest">{user?.name || 'ASHU YADAV'}</p>
+                        </div>
+                        <div className="bg-[#1C1C1C] text-white px-3 py-1 rounded-lg text-[10px] font-black">
+                           VALID 2027
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Gloss Effect */}
+                  <div className="absolute -inset-full bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-[-20deg] animate-shine pointer-events-none" />
+                </motion.div>
+                
+                {/* Floating Coins Decorations */}
+                <motion.div animate={{ y: [0, 20, 0] }} transition={{ duration: 4, repeat: Infinity }} className="absolute -top-10 -left-10 text-4xl">💰</motion.div>
+                <motion.div animate={{ y: [0, -30, 0] }} transition={{ duration: 5, repeat: Infinity, delay: 1 }} className="absolute bottom-10 -right-10 text-4xl">✨</motion.div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      <div className="h-2 bg-[#F5F5F5]" />
+
       {/* ── Google-Style Testimonials ── */}
       <section className="bg-white py-12 md:py-20 overflow-hidden">
         <div className="container mx-auto px-4 md:px-6">
