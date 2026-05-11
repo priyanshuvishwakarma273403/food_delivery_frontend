@@ -41,6 +41,8 @@ const Profile = lazy(() => import('./pages/Profile'));
 const Blogs = lazy(() => import('./pages/Blogs'));
 const AdminBlogs = lazy(() => import('./pages/AdminBlogs'));
 const FoodieFeed = lazy(() => import('./pages/FoodieFeed'));
+const DiningOut = lazy(() => import('./pages/DiningOut'));
+const LiveEvents = lazy(() => import('./pages/DiningOut')); // Using DiningOut as placeholder for now
 
 const queryClient = new QueryClient();
 
@@ -108,6 +110,8 @@ function App() {
 
                 <Route path="/delivery/dashboard" element={<ProtectedRoute roles={['DELIVERY_PARTNER']}><DeliveryDashboard /></ProtectedRoute>} />
                 <Route path="/feed" element={<ProtectedRoute roles={['CUSTOMER']}><FoodieFeed /></ProtectedRoute>} />
+                <Route path="/dining" element={<DiningOut />} />
+                <Route path="/events" element={<LiveEvents />} />
                 <Route path="*" element={<NotFound />} />
 
               </Route>

@@ -19,7 +19,10 @@ import {
   ShoppingBag,
   Crown,
   Coins,
-  ChevronRight
+  ChevronRight,
+  Utensils,
+  Ticket,
+  Search as SearchIcon
 } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { useCartStore } from '../../store/cartStore';
@@ -135,6 +138,28 @@ const Header = () => {
             </div>
             <ChevronDown size={16} className="text-[#686B78] group-hover:text-primary transition-colors shrink-0 ml-1" />
           </button>
+
+          <div className="hidden lg:flex items-center gap-1 ml-4 bg-gray-50 p-1 rounded-2xl border border-gray-100">
+            {[
+              { label: 'Delivery', icon: ShoppingBag, path: '/', color: 'text-primary' },
+              { label: 'Dining Out', icon: Utensils, path: '/dining', color: 'text-blue-600' },
+              { label: 'Live Events', icon: Ticket, path: '/events', color: 'text-purple-600' },
+            ].map((nav) => (
+              <Link 
+                key={nav.path} 
+                to={nav.path}
+                className={cn(
+                  "flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300 font-bold text-sm",
+                  location.pathname === nav.path 
+                    ? "bg-white shadow-sm text-[#1C1C1C]" 
+                    : "text-gray-400 hover:text-[#1C1C1C] hover:bg-white/50"
+                )}
+              >
+                <nav.icon size={16} className={location.pathname === nav.path ? nav.color : 'text-gray-400'} />
+                {nav.label}
+              </Link>
+            ))}
+          </div>
 
 
           {/* Search Bar */}
