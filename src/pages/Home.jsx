@@ -324,7 +324,7 @@ const Home = () => {
             </div>
           </div>
 
-          <div className="flex overflow-x-auto pb-4 scrollbar-hide gap-4 md:gap-8 -mx-4 px-4 snap-x snap-mandatory">
+          <div className="flex overflow-x-auto pb-6 scrollbar-hide gap-6 md:gap-10 -mx-4 px-4 snap-x snap-mandatory scroll-smooth">
             {CUISINE_CATEGORIES.map((cuisine, index) => (
               <Link key={index} to={`/restaurants?cuisine=${cuisine.name}`} className="snap-start shrink-0">
                 <motion.div

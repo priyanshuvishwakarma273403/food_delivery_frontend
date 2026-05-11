@@ -41,7 +41,7 @@ const CategoryTabs = () => {
           <div className={cn("h-1 w-12 rounded-full transition-all duration-500", activeCategory.color)} />
         </div>
 
-        <div className="flex items-center justify-center gap-4 md:gap-8 overflow-x-auto no-scrollbar pb-6 px-4">
+        <div className="flex items-center justify-start md:justify-center gap-6 md:gap-10 overflow-x-auto scrollbar-hide pb-10 px-4 snap-x snap-mandatory scroll-smooth">
           {CATEGORIES.map((cat) => {
             const isActive = activeTab === cat.id;
             return (
@@ -51,8 +51,8 @@ const CategoryTabs = () => {
                 whileTap={{ scale: 0.9 }}
                 onClick={() => handleTabChange(cat.id)}
                 className={cn(
-                  "flex flex-col items-center gap-3 transition-all duration-500 relative py-2 min-w-[80px]",
-                  !isActive && "opacity-40 grayscale-[0.8] hover:opacity-100 hover:grayscale-0"
+                  "flex flex-col items-center gap-3 transition-all duration-500 relative py-2 min-w-[90px] snap-start",
+                  !isActive && "opacity-60 grayscale-[0.4] hover:opacity-100 hover:grayscale-0"
                 )}
               >
                 <div className={cn(
@@ -72,8 +72,8 @@ const CategoryTabs = () => {
                 </div>
                 
                 <span className={cn(
-                  "text-[11px] font-black uppercase tracking-[0.15em] transition-all duration-300",
-                  isActive ? "text-[#1C1C1C] translate-y-1" : "text-[#686B78]"
+                  "text-[10px] md:text-[11px] font-black uppercase tracking-[0.1em] transition-all duration-300 text-center",
+                  isActive ? "text-[#1C1C1C] translate-y-1" : "text-gray-500"
                 )}>
                   {cat.label}
                 </span>
