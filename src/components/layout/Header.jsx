@@ -46,6 +46,8 @@ const Header = () => {
   const coins = wallet?.coins ?? 0;
 
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [showResults, setShowResults] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
 
@@ -83,7 +85,28 @@ const Header = () => {
   useEffect(() => {
     setIsMobileMenuOpen(false);
     setIsProfileOpen(false);
+    setShowResults(false);
   }, [location.pathname]);
+
+  // Autocomplete logic
+  useEffect(() => {
+    const timer = setTimeout(async () => {
+      if (searchQuery.trim().length > 1) {
+        try {
+          const response = await axios.get(`/api/search/autocomplete?q=${searchQuery}`);
+          setSearchResults(response.data);
+          setShowResults(true);
+        } catch (error) {
+          console.error('Search error:', error);
+        }
+      } else {
+        setSearchResults([]);
+        setShowResults(false);
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
   // Close profile dropdown on outside click
   useEffect(() => {
@@ -172,9 +195,11 @@ const Header = () => {
                 className="w-full bg-[#F5F5F6] border border-transparent focus:border-primary/30 focus:bg-white focus:ring-4 focus:ring-primary/5 rounded-xl pl-11 pr-12 py-3 text-sm outline-none transition-all text-[#1C1C1C] font-medium placeholder:text-[#9093A4] placeholder:font-normal"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                onFocus={() => searchQuery.length > 1 && setShowResults(true)}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && searchQuery.trim()) {
                     navigate(`/restaurants?search=${searchQuery}`);
+                    setShowResults(false);
                   }
                 }}
               />
@@ -189,6 +214,43 @@ const Header = () => {
               >
                 <Mic size={18} />
               </button>
+
+              {/* Autocomplete Results */}
+              <AnimatePresence>
+                {showResults && searchResults.length > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden z-[60]"
+                  >
+                    <div className="py-2">
+                      {searchResults.map((res) => (
+                        <button
+                          key={res.id}
+                          onClick={() => {
+                            navigate(`/restaurant/${res.id}`);
+                            setShowResults(false);
+                            setSearchQuery('');
+                          }}
+                          className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors text-left"
+                        >
+                          <Search size={14} className="text-gray-400" />
+                          <div>
+                            <p className="text-sm font-bold text-[#1C1C1C]">{res.name}</p>
+                            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">{res.cuisineType} • {res.city}</p>
+                          </div>
+                          {res.rating && (
+                            <div className="ml-auto flex items-center gap-1 bg-green-50 px-2 py-0.5 rounded text-[10px] font-black text-green-600">
+                              {res.rating} <Star size={8} fill="currentColor" />
+                            </div>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
 

@@ -20,6 +20,7 @@ import Button from '../components/common/Button';
 import Badge from '../components/common/Badge';
 import { cn } from '../utils/cn';
 import { useEffect } from 'react';
+import axios from 'axios';
 
 const Restaurants = () => {
   const [searchParams] = useSearchParams();
@@ -32,13 +33,33 @@ const Restaurants = () => {
   const [showMobileFilters, setShowMobileFilters] = useState(false);
   const [viewMode, setViewMode] = useState('grid');
   const [visibleCount, setVisibleCount] = useState(20);
+  const [restaurants, setRestaurants] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Simulate loading
+  // Fetch restaurants
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 1200);
-    return () => clearTimeout(timer);
-  }, []);
+    const fetchRestaurants = async () => {
+      try {
+        setIsLoading(true);
+        let data;
+        if (search.trim()) {
+          const res = await axios.get(`/api/search/restaurants?q=${search}`);
+          data = res.data;
+        } else {
+          const res = await axios.get('/api/restaurants');
+          data = res.data;
+        }
+        setRestaurants(data);
+      } catch (error) {
+        console.error('Error fetching restaurants:', error);
+        // Fallback to static data if API fails or for initial development
+        setRestaurants(ALL_RESTAURANTS);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchRestaurants();
+  }, [search]);
 
 
   const filters = [
@@ -58,7 +79,7 @@ const Restaurants = () => {
   };
 
   const filteredRestaurants = useMemo(() => {
-    return ALL_RESTAURANTS.filter(res => {
+    return restaurants.filter(res => {
       const matchSearch = search === '' || 
         res.name.toLowerCase().includes(search.toLowerCase()) || 
         res.cuisine.toLowerCase().includes(search.toLowerCase()) ||
