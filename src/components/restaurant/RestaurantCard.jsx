@@ -24,20 +24,36 @@ const RestaurantCard = ({ restaurant }) => {
     costForTwo
   } = restaurant;
 
-  // Create a unique fallback image based on the restaurant name/id
+  // Create a diverse set of high-quality food images
   const fallbackImages = [
-    'https://images.unsplash.com/photo-1546069901-ba9599a7e63c', // Healthy
-    'https://images.unsplash.com/photo-1567620905732-2d1ec7bb7445', // Pancakes
-    'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38', // Pizza
-    'https://images.unsplash.com/photo-1482049016688-2d3e1b311543', // Burger
-    'https://images.unsplash.com/photo-1504674900247-0877df9cc836', // Mixed
-    'https://images.unsplash.com/photo-1473093226795-af9932fe5856', // Pasta
-    'https://images.unsplash.com/photo-1555939594-58d7cb561ad1', // Grill
+    'https://images.unsplash.com/photo-1546069901-ba9599a7e63c', // Salad/Healthy
+    'https://images.unsplash.com/photo-1567620905732-2d1ec7bb7445', // Pancakes/Sweets
+    'https://images.unsplash.com/photo-1513104890138-7c749659a591', // Pizza
+    'https://images.unsplash.com/photo-1568901346375-23c9450c58cd', // Burger
+    'https://images.unsplash.com/photo-1603360946369-dc9bb6258143', // Indian Thali
+    'https://images.unsplash.com/photo-1589302168068-964664d93dc0', // Biryani (Chicken)
+    'https://images.unsplash.com/photo-1603894544376-3b5265744f8b', // Mutton Curry
+    'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2', // Fish Fry
+    'https://images.unsplash.com/photo-1525351484163-7529414344d8', // Egg Benedict/Omelette
+    'https://images.unsplash.com/photo-1555939594-58d7cb561ad1', // Grilled Chicken
+    'https://images.unsplash.com/photo-1593560708920-61dd98c46a4e', // Chinese Noodles
+    'https://images.unsplash.com/photo-1512621776951-a57141f2eefd', // Healthy Veg Bowl
+    'https://images.unsplash.com/photo-1601050690597-df056fb47091', // Samosa/Indian Snacks
+    'https://images.unsplash.com/photo-1585032226651-759b368d7246', // Stir Fry
+    'https://images.unsplash.com/photo-1534422298391-e4f8c170db0f', // Dumplings/Momos
   ];
   
-  // Deterministic index based on name
-  const imageIndex = name ? name.length % fallbackImages.length : 0;
-  const uniqueFallback = `${fallbackImages[imageIndex]}?w=500&q=80&auto=format&fit=crop`;
+  // Better deterministic index using a simple hash of the name
+  const getHash = (str) => {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return Math.abs(hash);
+  };
+  
+  const imageIndex = name ? getHash(name) % fallbackImages.length : 0;
+  const uniqueFallback = `${fallbackImages[imageIndex]}?w=600&q=80&auto=format&fit=crop`;
 
   // Sync field names between backend and mock data
   const displayImage = imageUrl || image || uniqueFallback;

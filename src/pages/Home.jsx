@@ -440,10 +440,10 @@ const Home = () => {
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
             {[
               { label: 'Pure Veg', emoji: '🥬', bg: 'bg-green-50', border: 'border-green-200', hover: 'hover:border-green-400 hover:bg-green-100', filter: 'veg' },
-              { label: 'Under 30 min', emoji: '⚡', bg: 'bg-amber-50', border: 'border-amber-200', hover: 'hover:border-amber-400 hover:bg-amber-100', filter: 'fast' },
-              { label: 'Rating 4.5+', emoji: '⭐', bg: 'bg-orange-50', border: 'border-orange-200', hover: 'hover:border-orange-400 hover:bg-orange-100', filter: 'top' },
-              { label: 'Great Offers', emoji: '🏷️', bg: 'bg-blue-50', border: 'border-blue-200', hover: 'hover:border-blue-400 hover:bg-blue-100', filter: 'offers' },
-              { label: 'New Arrivals', emoji: '🆕', bg: 'bg-purple-50', border: 'border-purple-200', hover: 'hover:border-purple-400 hover:bg-purple-100', filter: 'new' },
+              { label: 'Chicken', emoji: '🍗', bg: 'bg-red-50', border: 'border-red-200', hover: 'hover:border-red-400 hover:bg-red-100', filter: 'chicken' },
+              { label: 'Mutton', emoji: '🍖', bg: 'bg-orange-50', border: 'border-orange-200', hover: 'hover:border-orange-400 hover:bg-orange-100', filter: 'mutton' },
+              { label: 'Fish', emoji: '🐟', bg: 'bg-blue-50', border: 'border-blue-200', hover: 'hover:border-blue-400 hover:bg-blue-100', filter: 'fish' },
+              { label: 'Egg', emoji: '🥚', bg: 'bg-yellow-50', border: 'border-yellow-200', hover: 'hover:border-yellow-400 hover:bg-yellow-100', filter: 'egg' },
             ].map((cat, i) => (
               <Link key={i} to={`/restaurants?filter=${cat.filter}`}>
                 <motion.div 
@@ -491,18 +491,37 @@ const Home = () => {
       <section className="bg-white py-12 md:py-20 overflow-hidden">
         <div className="container mx-auto px-4 md:px-6">
           <div className="text-center mb-12 md:mb-16">
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              className="inline-flex items-center gap-2 bg-blue-50 px-4 py-2 rounded-full mb-4 border border-blue-100"
-            >
-              <div className="flex -space-x-1">
-                {[1,2,3,4,5].map(i => <Star key={i} size={12} fill="#4285F4" strokeWidth={0} />)}
-              </div>
-              <span className="text-[10px] font-black text-blue-600 uppercase tracking-widest">4.8/5 on Google Reviews</span>
-            </motion.div>
+            <div className="flex flex-col md:flex-row items-center justify-center gap-4 mb-4">
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                className="inline-flex items-center gap-2 bg-blue-50 px-4 py-2 rounded-full border border-blue-100 shadow-sm"
+              >
+                <div className="flex -space-x-1">
+                  {[1,2,3,4,5].map(i => <Star key={i} size={12} fill="#4285F4" strokeWidth={0} />)}
+                </div>
+                <span className="text-[10px] font-black text-blue-600 uppercase tracking-widest">4.8/5 on Google Reviews</span>
+              </motion.div>
+              
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.1 }}
+                className="inline-flex items-center gap-2 bg-orange-50 px-4 py-2 rounded-full border border-orange-100 shadow-sm"
+              >
+                <div className="flex -space-x-2">
+                   {[1,2,3,4].map(i => (
+                     <div key={i} className="h-5 w-5 rounded-full border-2 border-white overflow-hidden bg-gray-200">
+                       <img src={`https://i.pravatar.cc/100?u=user${i}`} alt="user" className="w-full h-full object-cover" />
+                     </div>
+                   ))}
+                </div>
+                <span className="text-[10px] font-black text-orange-600 uppercase tracking-widest">5 Million+ Total Users</span>
+              </motion.div>
+            </div>
+            
             <h2 className="text-3xl md:text-5xl font-black text-[#1C1C1C] mb-4 tracking-tight">What our foodies say</h2>
-            <p className="text-[#686B78] text-sm md:text-lg max-w-2xl mx-auto font-medium">Join 5 Million+ happy customers across India</p>
+            <p className="text-[#686B78] text-sm md:text-lg max-w-2xl mx-auto font-medium">Authentic reviews from our community across India</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">

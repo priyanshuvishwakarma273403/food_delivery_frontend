@@ -41,11 +41,13 @@ const ReviewsModal = ({ isOpen, onClose }) => {
             <div className="p-6 md:p-8 border-b border-gray-100 flex items-center justify-between bg-white sticky top-0 z-10">
               <div>
                 <h3 className="text-2xl md:text-3xl font-black text-[#1C1C1C] tracking-tight">All Reviews</h3>
-                <div className="flex items-center gap-2 mt-1">
+                <div className="flex items-center gap-3 mt-1">
                    <div className="flex">
                      {[1,2,3,4,5].map(i => <Star key={i} size={14} fill="#FBBC05" strokeWidth={0} />)}
                    </div>
                    <span className="text-xs font-bold text-gray-500">Based on 2,540 verified reviews</span>
+                   <div className="h-1 w-1 bg-gray-300 rounded-full" />
+                   <span className="text-xs font-bold text-orange-600 bg-orange-50 px-2 py-0.5 rounded-md">5M+ Total Users</span>
                 </div>
               </div>
               <button 
