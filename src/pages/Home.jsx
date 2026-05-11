@@ -15,6 +15,9 @@ import CategoryTabs from '../components/home/CategoryTabs';
 import LocationModal from '../components/layout/LocationModal';
 import ReviewsModal from '../components/home/ReviewsModal';
 import { useLocationStore } from '../store/locationStore';
+import Stories from '../components/home/Stories';
+import OfferSlider from '../components/home/OfferSlider';
+import OrderPulse from '../components/home/OrderPulse';
 
 
 
@@ -277,15 +280,11 @@ const Home = () => {
         </div>
       </section>
 
-      {/* ── Stories / Food Bites ── */}
-      <section className="bg-white border-b border-[#F0F0F0] py-4">
-        <div className="container mx-auto px-4 md:px-6">
-          <p className="text-xs font-black text-[#1C1C1C] mb-3 flex items-center gap-2 uppercase tracking-widest">
-            <Flame className="text-[#FC8019]" size={14} /> Latest Food Bites
-          </p>
-          <StoryViewer />
-        </div>
-      </section>
+      {/* ── Offer Slider ── */}
+      <OfferSlider />
+
+      {/* ── Trending Stories ── */}
+      <Stories />
 
       {/* ── Stats Bar ── */}
       <section className="transition-colors duration-700" style={{ backgroundColor: theme.primary }}>
@@ -610,6 +609,8 @@ const Home = () => {
         isOpen={isReviewsModalOpen} 
         onClose={() => setIsReviewsModalOpen(false)} 
       />
+
+      <OrderPulse />
     </div>
 
   );
