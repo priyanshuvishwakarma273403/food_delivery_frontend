@@ -101,7 +101,7 @@ const Header = () => {
 
   const bottomNavItems = [
     { icon: Home, label: 'Home', to: '/' },
-    { icon: UtensilsCrossed, label: 'Explore', to: '/restaurants' },
+    { icon: Utensils, label: 'Dining', to: '/dining' },
     { icon: ShoppingBag, label: 'Cart', to: '/cart', badge: cartItemCount },
     { icon: ClipboardList, label: 'Orders', to: isAuthenticated ? '/orders' : '/login' },
     { icon: UserCircle, label: 'Account', to: isAuthenticated ? '/profile' : '/login' },
