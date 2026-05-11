@@ -535,43 +535,6 @@ const Home = () => {
                 name: 'Faiz Khan', 
                 date: '1 week ago', 
                 text: 'Love the variety of cuisines. The dynamic hero section and category tabs make it so easy to find exactly what I am craving for. Great job!',
-                avatar: 'https://i.pravatar.cc/150?u=faiz'
-              },
-              { 
-                name: 'Ankit Kumar', 
-                date: '3 weeks ago', 
-                text: 'Lightning fast delivery. I ordered Biryani and it reached me in 20 minutes! The live tracking feature is really smooth and accurate.',
-                avatar: 'https://i.pravatar.cc/150?u=ankit'
-              }
-            ].map((review, i) => (
-              <motion.div 
-                key={i}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }}
-                viewport={{ once: true }}
-                className="bg-white p-6 md:p-8 rounded-[2rem] border border-gray-100 shadow-[0_10px_30px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.08)] transition-all duration-500 relative group"
-              >
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="h-12 w-12 rounded-full overflow-hidden border-2 border-primary/10 shadow-inner group-hover:scale-110 transition-transform">
-                    <img src={review.avatar} alt={review.name} className="w-full h-full object-cover" />
-                  </div>
-                  <div>
-                    <h4 className="font-black text-[#1C1C1C] text-base">{review.name}</h4>
-                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">{review.date}</p>
-                  </div>
-                  <div className="ml-auto bg-blue-50 h-8 w-8 rounded-full flex items-center justify-center">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="G" className="w-4 h-4" />
-                  </div>
-                </div>
-                
-                <div className="flex gap-1 mb-4">
-                  {[1,2,3,4,5].map(star => (
-                    <Star key={star} size={14} fill="#FBBC05" strokeWidth={0} />
-                  ))}
-                </div>
-                
-                <p className="text-sm md:text-base text-[#686B78] leading-relaxed font-medium italic">
                    "{review.text}"
                 </p>
                 
