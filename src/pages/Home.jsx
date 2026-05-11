@@ -18,6 +18,7 @@ import { useLocationStore } from '../store/locationStore';
 import Stories from '../components/home/Stories';
 import OfferSlider from '../components/home/OfferSlider';
 import OrderPulse from '../components/home/OrderPulse';
+import { useAuthStore } from '../store/authStore';
 
 
 
@@ -86,6 +87,7 @@ const Home = () => {
   const [searchValue, setSearchValue] = useState('');
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
   const [isReviewsModalOpen, setIsReviewsModalOpen] = useState(false);
+  const { user } = useAuthStore();
   const { currentLocation, detectLocation } = useLocationStore();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();

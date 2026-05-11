@@ -9,6 +9,7 @@ import SocialProof from './components/common/SocialProof';
 import CartDrawer from './components/cart/CartDrawer';
 import { Spinner } from './components/common/Loader'; 
 import { ThemeProvider } from './context/ThemeContext';
+import ScrollToTop from './components/common/ScrollToTop';
 import { useEffect } from 'react';
 
 // Lazy loaded pages
@@ -79,6 +80,7 @@ function App() {
     <ThemeProvider>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
+          <ScrollToTop />
           <Suspense fallback={<PageLoader />}>
             <Routes>
               <Route element={<Layout />}>
