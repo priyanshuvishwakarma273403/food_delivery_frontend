@@ -224,7 +224,7 @@ const OrderDetail = () => {
             </div>
             <div>
               <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4 border-l-4 border-secondary pl-4">Delivery Address</p>
-              <h4 className="text-lg font-bold mb-1">Home (John Doe)</h4>
+              <h4 className="text-lg font-bold mb-1">Home (Ankit Kumar)</h4>
               <p className="text-sm text-text-secondary truncate">H.No 123, Street 5, Royal Palms, Sector 62, Noida</p>
             </div>
           </div>

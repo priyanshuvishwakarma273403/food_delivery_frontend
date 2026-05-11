@@ -13,6 +13,7 @@ import { Spinner } from '../components/common/Loader';
 import Button from '../components/common/Button';
 import CategoryTabs from '../components/home/CategoryTabs';
 import LocationModal from '../components/layout/LocationModal';
+import ReviewsModal from '../components/home/ReviewsModal';
 import { useLocationStore } from '../store/locationStore';
 
 
@@ -81,6 +82,7 @@ const HERO_THEMES = {
 const Home = () => {
   const [searchValue, setSearchValue] = useState('');
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
+  const [isReviewsModalOpen, setIsReviewsModalOpen] = useState(false);
   const { currentLocation, detectLocation } = useLocationStore();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -483,9 +485,111 @@ const Home = () => {
         </div>
       </section>
 
+      <div className="h-2 bg-[#F5F5F5]" />
+
+      {/* ── Google-Style Testimonials ── */}
+      <section className="bg-white py-12 md:py-20 overflow-hidden">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="text-center mb-12 md:mb-16">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              className="inline-flex items-center gap-2 bg-blue-50 px-4 py-2 rounded-full mb-4 border border-blue-100"
+            >
+              <div className="flex -space-x-1">
+                {[1,2,3,4,5].map(i => <Star key={i} size={12} fill="#4285F4" strokeWidth={0} />)}
+              </div>
+              <span className="text-[10px] font-black text-blue-600 uppercase tracking-widest">4.8/5 on Google Reviews</span>
+            </motion.div>
+            <h2 className="text-3xl md:text-5xl font-black text-[#1C1C1C] mb-4 tracking-tight">What our foodies say</h2>
+            <p className="text-[#686B78] text-sm md:text-lg max-w-2xl mx-auto font-medium">Join 5 Million+ happy customers across India</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+            {[
+              { 
+                name: 'Ashu Yadav', 
+                date: '2 days ago', 
+                text: 'The best food delivery app in Mumbai! Delivery is always before time and the packaging is superb. Highly recommended for daily office lunches.',
+                avatar: 'https://i.pravatar.cc/150?u=ashu'
+              },
+              { 
+                name: 'Faiz Khan', 
+                date: '1 week ago', 
+                text: 'Love the variety of cuisines. The dynamic hero section and category tabs make it so easy to find exactly what I am craving for. Great job!',
+                avatar: 'https://i.pravatar.cc/150?u=faiz'
+              },
+              { 
+                name: 'Ankit Kumar', 
+                date: '3 weeks ago', 
+                text: 'Lightning fast delivery. I ordered Biryani and it reached me in 20 minutes! The live tracking feature is really smooth and accurate.',
+                avatar: 'https://i.pravatar.cc/150?u=ankit'
+              }
+            ].map((review, i) => (
+              <motion.div 
+                key={i}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1 }}
+                viewport={{ once: true }}
+                className="bg-white p-6 md:p-8 rounded-[2rem] border border-gray-100 shadow-[0_10px_30px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.08)] transition-all duration-500 relative group"
+              >
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="h-12 w-12 rounded-full overflow-hidden border-2 border-primary/10 shadow-inner group-hover:scale-110 transition-transform">
+                    <img src={review.avatar} alt={review.name} className="w-full h-full object-cover" />
+                  </div>
+                  <div>
+                    <h4 className="font-black text-[#1C1C1C] text-base">{review.name}</h4>
+                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">{review.date}</p>
+                  </div>
+                  <div className="ml-auto bg-blue-50 h-8 w-8 rounded-full flex items-center justify-center">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="G" className="w-4 h-4" />
+                  </div>
+                </div>
+                
+                <div className="flex gap-1 mb-4">
+                  {[1,2,3,4,5].map(star => (
+                    <Star key={star} size={14} fill="#FBBC05" strokeWidth={0} />
+                  ))}
+                </div>
+                
+                <p className="text-sm md:text-base text-[#686B78] leading-relaxed font-medium italic">
+                   "{review.text}"
+                </p>
+                
+                {/* Decorative Quote Mark */}
+                <div className="absolute top-8 right-8 text-6xl text-gray-50 -z-10 font-serif select-none group-hover:text-primary/5 transition-colors">
+                  &rdquo;
+                </div>
+              </motion.div>
+            ))}
+          </div>
+          
+          <motion.div 
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            className="mt-16 text-center"
+          >
+            <button 
+              onClick={() => setIsReviewsModalOpen(true)}
+              className="bg-[#1C1C1C] text-white px-8 py-3 rounded-2xl font-black text-sm tracking-widest uppercase hover:bg-primary transition-all shadow-xl shadow-gray-200"
+            >
+              View all 2,540 Reviews
+            </button>
+          </motion.div>
+        </div>
+      </section>
+
+      <div className="h-2 bg-[#F5F5F5]" />
+
       <LocationModal 
         isOpen={isLocationModalOpen} 
         onClose={() => setIsLocationModalOpen(false)} 
+      />
+
+      <ReviewsModal 
+        isOpen={isReviewsModalOpen} 
+        onClose={() => setIsReviewsModalOpen(false)} 
       />
     </div>
 

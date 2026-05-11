@@ -212,7 +212,7 @@ const Register = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <Input
                     label="Full Name"
-                    placeholder="John Doe"
+                    placeholder="Ankit Kumar"
                     icon={User}
                     error={errors.name?.message}
                     {...register('name')}
