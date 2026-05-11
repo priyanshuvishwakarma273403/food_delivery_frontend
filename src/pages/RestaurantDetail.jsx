@@ -23,6 +23,9 @@ import Badge from '../components/common/Badge';
 import CoinRewardPopup from '../components/common/CoinRewardPopup';
 import { cn } from '../utils/cn';
 import { getOptimizedImageUrl } from '../utils/cloudinary';
+import ReviewSection from '../components/restaurant/ReviewSection';
+import axios from 'axios';
+import { useEffect } from 'react';
 
 
 const RestaurantDetail = () => {
@@ -281,6 +284,13 @@ const RestaurantDetail = () => {
         coins={rewardCoins} 
         onClose={() => setShowReward(false)} 
       />
+
+      {/* Review Section */}
+      <div className="bg-white pb-20">
+        <div className="container mx-auto px-4">
+          <ReviewSection restaurantId={restaurant.id} />
+        </div>
+      </div>
     </div>
   );
 };
