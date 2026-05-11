@@ -62,7 +62,7 @@ const HERO_THEMES = {
     secondary: '#60A5FA',
     gradient: 'from-[#1A73E8]/20 via-[#1A73E8]/5 to-transparent',
     accent: 'bg-[#1A73E8]',
-    image: 'https://images.unsplash.com/photo-1544145945-f904253d0c71?w=1800&q=80',
+    image: 'https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=1800&q=80',
     light: 'bg-blue-50'
   },
   bakery: {
