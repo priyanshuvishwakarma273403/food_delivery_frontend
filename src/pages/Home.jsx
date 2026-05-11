@@ -46,7 +46,7 @@ const HERO_THEMES = {
     secondary: '#10B981',
     gradient: 'from-[#0C831F]/20 via-[#0C831F]/5 to-transparent',
     accent: 'bg-[#0C831F]',
-    image: 'https://images.unsplash.com/photo-1504387828636-adbd50779770?w=1800&q=80',
+    image: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=1800&q=80',
     light: 'bg-emerald-50'
   },
   sweets: {
